@@ -9,14 +9,14 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2015/04/15/2015-04-15-centos7%E4%B8%8BDocker%E5%AE%89%E8%A3%85/</loc>
+    <loc>http://yoursite.com/2015/04/10/2015-04-10-Docker-%E9%94%99%E8%AF%AF%E9%9B%86%E5%90%88/</loc>
     
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://yoursite.com/2015/04/13/2015-04-13-docker-compose-installation/</loc>
+    <loc>http://yoursite.com/2015/04/15/2015-04-15-centos7%E4%B8%8BDocker%E5%AE%89%E8%A3%85/</loc>
     
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
     
@@ -44,13 +44,6 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2015/04/22/2015-04-22-centos7%E4%B8%8B-Jenkins-%E5%AE%89%E8%A3%85/</loc>
-    
-    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://yoursite.com/2015/04/18/2015-04-18-centos7-%E5%86%85%E6%A0%B8%E5%8D%87%E7%BA%A7/</loc>
     
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
@@ -59,6 +52,13 @@
   
   <url>
     <loc>http://yoursite.com/2015/04/28/2015-04-28-centos6%E4%B8%8BMemcache%E5%AE%89%E8%A3%85/</loc>
+    
+    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2015/04/22/2015-04-22-centos7%E4%B8%8B-Jenkins-%E5%AE%89%E8%A3%85/</loc>
     
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
     
@@ -79,14 +79,14 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2015/05/05/2015-05-05-Redis%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88Sorted-Sets%E8%AF%B4%E6%98%8E/</loc>
+    <loc>http://yoursite.com/2015/04/29/2015-04-29-centos%E4%B8%8B%E5%AE%89%E8%A3%85MediaWiKi/</loc>
     
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://yoursite.com/2015/04/29/2015-04-29-centos%E4%B8%8B%E5%AE%89%E8%A3%85MediaWiKi/</loc>
+    <loc>http://yoursite.com/2015/05/05/2015-05-05-Redis%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88Sorted-Sets%E8%AF%B4%E6%98%8E/</loc>
     
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
     
@@ -149,7 +149,7 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2015/04/10/2015-04-10-Docker-%E9%94%99%E8%AF%AF%E9%9B%86%E5%90%88/</loc>
+    <loc>http://yoursite.com/2015/04/13/2015-04-13-docker-compose-installation/</loc>
     
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
     
@@ -205,14 +205,14 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/11/28/2016-11-28-SHELL-echo-with-color/</loc>
+    <loc>http://yoursite.com/2016/11/25/2016-11-25-gitlab-error-RPC-failed/</loc>
     
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/11/25/2016-11-25-gitlab-error-RPC-failed/</loc>
+    <loc>http://yoursite.com/2016/11/28/2016-11-28-SHELL-echo-with-color/</loc>
     
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
     
@@ -226,14 +226,14 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/12/06/2016-12-06-Centos-command-screen/</loc>
+    <loc>http://yoursite.com/2016/12/13/2016-12-13-Mysql-ERROR-1175-SQL-SAFE-UPDATES/</loc>
     
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/12/13/2016-12-13-Mysql-ERROR-1175-SQL-SAFE-UPDATES/</loc>
+    <loc>http://yoursite.com/2016/12/06/2016-12-06-Centos-command-screen/</loc>
     
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
     
