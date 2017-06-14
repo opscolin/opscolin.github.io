@@ -1190,9 +1190,9 @@ root@pts/3 $ pyenv versions
     
       <category term="python" scheme="http://yoursite.com/tags/python/"/>
     
-      <category term="pyenv" scheme="http://yoursite.com/tags/pyenv/"/>
-    
       <category term="virtualenv" scheme="http://yoursite.com/tags/virtualenv/"/>
+    
+      <category term="pyenv" scheme="http://yoursite.com/tags/pyenv/"/>
     
   </entry>
   
@@ -1246,9 +1246,9 @@ exec $SHELL -l
     
       <category term="python" scheme="http://yoursite.com/tags/python/"/>
     
-      <category term="virtualenv" scheme="http://yoursite.com/tags/virtualenv/"/>
-    
       <category term="Centos" scheme="http://yoursite.com/tags/Centos/"/>
+    
+      <category term="virtualenv" scheme="http://yoursite.com/tags/virtualenv/"/>
     
   </entry>
   
