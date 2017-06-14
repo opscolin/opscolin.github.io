@@ -1,0 +1,899 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Linux,usermode,groupmode," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Colinws 工作室" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="摘要 在Linux操作系统下怎么样用命令行去修改用户的名称（也就是重命名），或者UID/GID切记不要手动用vi之类的文本编辑器去修改 /etc/passwd 文件  修改用户名称Usage: usermod -l login-name old-name 修改用户的名称 old-name 改成 login-name，别的都没有改变。其实我们也应该考虑是否把用户的HOME目录也改成新的用户。 另外这">
+<meta name="keywords" content="Linux,usermode,groupmode">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 下修改或者重命名用户名称或者UID&#x2F;GID">
+<meta property="og:url" content="http://yoursite.com/2016/12/23/2016-12-23-rename-username-uid-gid-under-centos7/index.html">
+<meta property="og:site_name" content="Colinws 工作室">
+<meta property="og:description" content="摘要 在Linux操作系统下怎么样用命令行去修改用户的名称（也就是重命名），或者UID/GID切记不要手动用vi之类的文本编辑器去修改 /etc/passwd 文件  修改用户名称Usage: usermod -l login-name old-name 修改用户的名称 old-name 改成 login-name，别的都没有改变。其实我们也应该考虑是否把用户的HOME目录也改成新的用户。 另外这">
+<meta property="og:image" content="http://yoursite.com/images/qrcode_for_gh_da4929fed8ed_430.jpg">
+<meta property="og:updated_time" content="2017-06-13T14:29:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux 下修改或者重命名用户名称或者UID&#x2F;GID">
+<meta name="twitter:description" content="摘要 在Linux操作系统下怎么样用命令行去修改用户的名称（也就是重命名），或者UID/GID切记不要手动用vi之类的文本编辑器去修改 /etc/passwd 文件  修改用户名称Usage: usermod -l login-name old-name 修改用户的名称 old-name 改成 login-name，别的都没有改变。其实我们也应该考虑是否把用户的HOME目录也改成新的用户。 另外这">
+<meta name="twitter:image" content="http://yoursite.com/images/qrcode_for_gh_da4929fed8ed_430.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/23/2016-12-23-rename-username-uid-gid-under-centos7/"/>
+
+
+
+
+
+  <title>Linux 下修改或者重命名用户名称或者UID/GID | Colinws 工作室</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1261041972&web_id=1261041972" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Colinws 工作室</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">专注于技术</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/23/2016-12-23-rename-username-uid-gid-under-centos7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Colin.Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/colinws.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Colinws 工作室">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux 下修改或者重命名用户名称或者UID/GID</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-23T13:42:04+08:00">
+                2016-12-23
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-06-13T22:29:00+08:00">
+                2017-06-13
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><blockquote>
+<p>在Linux操作系统下怎么样用命令行去修改用户的名称（也就是重命名），或者UID/GID<br>切记不要手动用vi之类的文本编辑器去修改 <code>/etc/passwd</code> 文件</p>
+</blockquote>
+<h3 id="修改用户名称"><a href="#修改用户名称" class="headerlink" title="修改用户名称"></a>修改用户名称</h3><p>Usage:</p>
+<pre><code>usermod -l login-name old-name
+</code></pre><p>修改用户的名称 <code>old-name</code> 改成 <code>login-name</code>，别的都没有改变。其实我们也应该考虑是否把用户的HOME目录也改成新的用户。</p>
+<p><strong>另外这里有个问题需要注意</strong></p>
+<a id="more"></a>
+<p>如果出现如下报错</p>
+<pre><code>root@pts/0 $ usermod -l newjames james
+usermod: user James is currently used by process 12345
+</code></pre><p>说明有用<code>james</code>用户运行的程序，需要把相关的程序停掉之后再执行上面的命令</p>
+<p>Examples:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"><span class="comment"># add user 'james' for test</span></span></div><div class="line">root@pts/0 $ useradd james</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># check original id</span></span></div><div class="line">root@pts/0 $ id james</div><div class="line">uid=1007(james) gid=1008(james) 组=1008(james)</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># check HOME directory</span></span></div><div class="line">root@pts/0 $ ls -ld /home/james/</div><div class="line">drwx------ 2 james james 4096 12月 23 11:46 /home/james/</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># try to change or rename and verify</span></span></div><div class="line">root@pts/0 $ usermod -l newjames james</div><div class="line"></div><div class="line">root@pts/0 $ id james</div><div class="line">id: james: no such user</div><div class="line"></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=1007(newjames) gid=1008(james) 组=1008(james)</div><div class="line"><span class="meta"></span></div><div class="line"></div><div class="line">#<span class="bash"><span class="comment"># check HOME folder</span></span></div><div class="line">root@pts/0 $ ls -ld /home/james/</div><div class="line">drwx------ 2 newjames james 4096 12月 23 11:46 /home/james/</div><div class="line"></div><div class="line">root@pts/0 $ ls -ld /home/newjames</div><div class="line">ls: 无法访问/home/newjames: 没有那个文件或目录</div><div class="line">Dev-web-solr [~] 2016-12-23 11:47:22</div><div class="line">root@pts/0 $</div></pre></td></tr></table></figure>
+<p>从上面可以看出，变化只仅仅是username，UID/GUID/HOME目录都没有改变</p>
+<hr>
+<p>修改UID/GID相对很简单，结合上面的例子。继续如下：</p>
+<h3 id="修改UID"><a href="#修改UID" class="headerlink" title="修改UID"></a>修改UID</h3><p>Usage:</p>
+<pre><code>usermod -u NEW-UID username
+</code></pre><p>Examples:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"><span class="comment"># original UID is 1007</span></span></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=1007(newjames) gid=1008(james) 组=1008(james)</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># change 1007 to 2007</span></span></div><div class="line">root@pts/0 $ usermod -u 2007 newjames</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># modified to 2007</span></span></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=2007(newjames) gid=1008(james) 组=1008(james)</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="修改GID-group-name"><a href="#修改GID-group-name" class="headerlink" title="修改GID/group-name"></a>修改GID/group-name</h3><p>Usage:</p>
+<pre><code>groupmod -g NEW-GID groupname
+</code></pre><p>Examples:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"><span class="comment"># james to newjames, but james's group is still 'james'</span></span></div><div class="line">root@pts/0 $ groupmod -g 2007 newjames</div><div class="line">groupmod：“newjames”组不存在</div><div class="line"></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=2007(newjames) gid=1008(james) 组=1008(james)</div><div class="line"></div><div class="line">root@pts/0 $ groupmod -g 2007 james</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># try to rename group</span></span></div><div class="line">root@pts/0 $ groupmod --help</div><div class="line">用法：groupmod [选项] 组</div><div class="line"></div><div class="line">选项:</div><div class="line">  -g, --gid GID                 将组 ID 改为 GID</div><div class="line">  -h, --help                    显示此帮助信息并推出</div><div class="line">  -n, --new-name NEW_GROUP      改名为 NEW_GROUP</div><div class="line">  -o, --non-unique              允许使用重复的 GID</div><div class="line">  -p, --password PASSWORD	将密码更改为(加密过的) PASSWORD</div><div class="line">  -R, --root CHROOT_DIR         chroot 到的目录</div><div class="line"></div><div class="line"></div><div class="line">root@pts/0 $ groupmod -n newjamesgroup james</div><div class="line"><span class="meta"></span></div><div class="line"></div><div class="line">#<span class="bash"><span class="comment"># find that group was renamed</span></span></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=2007(newjames) gid=1008(newjamesgroup) 组=1008(newjamesgroup)</div><div class="line"><span class="meta"></span></div><div class="line"></div><div class="line">#<span class="bash"><span class="comment"># try to change GID</span></span></div><div class="line">root@pts/0 $ groupmod -g 2007 james</div><div class="line"></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=2007(newjames) gid= 2007(newjamesgroup) 组= 2007(newjamesgroup)</div></pre></td></tr></table></figure>
+<h3 id="修改用户HOME显示"><a href="#修改用户HOME显示" class="headerlink" title="修改用户HOME显示"></a>修改用户HOME显示</h3><p>最后我们来考虑下前面说过的rename用户名称之后，HOME家目录的显示没有改变。</p>
+<p>Usage:</p>
+<pre><code>usermod -d /home/new-user -m new-user
+</code></pre><p>Examples:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">root@pts/0 $ ls -ld /home/james</div><div class="line">drwx------ 2 newjames 1008 4096 12月 23 11:46 /home/james</div><div class="line"></div><div class="line">root@pts/0 $ ls -ld /home/newjames</div><div class="line">ls: 无法访问/home/newjames: 没有那个文件或目录</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># change HOME folder</span></span></div><div class="line">root@pts/0 $ usermod -d /home/newjames -m newjames</div><div class="line"></div><div class="line">root@pts/0 $ ls -ld /home/newjames</div><div class="line">drwx------ 2 newjames 1008 4096 12月 23 11:46 /home/newjames</div><div class="line"></div><div class="line">root@pts/0 $ ls -ld /home/james</div><div class="line">ls: 无法访问/home/james: 没有那个文件或目录</div><div class="line">root@pts/0 $</div></pre></td></tr></table></figure>
+<hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/usermode/" rel="tag"># usermode</a>
+          
+            <a href="/tags/groupmode/" rel="tag"># groupmode</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/13/2016-12-13-Mysql-ERROR-1175-SQL-SAFE-UPDATES/" rel="next" title="Mysql ERROR 1175 - SQL_SAFE_UPDATES">
+                <i class="fa fa-chevron-left"></i> Mysql ERROR 1175 - SQL_SAFE_UPDATES
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/26/2016-12-26-solr-install-and-baisc-usage/" rel="prev" title="Centos7下安装Solr服务和Solr基本用法">
+                Centos7下安装Solr服务和Solr基本用法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/colinws.jpg"
+               alt="Colin.Liu" />
+          <p class="site-author-name" itemprop="name">Colin.Liu</p>
+           
+              <p class="site-description motion-element" itemprop="description">colinws工作室</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/opscolin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/users/6d793fbacc88/latest_articles" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  简书
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/eagle5063" target="_blank" title="CSDN">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.python.org/" title="Python" target="_blank">Python</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.djangoproject.com/" title="Django" target="_blank">Django</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.hhzzer.com/" title="惠露的博客" target="_blank">惠露的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://brucephaner.github.io" title="潘东升" target="_blank">潘东升</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#摘要"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改用户名称"><span class="nav-number">2.</span> <span class="nav-text">修改用户名称</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改UID"><span class="nav-number">3.</span> <span class="nav-text">修改UID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改GID-group-name"><span class="nav-number">4.</span> <span class="nav-text">修改GID/group-name</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改用户HOME显示"><span class="nav-number">5.</span> <span class="nav-text">修改用户HOME显示</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Colin.Liu</span>
+
+
+ <span class="site-pv">
+   <script src="http://s6.cnzz.com/stat.php?id=1261041972&web_id=1261041972" type="text/javascript"></script>
+</span>
+ 
+
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+<br>
+
+<!-- 
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次 | 
+</span>
+
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

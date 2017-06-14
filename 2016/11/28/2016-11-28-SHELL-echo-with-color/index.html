@@ -1,0 +1,951 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="shell,shell color," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Colinws 工作室" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Shell 颜色和闪烁控制 在Shell下有时候需要定制输出，比如给输出加上颜色，或者显示高亮，或者添加闪烁等。然后这些颜色代码或者控制码等相对不好记住。这个时候我们可以考虑把最终想要的结果制定成对应的函数，在使用的时候直接调用函数会方便很多  格式echo -e &amp;quot;\033[字背景颜色;字体颜色m字符串\033[控制码&amp;quot;">
+<meta name="keywords" content="shell,shell color">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SHELL输出颜色和闪烁控制">
+<meta property="og:url" content="http://yoursite.com/2016/11/28/2016-11-28-SHELL-echo-with-color/index.html">
+<meta property="og:site_name" content="Colinws 工作室">
+<meta property="og:description" content="Shell 颜色和闪烁控制 在Shell下有时候需要定制输出，比如给输出加上颜色，或者显示高亮，或者添加闪烁等。然后这些颜色代码或者控制码等相对不好记住。这个时候我们可以考虑把最终想要的结果制定成对应的函数，在使用的时候直接调用函数会方便很多  格式echo -e &amp;quot;\033[字背景颜色;字体颜色m字符串\033[控制码&amp;quot;">
+<meta property="og:image" content="http://yoursite.com/images/shell/shell-color-1.png">
+<meta property="og:image" content="http://yoursite.com/images/shell/shell-color-2.png">
+<meta property="og:image" content="http://yoursite.com/images/qrcode_for_gh_da4929fed8ed_430.jpg">
+<meta property="og:updated_time" content="2017-06-13T14:29:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SHELL输出颜色和闪烁控制">
+<meta name="twitter:description" content="Shell 颜色和闪烁控制 在Shell下有时候需要定制输出，比如给输出加上颜色，或者显示高亮，或者添加闪烁等。然后这些颜色代码或者控制码等相对不好记住。这个时候我们可以考虑把最终想要的结果制定成对应的函数，在使用的时候直接调用函数会方便很多  格式echo -e &amp;quot;\033[字背景颜色;字体颜色m字符串\033[控制码&amp;quot;">
+<meta name="twitter:image" content="http://yoursite.com/images/shell/shell-color-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/28/2016-11-28-SHELL-echo-with-color/"/>
+
+
+
+
+
+  <title>SHELL输出颜色和闪烁控制 | Colinws 工作室</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1261041972&web_id=1261041972" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Colinws 工作室</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">专注于技术</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/28/2016-11-28-SHELL-echo-with-color/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Colin.Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/colinws.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Colinws 工作室">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SHELL输出颜色和闪烁控制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-28T17:48:45+08:00">
+                2016-11-28
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-06-13T22:29:00+08:00">
+                2017-06-13
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Shell/" itemprop="url" rel="index">
+                    <span itemprop="name">Shell</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Shell-颜色和闪烁控制"><a href="#Shell-颜色和闪烁控制" class="headerlink" title="Shell 颜色和闪烁控制"></a>Shell 颜色和闪烁控制</h2><blockquote>
+<p>在Shell下有时候需要定制输出，比如给输出加上颜色，或者显示高亮，或者添加闪烁等。<br>然后这些颜色代码或者控制码等相对不好记住。这个时候我们可以考虑把最终想要的结果制定成对应的函数，<br>在使用的时候直接调用函数会方便很多</p>
+</blockquote>
+<h2 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h2><pre><code>echo -e &quot;\033[字背景颜色;字体颜色m字符串\033[控制码&quot;
+</code></pre><a id="more"></a>
+<h2 id="定制颜色函数"><a href="#定制颜色函数" class="headerlink" title="定制颜色函数"></a>定制颜色函数</h2><pre><code>## blue to echo 
+function blue(){
+    echo -e &quot;\033[34m[ $1 ]\033[0m&quot;
+}
+
+
+## green to echo 
+function green(){
+    echo -e &quot;\033[32m[ $1 ]\033[0m&quot;
+}
+
+## Error to warning with blink
+function bred(){
+    echo -e &quot;\033[31m\033[01m\033[05m[ $1 ]\033[0m&quot;
+}
+
+## Error to warning with blink
+function byellow(){
+    echo -e &quot;\033[33m\033[01m\033[05m[ $1 ]\033[0m&quot;
+}
+
+
+## Error
+function bred(){
+    echo -e &quot;\033[31m\033[01m[ $1 ]\033[0m&quot;
+}
+
+## warning
+function byellow(){
+    echo -e &quot;\033[33m\033[01m[ $1 ]\033[0m&quot;
+}
+</code></pre><hr>
+<p>可以把这些函数写入到一个公共的SHELL脚本中，每次在编写其他脚本的时候用如下方式调用，即可</p>
+<pre><code>source /root/bin/common
+</code></pre><p>或者可以把上述代码直接粘贴到当前编写的脚本中去。</p>
+<p>当然可以推荐第一种方式。不用每次都复制粘贴。 直接 <code>source 调用</code> 即可</p>
+<h2 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">root@pts/4 $ cat /root/bin/common </div><div class="line"><span class="meta">#</span>!/usr/bin/env bash</div><div class="line"><span class="meta"></span></div><div class="line">## blue to echo </div><div class="line">function blue()&#123;</div><div class="line">	echo -e "\033[35m[ $1 ]\033[0m"</div><div class="line">&#125;</div><div class="line"><span class="meta"></span></div><div class="line"></div><div class="line">## green to echo </div><div class="line">function green()&#123;</div><div class="line">	echo -e "\033[32m[ $1 ]\033[0m"</div><div class="line">&#125;</div><div class="line"><span class="meta"></span></div><div class="line">## Error to warning with blink</div><div class="line">function bred()&#123;</div><div class="line">	echo -e "\033[31m\033[01m\033[05m[ $1 ]\033[0m"</div><div class="line">&#125;</div><div class="line"><span class="meta"></span></div><div class="line">## Error to warning with blink</div><div class="line">function byellow()&#123;</div><div class="line">	echo -e "\033[33m\033[01m\033[05m[ $1 ]\033[0m"</div><div class="line">&#125;</div><div class="line"><span class="meta"></span></div><div class="line"></div><div class="line">## Error</div><div class="line">function red()&#123;</div><div class="line">	echo -e "\033[31m\033[01m[ $1 ]\033[0m"</div><div class="line">&#125;</div><div class="line"><span class="meta"></span></div><div class="line">## warning</div><div class="line">function yellow()&#123;</div><div class="line">	echo -e "\033[33m\033[01m[ $1 ]\033[0m"</div><div class="line">&#125;</div><div class="line">Dev-web-solr [/opt/hexo2] 2016-11-28 17:52:03</div><div class="line">root@pts/4 $ cat /root/bin/test.sh </div><div class="line"><span class="meta">#</span>!/usr/bin/env bash</div><div class="line"></div><div class="line">source /root/bin/common</div><div class="line"></div><div class="line">green "hello world with green color"</div><div class="line">blue "hello world with blue color"</div><div class="line"></div><div class="line">bred "error info with blink"</div><div class="line">byellow "warning info with blink"</div></pre></td></tr></table></figure>
+<p><strong>测试结果如下所示</strong></p>
+<p><img src="/images/shell/shell-color-1.png" alt="shell-color"></p>
+<p><img src="/images/shell/shell-color-2.png" alt="shell-color"></p>
+<hr>
+<p>附加 shell输出 字体背景颜色和字体颜色，控制码等参数</p>
+<h2 id="字体背景颜色"><a href="#字体背景颜色" class="headerlink" title="字体背景颜色"></a>字体背景颜色</h2><pre><code>40:黑 
+41:深红 
+42:绿 
+43:黄色 
+44:蓝色 
+45:紫色 
+46:深绿 
+47:白色 
+</code></pre><h2 id="字体颜色"><a href="#字体颜色" class="headerlink" title="字体颜色"></a>字体颜色</h2><pre><code>30:黑 
+31:红 
+32:绿 
+33:黄 
+34:蓝色 
+35:紫色 
+36:深绿 
+37:白色 
+</code></pre><h2 id="控制码"><a href="#控制码" class="headerlink" title="控制码"></a>控制码</h2><p>这里常用有 设置高亮度/下划线/闪烁/关闭所有属性</p>
+<pre><code>\33[0m 关闭所有属性 
+\33[01m 设置高亮度 
+\33[04m 下划线 
+\33[05m 闪烁 
+\33[07m 反显 
+\33[08m 消隐 
+\33[30m -- \33[37m 设置前景色 
+\33[40m -- \33[47m 设置背景色 
+\33[nA 光标上移n行 
+\33[nB 光标下移n行 
+\33[nC 光标右移n行 
+\33[nD 光标左移n行 
+\33[y;xH设置光标位置 
+\33[2J 清屏 
+\33[K 清除从光标到行尾的内容 
+\33[s 保存光标位置 
+\33[u 恢复光标位置 
+\33[?25l 隐藏光标 
+\33[?25h 显示光标
+</code></pre><hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/shell/" rel="tag"># shell</a>
+          
+            <a href="/tags/shell-color/" rel="tag"># shell color</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/25/2016-11-25-gitlab-error-RPC-failed/" rel="next" title="gitlab报错 - RPC failed">
+                <i class="fa fa-chevron-left"></i> gitlab报错 - RPC failed
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/29/2016-11-29-Testing-Flask-mail-and-meet-some-errors/" rel="prev" title="Flask-mail测试和遇到的问题">
+                Flask-mail测试和遇到的问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/colinws.jpg"
+               alt="Colin.Liu" />
+          <p class="site-author-name" itemprop="name">Colin.Liu</p>
+           
+              <p class="site-description motion-element" itemprop="description">colinws工作室</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/opscolin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/users/6d793fbacc88/latest_articles" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  简书
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/eagle5063" target="_blank" title="CSDN">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.python.org/" title="Python" target="_blank">Python</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.djangoproject.com/" title="Django" target="_blank">Django</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.hhzzer.com/" title="惠露的博客" target="_blank">惠露的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://brucephaner.github.io" title="潘东升" target="_blank">潘东升</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Shell-颜色和闪烁控制"><span class="nav-number">1.</span> <span class="nav-text">Shell 颜色和闪烁控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#格式"><span class="nav-number">2.</span> <span class="nav-text">格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定制颜色函数"><span class="nav-number">3.</span> <span class="nav-text">定制颜色函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#举例"><span class="nav-number">4.</span> <span class="nav-text">举例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字体背景颜色"><span class="nav-number">5.</span> <span class="nav-text">字体背景颜色</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字体颜色"><span class="nav-number">6.</span> <span class="nav-text">字体颜色</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#控制码"><span class="nav-number">7.</span> <span class="nav-text">控制码</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Colin.Liu</span>
+
+
+ <span class="site-pv">
+   <script src="http://s6.cnzz.com/stat.php?id=1261041972&web_id=1261041972" type="text/javascript"></script>
+</span>
+ 
+
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+<br>
+
+<!-- 
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次 | 
+</span>
+
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

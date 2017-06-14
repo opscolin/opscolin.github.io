@@ -1,0 +1,1486 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Colinws 工作室</title>
+  <subtitle>专注于技术</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2017-06-13T14:29:00.000Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>Colin.Liu</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Centos7下安装Solr服务和Solr基本用法</title>
+    <link href="http://yoursite.com/2016/12/26/2016-12-26-solr-install-and-baisc-usage/"/>
+    <id>http://yoursite.com/2016/12/26/2016-12-26-solr-install-and-baisc-usage/</id>
+    <published>2016-12-26T11:57:18.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Requirements"><a href="#Requirements" class="headerlink" title="Requirements"></a>Requirements</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">root@pts/6 $ java -version</div><div class="line">java version "1.8.0_91"</div><div class="line">Java(TM) SE Runtime Environment (build 1.8.0_91-b14)</div><div class="line">Java HotSpot(TM) 64-Bit Server VM (build 25.91-b14, mixed mode)</div></pre></td></tr></table></figure>
+<p>refer to <a href="http://lucene.apache.org/solr/6_3_0/SYSTEM_REQUIREMENTS.html" target="_blank" rel="external"><strong>solr system requirements</strong></a></p>
+<h2 id="Installation-solr"><a href="#Installation-solr" class="headerlink" title="Installation solr"></a>Installation solr</h2><p>这篇主要是以单实例Solr为说明</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"> download new version </span></div><div class="line">wget https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/solr/6.3.0/solr-6.3.0.zip</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"> init directory about solr</span></div><div class="line"><span class="meta">#</span><span class="bash"> separate installation folder and data folder</span></div><div class="line">mkdir /TestDisk/solrtest/&#123;installation,data&#125;</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"> installation </span></div><div class="line">root@pts/6 $ solr-6.3.0/bin/install_solr_service.sh solr-6.3.0.zip \</div><div class="line">-d /TestDisk/solrtest/data/ -i /TestDisk/solrtest/installation \</div><div class="line">-p 8985 -s lcsolr</div><div class="line"></div><div class="line">Extracting solr-6.3.0.zip to /TestDisk/solrtest/installation</div><div class="line"></div><div class="line"></div><div class="line">Installing symlink /TestDisk/solrtest/installation/lcsolr -&gt; /TestDisk/solrtest/installation/solr-6.3.0 ...</div><div class="line"></div><div class="line"></div><div class="line">Installing /etc/init.d/lcsolr script ...</div><div class="line"></div><div class="line"></div><div class="line">Installing /etc/default/lcsolr.in.sh ...</div><div class="line"></div><div class="line">Service lcsolr installed.</div><div class="line">Customize Solr startup configuration in /etc/default/lcsolr.in.sh</div><div class="line">Waiting up to 180 seconds to see Solr running on port 8985 [\]</div><div class="line">Started Solr server on port 8985 (pid=17625). Happy searching!</div><div class="line"></div><div class="line"></div><div class="line">Found 1 Solr nodes:</div><div class="line"></div><div class="line">Solr process 17625 running on port 8985</div><div class="line">&#123;</div><div class="line">  "solr_home":"/TestDisk/solrtest/data/data",</div><div class="line">  "version":"6.3.0 a66a44513ee8191e25b477372094bfa846450316 - shalin - 2016-11-02 19:52:42",</div><div class="line">  "startTime":"2016-12-26T11:35:08.023Z",</div><div class="line">  "uptime":"0 days, 0 hours, 0 minutes, 8 seconds",</div><div class="line">  "memory":"84 MB (%17.1) of 490.7 MB"&#125;</div></pre></td></tr></table></figure>
+<p><code>install_solr_service.sh</code> 参数说明：</p>
+<p>安装脚本自身必须是<code>root</code>运行才行</p>
+<ul>
+<li>-d solr数据数据目录，比如存放logs,pid文件，core目录等等。默认在<code>/var/solr</code></li>
+<li>-i solr程序安装目录，默认在<code>/opt</code>。安装目录必须先创建好。</li>
+<li>-p 执行solr绑定的端口，默认是<code>8983</code>端口。</li>
+<li>-s solr服务的名称，默认是<code>solr</code>。可以指定别的，比如上面的 <code>lcsolr</code></li>
+<li>-u solr服务运行或者solr文件拥有者的用户，默认是<code>solr</code>。也只可以指定别的，如果指定的不存在怎会先创建相关用户</li>
+<li>-n solr安装完毕之后不启动solr服务</li>
+</ul>
+<p>如果对于安装的时候参数不熟悉导致的Joke就像 <a href="http://www.jianshu.com/p/59f28f16ba65" target="_blank" rel="external">这个错误</a></p>
+<p><strong>solr实际启动之后的主界面如图</strong></p>
+<p><img src="/images/solr/solr-index-page.png" alt="solr-index-page.png"></p>
+<h2 id="Solr-basic-usage"><a href="#Solr-basic-usage" class="headerlink" title="Solr basic usage"></a>Solr basic usage</h2><h3 id="create-core"><a href="#create-core" class="headerlink" title="create core"></a>create core</h3><p>创建Core的时候建议用命令行来创建，这样会更方便。</p>
+<p>因为web界面创建Core，默认要求 <code>installdir</code> 和 <code>datadir</code> 要必须先存在，而且 要求 <code>solrconfig.xml</code>也必须能被找到。</p>
+<p>语法：</p>
+<pre><code>## 因为我使用了不用的端口，所以这里加上-p
+bin/solr create -c james [-p 8985] 
+</code></pre><p>举例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">root@pts/6 $ su - solr -c '/TestDisk/solrtest/installation/lcsolr/bin/solr create -c james -p 8985'</div><div class="line"></div><div class="line">Copying configuration to new core instance directory:</div><div class="line">/TestDisk/solrtest/data/data/james</div><div class="line"></div><div class="line">Creating new core 'james' using command:</div><div class="line">http://localhost:8985/solr/admin/cores?action=CREATE&amp;name=james&amp;instanceDir=james</div><div class="line"></div><div class="line">&#123;</div><div class="line">  "responseHeader":&#123;</div><div class="line">    "status":0,</div><div class="line">    "QTime":2119&#125;,</div><div class="line">  "core":"james"&#125;</div></pre></td></tr></table></figure>
+<p>结果如下：<br><img src="/images/solr/solr-core.png" alt="solr-core.png"></p>
+<p>core详情页<br><img src="/images/solr/solr-core-index.png" alt="solr-core-index.png"></p>
+<p><strong>下面的例子只给出具体的命令，不做截图展示</strong></p>
+<p>另外给出来的<code>URL</code>可以在浏览器中执行，也可以在命令行用如下的方式</p>
+<pre><code>curl certain-url
+</code></pre><h3 id="select-from-core"><a href="#select-from-core" class="headerlink" title="select from core"></a>select from core</h3><pre><code>http://192.168.100.2:8985/solr/james/select?q=id:2031961177&amp;wt=json&amp;indent=true
+</code></pre><h3 id="delete-one-record-from-core"><a href="#delete-one-record-from-core" class="headerlink" title="delete one record from core"></a>delete one record from core</h3><pre><code>http://192.168.100.2:8985/solr/james/update/?stream.body=&lt;delete&gt;&lt;id&gt;2031961722&lt;/id&gt;&lt;/delete&gt;&amp;stream.contentType=text/xml;charset=utf-8&amp;commit=true
+</code></pre><h3 id="truncate-core"><a href="#truncate-core" class="headerlink" title="truncate core"></a>truncate core</h3><pre><code>http://192.168.100.2:8985/solr/james/update/?stream.body=&lt;delete&gt;&lt;query&gt;*:*&lt;/query&gt;&lt;/delete&gt;&amp;stream.contentType=text/xml;charset=utf-8&amp;commit=true
+</code></pre><hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Requirements&quot;&gt;&lt;a href=&quot;#Requirements&quot; class=&quot;headerlink&quot; title=&quot;Requirements&quot;&gt;&lt;/a&gt;Requirements&lt;/h2&gt;&lt;figure class=&quot;highlight shell&quot;&gt;&lt;
+    
+    </summary>
+    
+      <category term="Solr" scheme="http://yoursite.com/categories/Solr/"/>
+    
+    
+      <category term="solr" scheme="http://yoursite.com/tags/solr/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux 下修改或者重命名用户名称或者UID/GID</title>
+    <link href="http://yoursite.com/2016/12/23/2016-12-23-rename-username-uid-gid-under-centos7/"/>
+    <id>http://yoursite.com/2016/12/23/2016-12-23-rename-username-uid-gid-under-centos7/</id>
+    <published>2016-12-23T05:42:04.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><blockquote>
+<p>在Linux操作系统下怎么样用命令行去修改用户的名称（也就是重命名），或者UID/GID<br>切记不要手动用vi之类的文本编辑器去修改 <code>/etc/passwd</code> 文件</p>
+</blockquote>
+<h3 id="修改用户名称"><a href="#修改用户名称" class="headerlink" title="修改用户名称"></a>修改用户名称</h3><p>Usage:</p>
+<pre><code>usermod -l login-name old-name
+</code></pre><p>修改用户的名称 <code>old-name</code> 改成 <code>login-name</code>，别的都没有改变。其实我们也应该考虑是否把用户的HOME目录也改成新的用户。</p>
+<p><strong>另外这里有个问题需要注意</strong></p>
+<a id="more"></a>
+<p>如果出现如下报错</p>
+<pre><code>root@pts/0 $ usermod -l newjames james
+usermod: user James is currently used by process 12345
+</code></pre><p>说明有用<code>james</code>用户运行的程序，需要把相关的程序停掉之后再执行上面的命令</p>
+<p>Examples:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"><span class="comment"># add user 'james' for test</span></span></div><div class="line">root@pts/0 $ useradd james</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># check original id</span></span></div><div class="line">root@pts/0 $ id james</div><div class="line">uid=1007(james) gid=1008(james) 组=1008(james)</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># check HOME directory</span></span></div><div class="line">root@pts/0 $ ls -ld /home/james/</div><div class="line">drwx------ 2 james james 4096 12月 23 11:46 /home/james/</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># try to change or rename and verify</span></span></div><div class="line">root@pts/0 $ usermod -l newjames james</div><div class="line"></div><div class="line">root@pts/0 $ id james</div><div class="line">id: james: no such user</div><div class="line"></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=1007(newjames) gid=1008(james) 组=1008(james)</div><div class="line"><span class="meta"></span></div><div class="line"></div><div class="line">#<span class="bash"><span class="comment"># check HOME folder</span></span></div><div class="line">root@pts/0 $ ls -ld /home/james/</div><div class="line">drwx------ 2 newjames james 4096 12月 23 11:46 /home/james/</div><div class="line"></div><div class="line">root@pts/0 $ ls -ld /home/newjames</div><div class="line">ls: 无法访问/home/newjames: 没有那个文件或目录</div><div class="line">Dev-web-solr [~] 2016-12-23 11:47:22</div><div class="line">root@pts/0 $</div></pre></td></tr></table></figure>
+<p>从上面可以看出，变化只仅仅是username，UID/GUID/HOME目录都没有改变</p>
+<hr>
+<p>修改UID/GID相对很简单，结合上面的例子。继续如下：</p>
+<h3 id="修改UID"><a href="#修改UID" class="headerlink" title="修改UID"></a>修改UID</h3><p>Usage:</p>
+<pre><code>usermod -u NEW-UID username
+</code></pre><p>Examples:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"><span class="comment"># original UID is 1007</span></span></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=1007(newjames) gid=1008(james) 组=1008(james)</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># change 1007 to 2007</span></span></div><div class="line">root@pts/0 $ usermod -u 2007 newjames</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># modified to 2007</span></span></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=2007(newjames) gid=1008(james) 组=1008(james)</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="修改GID-group-name"><a href="#修改GID-group-name" class="headerlink" title="修改GID/group-name"></a>修改GID/group-name</h3><p>Usage:</p>
+<pre><code>groupmod -g NEW-GID groupname
+</code></pre><p>Examples:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"><span class="comment"># james to newjames, but james's group is still 'james'</span></span></div><div class="line">root@pts/0 $ groupmod -g 2007 newjames</div><div class="line">groupmod：“newjames”组不存在</div><div class="line"></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=2007(newjames) gid=1008(james) 组=1008(james)</div><div class="line"></div><div class="line">root@pts/0 $ groupmod -g 2007 james</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># try to rename group</span></span></div><div class="line">root@pts/0 $ groupmod --help</div><div class="line">用法：groupmod [选项] 组</div><div class="line"></div><div class="line">选项:</div><div class="line">  -g, --gid GID                 将组 ID 改为 GID</div><div class="line">  -h, --help                    显示此帮助信息并推出</div><div class="line">  -n, --new-name NEW_GROUP      改名为 NEW_GROUP</div><div class="line">  -o, --non-unique              允许使用重复的 GID</div><div class="line">  -p, --password PASSWORD	将密码更改为(加密过的) PASSWORD</div><div class="line">  -R, --root CHROOT_DIR         chroot 到的目录</div><div class="line"></div><div class="line"></div><div class="line">root@pts/0 $ groupmod -n newjamesgroup james</div><div class="line"><span class="meta"></span></div><div class="line"></div><div class="line">#<span class="bash"><span class="comment"># find that group was renamed</span></span></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=2007(newjames) gid=1008(newjamesgroup) 组=1008(newjamesgroup)</div><div class="line"><span class="meta"></span></div><div class="line"></div><div class="line">#<span class="bash"><span class="comment"># try to change GID</span></span></div><div class="line">root@pts/0 $ groupmod -g 2007 james</div><div class="line"></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=2007(newjames) gid= 2007(newjamesgroup) 组= 2007(newjamesgroup)</div></pre></td></tr></table></figure>
+<h3 id="修改用户HOME显示"><a href="#修改用户HOME显示" class="headerlink" title="修改用户HOME显示"></a>修改用户HOME显示</h3><p>最后我们来考虑下前面说过的rename用户名称之后，HOME家目录的显示没有改变。</p>
+<p>Usage:</p>
+<pre><code>usermod -d /home/new-user -m new-user
+</code></pre><p>Examples:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">root@pts/0 $ ls -ld /home/james</div><div class="line">drwx------ 2 newjames 1008 4096 12月 23 11:46 /home/james</div><div class="line"></div><div class="line">root@pts/0 $ ls -ld /home/newjames</div><div class="line">ls: 无法访问/home/newjames: 没有那个文件或目录</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># change HOME folder</span></span></div><div class="line">root@pts/0 $ usermod -d /home/newjames -m newjames</div><div class="line"></div><div class="line">root@pts/0 $ ls -ld /home/newjames</div><div class="line">drwx------ 2 newjames 1008 4096 12月 23 11:46 /home/newjames</div><div class="line"></div><div class="line">root@pts/0 $ ls -ld /home/james</div><div class="line">ls: 无法访问/home/james: 没有那个文件或目录</div><div class="line">root@pts/0 $</div></pre></td></tr></table></figure>
+<hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;摘要&quot;&gt;&lt;a href=&quot;#摘要&quot; class=&quot;headerlink&quot; title=&quot;摘要&quot;&gt;&lt;/a&gt;摘要&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;在Linux操作系统下怎么样用命令行去修改用户的名称（也就是重命名），或者UID/GID&lt;br&gt;切记不要手动用vi之类的文本编辑器去修改 &lt;code&gt;/etc/passwd&lt;/code&gt; 文件&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&quot;修改用户名称&quot;&gt;&lt;a href=&quot;#修改用户名称&quot; class=&quot;headerlink&quot; title=&quot;修改用户名称&quot;&gt;&lt;/a&gt;修改用户名称&lt;/h3&gt;&lt;p&gt;Usage:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;usermod -l login-name old-name
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;修改用户的名称 &lt;code&gt;old-name&lt;/code&gt; 改成 &lt;code&gt;login-name&lt;/code&gt;，别的都没有改变。其实我们也应该考虑是否把用户的HOME目录也改成新的用户。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;另外这里有个问题需要注意&lt;/strong&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://yoursite.com/categories/Linux/"/>
+    
+    
+      <category term="Linux" scheme="http://yoursite.com/tags/Linux/"/>
+    
+      <category term="usermode" scheme="http://yoursite.com/tags/usermode/"/>
+    
+      <category term="groupmode" scheme="http://yoursite.com/tags/groupmode/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Mysql ERROR 1175 - SQL_SAFE_UPDATES</title>
+    <link href="http://yoursite.com/2016/12/13/2016-12-13-Mysql-ERROR-1175-SQL-SAFE-UPDATES/"/>
+    <id>http://yoursite.com/2016/12/13/2016-12-13-Mysql-ERROR-1175-SQL-SAFE-UPDATES/</id>
+    <published>2016-12-13T02:39:43.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><blockquote>
+<p>Mysql 报错 ERROR 1175， 是因为启动的时候开启了<code>安全更新模式</code>导致的<br>报错信息如下</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ERROR 1175 (HY000): You are using safe update mode and you tried to update a table without a WHERE that uses a KEY column</div></pre></td></tr></table></figure>
+<h2 id="SQL-SAFE-UPDATES"><a href="#SQL-SAFE-UPDATES" class="headerlink" title="SQL_SAFE_UPDATES"></a>SQL_SAFE_UPDATES</h2><p>这个报错是因为在更新表的时候<code>where条件中没有到没有含有KEY的列导致的</code>。</p>
+<p>另外更新的时候<code>没有where条件</code>也会报类似的错误</p>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">root@127.0.0.1 : auditAdmin 16:54:10&gt; create table lc_temp(id int,name varchar(20)) ;</div><div class="line">Query OK, 0 rows affected (0.03 sec)</div><div class="line"></div><div class="line">root@127.0.0.1 : auditAdmin 16:54:23&gt; update lc_temp set name=&apos;james&apos;;</div><div class="line">ERROR 1175 (HY000): You are using safe update mode and you tried to update a table without a WHERE that uses a KEY column</div><div class="line">root@127.0.0.1 : auditAdmin 16:54:32&gt;</div></pre></td></tr></table></figure>
+<p>注意开头提示的“你在使用安全更新模式”，参考Mysql官网，在启动mysql的时候使用”<code>安全更新模式 --safe-updates</code>“相当于设置了如下命令<code>SET sql_safe_updates=1, sql_select_limit=1000, max_join_size=1000000;</code></p>
+<hr>
+<p><strong>附加</strong></p>
+<p>这里说明下<code>sql_select_limit</code>参数，为了防止出现不带where条件的全表查询导致资源浪费。如果表中的记录大于1000条的时候，只显示1000条记录</p>
+<p>有两种方式解决</p>
+<pre><code>## modify sql_safe_updates
+set sql_safe_updates=0;
+set sql_safe_updates=off;
+
+## limit 
+select username from userinfo limit 10001;
+</code></pre><hr>
+<p>当报错的时候检查，这个变量是开启的状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">root@127.0.0.1 : (none) 16:42:44&gt; show variables like &apos;%SQL_SAFE_UPDATES%&apos;;</div><div class="line">+------------------+-------+</div><div class="line">| Variable_name    | Value |</div><div class="line">+------------------+-------+</div><div class="line">| sql_safe_updates | ON    |</div><div class="line">+------------------+-------+</div><div class="line">1 row in set (0.00 sec)</div></pre></td></tr></table></figure>
+<p>修改为<code>OFF</code>或者<code>0</code></p>
+<pre><code>SET sql_safe_updates = 0;
+SET sql_safe_updates = OFF;
+</code></pre><p>再去执行update，就没有问题</p>
+<p><strong>Refer to</strong> <a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-tips.html" target="_blank" rel="external">mysql-tips</a></p>
+<hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;摘要&quot;&gt;&lt;a href=&quot;#摘要&quot; class=&quot;headerlink&quot; title=&quot;摘要&quot;&gt;&lt;/a&gt;摘要&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;Mysql 报错 ERROR 1175， 是因为启动的时候开启了&lt;code&gt;安全更新模式&lt;/code&gt;导致的&lt;br&gt;报错信息如下&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;ERROR 1175 (HY000): You are using safe update mode and you tried to update a table without a WHERE that uses a KEY column&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h2 id=&quot;SQL-SAFE-UPDATES&quot;&gt;&lt;a href=&quot;#SQL-SAFE-UPDATES&quot; class=&quot;headerlink&quot; title=&quot;SQL_SAFE_UPDATES&quot;&gt;&lt;/a&gt;SQL_SAFE_UPDATES&lt;/h2&gt;&lt;p&gt;这个报错是因为在更新表的时候&lt;code&gt;where条件中没有到没有含有KEY的列导致的&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;另外更新的时候&lt;code&gt;没有where条件&lt;/code&gt;也会报类似的错误&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="MySQL" scheme="http://yoursite.com/categories/MySQL/"/>
+    
+    
+      <category term="mysql error" scheme="http://yoursite.com/tags/mysql-error/"/>
+    
+      <category term="1175 error" scheme="http://yoursite.com/tags/1175-error/"/>
+    
+      <category term="SQL_SAFE_UPDATES" scheme="http://yoursite.com/tags/SQL-SAFE-UPDATES/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Centos命令系列 之  screen</title>
+    <link href="http://yoursite.com/2016/12/06/2016-12-06-Centos-command-screen/"/>
+    <id>http://yoursite.com/2016/12/06/2016-12-06-Centos-command-screen/</id>
+    <published>2016-12-06T03:18:36.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><blockquote>
+<p>作为运维人员经常会遇到等到远程主机的链接因为网络原因或者别的其他不可抗拒的原因断掉，此时远程为执行完成的命令也会断掉而导致很多任务需要重新执行。</p>
+<p>这给大家介绍一个在这种情况下很好用的命令 <code>screen</code>，具体好用在那里，下面具体介绍，包括从其安装到配置到使用</p>
+</blockquote>
+<h2 id="What-to-do"><a href="#What-to-do" class="headerlink" title="What to do"></a>What to do</h2><p>在正式介绍之前，先给大家介绍下 <code>screen</code> 都能做什么事情</p>
+<ul>
+<li>通过一个SSH session使用多个shell窗口</li>
+<li>即使网络断开链接也能保持shell窗口处理激活状态</li>
+<li>可以在任何地方断开或者重连同一个shell session</li>
+<li>不用为了跑一个耗时的任务而长时间保持几个shell session处于激活状态</li>
+</ul>
+<h2 id=""><a href="#" class="headerlink" title=""></a><a id="more"></a></h2><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>Centos下命令安装一般都采用两种方式，YUM和RPM包的方式。这里分别介绍</p>
+<h3 id="YUM安装"><a href="#YUM安装" class="headerlink" title="YUM安装"></a>YUM安装</h3><pre><code>yum install -y screen
+</code></pre><h3 id="RPM安装"><a href="#RPM安装" class="headerlink" title="RPM安装"></a>RPM安装</h3><p>对于下载 RPM 包，建议去 <a href="http://rpm.pbone.net/" target="_blank" rel="external">http://rpm.pbone.net/</a> 下载</p>
+<pre><code>wget ftp://bo.mirror.garr.it/1/slc/centos/7.1.1503/os/x86_64/Packages/screen-4.1.0-0.19.20120314git3c2946.el7.x86_64.rpm
+rpm -ivh screen-4.1.0-0.19.20120314git3c2946.el7.x86_64.rpm
+</code></pre><h2 id="验证安装"><a href="#验证安装" class="headerlink" title="验证安装"></a>验证安装</h2><pre><code>root@pts/1 $ which screen
+/usr/bin/screen
+
+root@pts/1 $ screen -v
+Screen version 4.01.00devel (GNU) 2-May-06
+</code></pre><hr>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="screen"><a href="#screen" class="headerlink" title="screen"></a>screen</h3><p>在开始使用 <code>screen</code> 之前，执行下面的命令</p>
+<pre><code>root@pts/1 $ ps -ef|grep screen
+root      6297  2410  0 14:02 pts/1    00:00:00 grep --color=auto screen
+</code></pre><p>然后输入 <code>screen</code> 回车，感觉打开了一个新的shell session</p>
+<h3 id="screen-list"><a href="#screen-list" class="headerlink" title="screen -list"></a>screen -list</h3><p>这个时候我们在执行上面的<code>ps</code>命令和<code>screen -list</code>查看结果</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">root@pts/2 $ ps -ef|grep screen</div><div class="line">root      6335  2410  0 14:02 pts/1    00:00:00 screen</div><div class="line">root      6476  6337  0 14:02 pts/2    00:00:00 grep --color=auto screen</div><div class="line"></div><div class="line">root@pts/2 $ screen -list</div><div class="line">There is a screen on:</div><div class="line">        6336.pts-1.192  (Attached)</div><div class="line">1 Socket in /var/run/screen/S-root.</div></pre></td></tr></table></figure>
+<p><code>screen -list</code>是查看开启的screen列表</p>
+<h3 id="新增screen-ctrl-a-c"><a href="#新增screen-ctrl-a-c" class="headerlink" title="新增screen ctrl+a+c"></a>新增screen <code>ctrl+a+c</code></h3><p>为了验证新增screen和后面的功能，在上面的开启的第一个screen session中执行<code>top</code>命令</p>
+<p>从当前的screen session开启一个新的screen session可以使用快捷键 <code>ctrl+a+c</code></p>
+<p>看到开启了一个新的 screen session，一个没有执行<code>top</code>的新session</p>
+<h3 id="screen切换-ctrl-a-n-p"><a href="#screen切换-ctrl-a-n-p" class="headerlink" title="screen切换 ctrl+a+n/p"></a>screen切换 ctrl+a+n/p</h3><pre><code>ctrl+a+n 切换到下一个
+
+ctrl+a+p 切换到上一个
+</code></pre><p>需要说明的是在切换的时候N多session组成一个<code>类似环状</code>，ctrl+a+n切换到最后一个之后在切换久切换到了第一个，</p>
+<p>同理ctrl+a+p切换到第一个之后在切换久切换到了最后一个screen session</p>
+<h3 id="离开screen-ctrl-a-d"><a href="#离开screen-ctrl-a-d" class="headerlink" title="离开screen ctrl+a+d"></a>离开screen ctrl+a+d</h3><p>注意括号中的状态值，由<code>Attached</code>变成<code>Detached</code></p>
+<pre><code>[detached from 6336.pts-1.192]
+
+root@pts/1 $ screen -list
+There is a screen on:
+    6336.pts-1.192  (Detached)
+1 Socket in /var/run/screen/S-root.
+</code></pre><h3 id="再连接到screen-ctrl-r-name"><a href="#再连接到screen-ctrl-r-name" class="headerlink" title="再连接到screen ctrl+r[+name]"></a>再连接到screen ctrl+r[+name]</h3><p>当系统只有一个screen处于 Detached状态的话，直接输入<code>ctrl+r</code>回车就可以进入screen</p>
+<p>如果有多个<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">root@pts/1 $ screen -list</div><div class="line">There are screens on:</div><div class="line">        9944.lc (Detached)</div><div class="line">        9766.pts-1.192  (Detached)</div><div class="line">        6336.pts-1.192  (Detached)</div><div class="line">3 Sockets in /var/run/screen/S-root.</div></pre></td></tr></table></figure></p>
+<p>就需要执行<code>ctrl+r+9766.pts-1.192</code></p>
+<p>这里其实输入前面的数字或者后面的字符串都行，比如</p>
+<pre><code>ctrl+r+6336
+ctrl+r+pts-1.192
+</code></pre><p><code>pts-1.192</code> 是由系统生成的，对应用户而言没有明确的意义。我们可以通过<code>screen -S lc</code> 命令去自定义这个值，结果如上面的<code>9944.lc</code></p>
+<h2 id="锁住screen-ctrl-a-x"><a href="#锁住screen-ctrl-a-x" class="headerlink" title="锁住screen ctrl+a+x"></a>锁住screen ctrl+a+x</h2><pre><code>Screen used by root &lt;root&gt; on 192.
+Password:  
+</code></pre><p>使用的时候输入密码即可</p>
+<h2 id="停止screen-exit-or-ctrl-a-k"><a href="#停止screen-exit-or-ctrl-a-k" class="headerlink" title="停止screen exit or ctrl+a+k"></a>停止screen exit or ctrl+a+k</h2><p>当你跑完脚本或者执行完任务的时候，一般建议<code>停止screen</code>，也就是<code>真正的退出screen</code></p>
+<hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;摘要&quot;&gt;&lt;a href=&quot;#摘要&quot; class=&quot;headerlink&quot; title=&quot;摘要&quot;&gt;&lt;/a&gt;摘要&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;作为运维人员经常会遇到等到远程主机的链接因为网络原因或者别的其他不可抗拒的原因断掉，此时远程为执行完成的命令也会断掉而导致很多任务需要重新执行。&lt;/p&gt;
+&lt;p&gt;这给大家介绍一个在这种情况下很好用的命令 &lt;code&gt;screen&lt;/code&gt;，具体好用在那里，下面具体介绍，包括从其安装到配置到使用&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;What-to-do&quot;&gt;&lt;a href=&quot;#What-to-do&quot; class=&quot;headerlink&quot; title=&quot;What to do&quot;&gt;&lt;/a&gt;What to do&lt;/h2&gt;&lt;p&gt;在正式介绍之前，先给大家介绍下 &lt;code&gt;screen&lt;/code&gt; 都能做什么事情&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;通过一个SSH session使用多个shell窗口&lt;/li&gt;
+&lt;li&gt;即使网络断开链接也能保持shell窗口处理激活状态&lt;/li&gt;
+&lt;li&gt;可以在任何地方断开或者重连同一个shell session&lt;/li&gt;
+&lt;li&gt;不用为了跑一个耗时的任务而长时间保持几个shell session处于激活状态&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;&quot;&gt;&lt;a href=&quot;#&quot; class=&quot;headerlink&quot; title=&quot;&quot;&gt;&lt;/a&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://yoursite.com/categories/Linux/"/>
+    
+    
+      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+    
+      <category term="screen" scheme="http://yoursite.com/tags/screen/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Flask-mail测试和遇到的问题</title>
+    <link href="http://yoursite.com/2016/11/29/2016-11-29-Testing-Flask-mail-and-meet-some-errors/"/>
+    <id>http://yoursite.com/2016/11/29/2016-11-29-Testing-Flask-mail-and-meet-some-errors/</id>
+    <published>2016-11-29T11:10:33.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="导语"><a href="#导语" class="headerlink" title="导语"></a>导语</h2><blockquote>
+<p>今天在尝试 <code>Flask-Mail</code> 发送邮件的过程中，遇到一个小问题导致发送邮件失败，查到了半天问题，真是被自己蠢到了。<br>这里针对这个问题的前因后果做一个整理分享给大家，避免大家踩同样的坑。</p>
+</blockquote>
+<h2 id="安装-Flask-Mail"><a href="#安装-Flask-Mail" class="headerlink" title="安装 Flask-Mail"></a>安装 Flask-Mail</h2><p>这里建议利用 <code>virtualenv</code> 来创建隔离的环境来测试发送邮件，关于 virtualenv相关的介绍和使用可以参考如下连接</p>
+<p><a href="http://blog.liuc.me/2016/09/25/Centos下pyenv安装python多版本-增强版/" target="_blank" rel="external">Centos下pyenv安装python多版本-增强版</a></p>
+<p><a href="http://blog.liuc.me/2016/09/25/Centos下python纯净虚拟环境/" target="_blank" rel="external">Centos下python纯净虚拟环境</a></p>
+<a id="more"></a>
+<p><strong> 安装并验证 Flask-Mail </strong></p>
+<pre><code>pip install flask-mail
+
+root@pts/1 $ python
+Python 2.7.5 (default, Nov  3 2016, 17:08:21) 
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-4)] on linux2
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; import flask_mail
+&gt;&gt;&gt; print flask_mail.__version__
+0.9.1
+&gt;&gt;&gt; 
+</code></pre><h2 id="Flask-Mail-说明"><a href="#Flask-Mail-说明" class="headerlink" title="Flask-Mail 说明"></a>Flask-Mail 说明</h2><p>参考 <a href="http://pythonhosted.org/Flask-Mail/" target="_blank" rel="external">flask-mail 官方文档</a> 需要注意一下配置</p>
+<pre><code>Configuring Flask-Mail
+Flask-Mail is configured through the standard Flask config API. These are the available options (each is explained later in the documentation):
+
+MAIL_SERVER : default ‘localhost’
+MAIL_PORT : default 25
+MAIL_USE_TLS : default False
+MAIL_USE_SSL : default False
+MAIL_DEBUG : default app.debug
+MAIL_USERNAME : default None
+MAIL_PASSWORD : default None
+MAIL_DEFAULT_SENDER : default None
+MAIL_MAX_EMAILS : default None
+MAIL_SUPPRESS_SEND : default app.testing
+MAIL_ASCII_ATTACHMENTS : default False
+</code></pre><p>这里尤其注意下面两个参数吧</p>
+<pre><code>MAIL_USE_TLS : default False
+MAIL_USE_SSL : default False
+</code></pre><p>关于 TLS 和 SSL 的说明可以参考 <a href="http://www.techug.com/https-ssl-tls" target="_blank" rel="external">聊聊HTTPS和SSL/TLS协议</a></p>
+<h2 id="遇到问题"><a href="#遇到问题" class="headerlink" title="遇到问题"></a>遇到问题</h2><p>参考网上flask web开发中实例设置 <code>MAIL_USE_TLS=True</code> ，考虑google email可能被墙的原因，在实际中自己的 <code>MAIL_SERVER=&#39;smtp.exmail.qq.com&#39;</code><br>但是测试过程中不报错，就直接卡死不动，以为是防火墙的问题，也修改了云端的防火墙开启了<code>465端口</code>，还是不能发信。</p>
+<p>思考…</p>
+<p>MAIL_SERVER/MAIL_USERNAME/MAIL_PASSWORD可能是没有错，端口的话腾讯企业邮箱smtp开发的端口是465，那就剩下这个协议的问题了…</p>
+<p>登陆网页端设置中查看，呃… 怎么不是<code>TSL</code>协议，而是SSL协议，如下图</p>
+<p><img src="/images/flask/exmail.qq.png" alt="exmail-smtp-protocol"></p>
+<p>那么TLS是google mail的设置了吗？赶紧登陆 google mail去看看</p>
+<p><img src="/images/flask/smtp.gmail.png" alt="google-mail-smtp-protocol"></p>
+<p>还真是…</p>
+<p>修改配置为：</p>
+<pre><code>app.config[&apos;MAIL_USE_SSL&apos;] = True
+app.config[&apos;MAIL_USE_TLS&apos;] = False ## 默认就是 false, 加上警示自己
+</code></pre><p>再次测试发送邮件成功，如下图</p>
+<p><img src="/images/flask/flask-send-mail.png" alt="flask-send-mail"></p>
+<h2 id="实际脚本"><a href="#实际脚本" class="headerlink" title="实际脚本"></a>实际脚本</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">root@pts/<span class="number">1</span> $ cat flask-sendmail.py</div><div class="line"><span class="comment">#!/usr/bin/env python </span></div><div class="line"><span class="comment">#coding: utf-8</span></div><div class="line"></div><div class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request</div><div class="line"><span class="keyword">from</span> flask_script <span class="keyword">import</span> Manager,Shell</div><div class="line"><span class="keyword">from</span> flask_mail <span class="keyword">import</span> Mail,Message</div><div class="line"><span class="keyword">from</span> threading <span class="keyword">import</span> Thread</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line">app = Flask(__name__)</div><div class="line"></div><div class="line">app.config[<span class="string">'DEBUG'</span>] = <span class="keyword">True</span></div><div class="line"></div><div class="line"></div><div class="line">app.config[<span class="string">'MAIL_SERVER'</span>] = <span class="string">'smtp.exmail.qq.com'</span></div><div class="line">app.config[<span class="string">'MAIL_PORT'</span>] = <span class="number">465</span></div><div class="line">app.config[<span class="string">'MAIL_USE_SSL'</span>] = <span class="keyword">True</span></div><div class="line">app.config[<span class="string">'MAIL_USE_TLS'</span>] = <span class="keyword">False</span></div><div class="line">app.config[<span class="string">'MAIL_USERNAME'</span>] = os.environ.get(<span class="string">'MAIL_USERNAME'</span>)</div><div class="line">app.config[<span class="string">'MAIL_PASSWORD'</span>] = os.environ.get(<span class="string">'MAIL_PASSWORD'</span>)</div><div class="line"></div><div class="line">manager = Manager(app)</div><div class="line">mail = Mail(app)</div><div class="line"></div><div class="line"><span class="comment">## 异步发送邮件</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">send_async_email</span><span class="params">(app,msg)</span>:</span></div><div class="line">    <span class="keyword">with</span> app.app_context():</div><div class="line">        mail.send(msg)</div><div class="line"></div><div class="line"><span class="meta">@app.route('/')</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></div><div class="line">	msg = Message(subject=<span class="string">'Email test by flask-email'</span>,sender=<span class="string">"liuc1@xxx.com"</span>,recipients=[<span class="string">'liuc1@xxx.com'</span>,<span class="string">'xxxxxxx@qq.com'</span>])</div><div class="line">	msg.body = <span class="string">'hello 刘超'</span></div><div class="line">	msg.html = <span class="string">'&lt;b&gt;测试Flask发送邮件&lt;b&gt;'</span></div><div class="line"></div><div class="line">	thread = Thread(target=send_async_email,args=[app,msg])</div><div class="line">	thread.start()</div><div class="line"></div><div class="line">	<span class="comment"># mail.send(msg)</span></div><div class="line"></div><div class="line">	<span class="keyword">return</span> <span class="string">'&lt;h1&gt;邮件发送成功&lt;/h1&gt;'</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">	manager.run()</div></pre></td></tr></table></figure>
+<p>邮件内容会以<code>文本和html两种格式</code>呈现，而你能看到哪种格式<code>取决于你的邮件客户端</code>。</p>
+<h2 id="flask-mail相关错误总结"><a href="#flask-mail相关错误总结" class="headerlink" title="flask-mail相关错误总结"></a>flask-mail相关错误总结</h2><h4 id="没有开启POP3-SMTP服务"><a href="#没有开启POP3-SMTP服务" class="headerlink" title="没有开启POP3/SMTP服务"></a>没有开启POP3/SMTP服务</h4><pre><code>smtplib.SMTPAuthenticationError: (454, &apos;Authentication failed, please open smtp flag first!&apos;)
+</code></pre><h4 id="密码错误"><a href="#密码错误" class="headerlink" title="密码错误"></a>密码错误</h4><p>QQ邮箱 <code>开启POP3/SMTP服务</code> 之后需要一个独立的<code>邮箱密码</code></p>
+<pre><code>smtplib.SMTPAuthenticationError: (535, &apos;Authentication failed&apos;)
+</code></pre><h4 id="开启-TLS"><a href="#开启-TLS" class="headerlink" title="开启 TLS"></a>开启 TLS</h4><pre><code>smtplib.SMTPServerDisconnected: Connection unexpectedly closed
+</code></pre><hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;导语&quot;&gt;&lt;a href=&quot;#导语&quot; class=&quot;headerlink&quot; title=&quot;导语&quot;&gt;&lt;/a&gt;导语&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;今天在尝试 &lt;code&gt;Flask-Mail&lt;/code&gt; 发送邮件的过程中，遇到一个小问题导致发送邮件失败，查到了半天问题，真是被自己蠢到了。&lt;br&gt;这里针对这个问题的前因后果做一个整理分享给大家，避免大家踩同样的坑。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;安装-Flask-Mail&quot;&gt;&lt;a href=&quot;#安装-Flask-Mail&quot; class=&quot;headerlink&quot; title=&quot;安装 Flask-Mail&quot;&gt;&lt;/a&gt;安装 Flask-Mail&lt;/h2&gt;&lt;p&gt;这里建议利用 &lt;code&gt;virtualenv&lt;/code&gt; 来创建隔离的环境来测试发送邮件，关于 virtualenv相关的介绍和使用可以参考如下连接&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://blog.liuc.me/2016/09/25/Centos下pyenv安装python多版本-增强版/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Centos下pyenv安装python多版本-增强版&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://blog.liuc.me/2016/09/25/Centos下python纯净虚拟环境/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Centos下python纯净虚拟环境&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Flask" scheme="http://yoursite.com/categories/Flask/"/>
+    
+    
+      <category term="python" scheme="http://yoursite.com/tags/python/"/>
+    
+      <category term="flask" scheme="http://yoursite.com/tags/flask/"/>
+    
+      <category term="flask-mail" scheme="http://yoursite.com/tags/flask-mail/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SHELL输出颜色和闪烁控制</title>
+    <link href="http://yoursite.com/2016/11/28/2016-11-28-SHELL-echo-with-color/"/>
+    <id>http://yoursite.com/2016/11/28/2016-11-28-SHELL-echo-with-color/</id>
+    <published>2016-11-28T09:48:45.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Shell-颜色和闪烁控制"><a href="#Shell-颜色和闪烁控制" class="headerlink" title="Shell 颜色和闪烁控制"></a>Shell 颜色和闪烁控制</h2><blockquote>
+<p>在Shell下有时候需要定制输出，比如给输出加上颜色，或者显示高亮，或者添加闪烁等。<br>然后这些颜色代码或者控制码等相对不好记住。这个时候我们可以考虑把最终想要的结果制定成对应的函数，<br>在使用的时候直接调用函数会方便很多</p>
+</blockquote>
+<h2 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h2><pre><code>echo -e &quot;\033[字背景颜色;字体颜色m字符串\033[控制码&quot;
+</code></pre><a id="more"></a>
+<h2 id="定制颜色函数"><a href="#定制颜色函数" class="headerlink" title="定制颜色函数"></a>定制颜色函数</h2><pre><code>## blue to echo 
+function blue(){
+    echo -e &quot;\033[34m[ $1 ]\033[0m&quot;
+}
+
+
+## green to echo 
+function green(){
+    echo -e &quot;\033[32m[ $1 ]\033[0m&quot;
+}
+
+## Error to warning with blink
+function bred(){
+    echo -e &quot;\033[31m\033[01m\033[05m[ $1 ]\033[0m&quot;
+}
+
+## Error to warning with blink
+function byellow(){
+    echo -e &quot;\033[33m\033[01m\033[05m[ $1 ]\033[0m&quot;
+}
+
+
+## Error
+function bred(){
+    echo -e &quot;\033[31m\033[01m[ $1 ]\033[0m&quot;
+}
+
+## warning
+function byellow(){
+    echo -e &quot;\033[33m\033[01m[ $1 ]\033[0m&quot;
+}
+</code></pre><hr>
+<p>可以把这些函数写入到一个公共的SHELL脚本中，每次在编写其他脚本的时候用如下方式调用，即可</p>
+<pre><code>source /root/bin/common
+</code></pre><p>或者可以把上述代码直接粘贴到当前编写的脚本中去。</p>
+<p>当然可以推荐第一种方式。不用每次都复制粘贴。 直接 <code>source 调用</code> 即可</p>
+<h2 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">root@pts/4 $ cat /root/bin/common </div><div class="line"><span class="meta">#</span>!/usr/bin/env bash</div><div class="line"><span class="meta"></span></div><div class="line">## blue to echo </div><div class="line">function blue()&#123;</div><div class="line">	echo -e "\033[35m[ $1 ]\033[0m"</div><div class="line">&#125;</div><div class="line"><span class="meta"></span></div><div class="line"></div><div class="line">## green to echo </div><div class="line">function green()&#123;</div><div class="line">	echo -e "\033[32m[ $1 ]\033[0m"</div><div class="line">&#125;</div><div class="line"><span class="meta"></span></div><div class="line">## Error to warning with blink</div><div class="line">function bred()&#123;</div><div class="line">	echo -e "\033[31m\033[01m\033[05m[ $1 ]\033[0m"</div><div class="line">&#125;</div><div class="line"><span class="meta"></span></div><div class="line">## Error to warning with blink</div><div class="line">function byellow()&#123;</div><div class="line">	echo -e "\033[33m\033[01m\033[05m[ $1 ]\033[0m"</div><div class="line">&#125;</div><div class="line"><span class="meta"></span></div><div class="line"></div><div class="line">## Error</div><div class="line">function red()&#123;</div><div class="line">	echo -e "\033[31m\033[01m[ $1 ]\033[0m"</div><div class="line">&#125;</div><div class="line"><span class="meta"></span></div><div class="line">## warning</div><div class="line">function yellow()&#123;</div><div class="line">	echo -e "\033[33m\033[01m[ $1 ]\033[0m"</div><div class="line">&#125;</div><div class="line">Dev-web-solr [/opt/hexo2] 2016-11-28 17:52:03</div><div class="line">root@pts/4 $ cat /root/bin/test.sh </div><div class="line"><span class="meta">#</span>!/usr/bin/env bash</div><div class="line"></div><div class="line">source /root/bin/common</div><div class="line"></div><div class="line">green "hello world with green color"</div><div class="line">blue "hello world with blue color"</div><div class="line"></div><div class="line">bred "error info with blink"</div><div class="line">byellow "warning info with blink"</div></pre></td></tr></table></figure>
+<p><strong>测试结果如下所示</strong></p>
+<p><img src="/images/shell/shell-color-1.png" alt="shell-color"></p>
+<p><img src="/images/shell/shell-color-2.png" alt="shell-color"></p>
+<hr>
+<p>附加 shell输出 字体背景颜色和字体颜色，控制码等参数</p>
+<h2 id="字体背景颜色"><a href="#字体背景颜色" class="headerlink" title="字体背景颜色"></a>字体背景颜色</h2><pre><code>40:黑 
+41:深红 
+42:绿 
+43:黄色 
+44:蓝色 
+45:紫色 
+46:深绿 
+47:白色 
+</code></pre><h2 id="字体颜色"><a href="#字体颜色" class="headerlink" title="字体颜色"></a>字体颜色</h2><pre><code>30:黑 
+31:红 
+32:绿 
+33:黄 
+34:蓝色 
+35:紫色 
+36:深绿 
+37:白色 
+</code></pre><h2 id="控制码"><a href="#控制码" class="headerlink" title="控制码"></a>控制码</h2><p>这里常用有 设置高亮度/下划线/闪烁/关闭所有属性</p>
+<pre><code>\33[0m 关闭所有属性 
+\33[01m 设置高亮度 
+\33[04m 下划线 
+\33[05m 闪烁 
+\33[07m 反显 
+\33[08m 消隐 
+\33[30m -- \33[37m 设置前景色 
+\33[40m -- \33[47m 设置背景色 
+\33[nA 光标上移n行 
+\33[nB 光标下移n行 
+\33[nC 光标右移n行 
+\33[nD 光标左移n行 
+\33[y;xH设置光标位置 
+\33[2J 清屏 
+\33[K 清除从光标到行尾的内容 
+\33[s 保存光标位置 
+\33[u 恢复光标位置 
+\33[?25l 隐藏光标 
+\33[?25h 显示光标
+</code></pre><hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Shell-颜色和闪烁控制&quot;&gt;&lt;a href=&quot;#Shell-颜色和闪烁控制&quot; class=&quot;headerlink&quot; title=&quot;Shell 颜色和闪烁控制&quot;&gt;&lt;/a&gt;Shell 颜色和闪烁控制&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;在Shell下有时候需要定制输出，比如给输出加上颜色，或者显示高亮，或者添加闪烁等。&lt;br&gt;然后这些颜色代码或者控制码等相对不好记住。这个时候我们可以考虑把最终想要的结果制定成对应的函数，&lt;br&gt;在使用的时候直接调用函数会方便很多&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;格式&quot;&gt;&lt;a href=&quot;#格式&quot; class=&quot;headerlink&quot; title=&quot;格式&quot;&gt;&lt;/a&gt;格式&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;echo -e &amp;quot;\033[字背景颜色;字体颜色m字符串\033[控制码&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+    
+    </summary>
+    
+      <category term="Shell" scheme="http://yoursite.com/categories/Shell/"/>
+    
+    
+      <category term="shell" scheme="http://yoursite.com/tags/shell/"/>
+    
+      <category term="shell color" scheme="http://yoursite.com/tags/shell-color/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>gitlab报错 - RPC failed</title>
+    <link href="http://yoursite.com/2016/11/25/2016-11-25-gitlab-error-RPC-failed/"/>
+    <id>http://yoursite.com/2016/11/25/2016-11-25-gitlab-error-RPC-failed/</id>
+    <published>2016-11-25T03:39:16.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="导语"><a href="#导语" class="headerlink" title="导语"></a>导语</h2><blockquote>
+<p>部门使用的代码管理仓库是gitlab，随着业务发展，代码量也越来越大，到目前已经大于100M，今天新入职员工全量拉取代码时候报错，查找原因是因为代码仓库太大导致拉取超时。 这里记录下处理过程</p>
+</blockquote>
+<hr>
+<h2 id="报错"><a href="#报错" class="headerlink" title="报错"></a>报错</h2><pre><code>fatal: early EOF
+fatal: The remote end hung up unexpectedly
+fatal: index-pack failed
+error: RPC failed; result=18, HTTP code = 200
+</code></pre><h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>因为这边使用的docker搭建的gitlab，处理方式有点不同<br>必须先进入到gitlab容器中去操作，重启 gitlab 也必须是进入到docker 容器中重启，<br>否则从服务器直接重启容器会导致配置丢失，恢复成默认值</p>
+<h3 id="nginx-client-max-body-size"><a href="#nginx-client-max-body-size" class="headerlink" title="nginx client_max_body_size"></a>nginx client_max_body_size</h3><p>之前修改过gitlab前端nginx的 client_max_body_size 大小，确保上传下载超大文件的可能性</p>
+<pre><code>vi /etc/nginx/nginx.conf
+client_max_body_size 50M;
+
+## check and reload nginx config
+nginx -t
+nginx -s reload
+</code></pre><h3 id="gitlab-timeout"><a href="#gitlab-timeout" class="headerlink" title="gitlab timeout"></a>gitlab timeout</h3><pre><code>## need to enter gitlab container firstly
+## then edit the config
+vi config/unicorn.rb
+timeout 300
+
+## then restart gitlab in container
+## remember that must be in container
+/etc/init.d/gitlab restart
+</code></pre><h3 id="git-http-postBuffer"><a href="#git-http-postBuffer" class="headerlink" title="git http.postBuffer"></a>git http.postBuffer</h3><p>另外建议也修改下本地 http.postBuffer 参数</p>
+<pre><code>## modify in commandline 
+git config --global http.postBuffer 524288000
+
+## check config list 
+git config --list
+</code></pre><hr>
+<p>最后重新拉取，没有问题</p>
+<hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;导语&quot;&gt;&lt;a href=&quot;#导语&quot; class=&quot;headerlink&quot; title=&quot;导语&quot;&gt;&lt;/a&gt;导语&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;部门使用的代码管理仓库是gitlab，随着业务发展，代码量也越来越大，到目前已经大于100M，今天新入职员工全量拉
+    
+    </summary>
+    
+      <category term="Git" scheme="http://yoursite.com/categories/Git/"/>
+    
+    
+      <category term="gitlab" scheme="http://yoursite.com/tags/gitlab/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python emumerate Usage</title>
+    <link href="http://yoursite.com/2016/11/15/2016-11-15-Python-emumerate-Usage/"/>
+    <id>http://yoursite.com/2016/11/15/2016-11-15-Python-emumerate-Usage/</id>
+    <published>2016-11-15T06:45:00.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="enumerate-说明"><a href="#enumerate-说明" class="headerlink" title="enumerate()说明"></a>enumerate()说明</h2><ul>
+<li>enumerate()是python的内置函数</li>
+<li>enumerate在字典上是枚举、列举的意思</li>
+<li>对于一个可迭代的（iterable）/可遍历的对象（如列表、字符串），enumerate将其组成一个索引序列，利用它可以同时获得索引和值</li>
+<li>enumerate多用于在for循环中得到计数</li>
+</ul>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><pre><code>&gt;&gt;&gt; goods = [[&apos;appple&apos;,70999],[&apos;banaba&apos;,2000],[&apos;orange&apos;,10000]]
+&gt;&gt;&gt; type(goods)
+&lt;type &apos;list&apos;&gt;
+&gt;&gt;&gt; for index,item in enumerate(goods):
+...     print index,item
+... 
+0 [&apos;appple&apos;, 70999]
+1 [&apos;banaba&apos;, 2000]
+2 [&apos;orange&apos;, 10000]
+&gt;&gt;&gt; for index,item in enumerate(goods):
+...     print index,item[0],item[1]
+... 
+0 appple 70999
+1 banaba 2000
+2 orange 10000
+&gt;&gt;&gt; 
+
+## enumerate可以有第二个参数
+&gt;&gt;&gt; for index,item in enumerate(goods,2):
+...     print index,item[0],item[1]
+... 
+2 appple 70999
+3 banaba 2000
+4 orange 10000
+&gt;&gt;&gt; 
+</code></pre><h2 id="特殊说明"><a href="#特殊说明" class="headerlink" title="特殊说明"></a>特殊说明</h2><p>文件大小为83M，用python计算文件行数</p>
+<p>实际脚本</p>
+<pre><code>#!/usr/bin/env python
+#-*- coding:utf8 -*-
+
+file = &apos;/usr/local/tomcat/logs/appLog/appLog.2016-11-08.log&apos;
+
+
+## 方式一，对于文件很大的时候比较慢
+#count = len(open(file,&apos;r&apos;).readlines())
+#print count
+
+
+## 方式二，相对比较高效
+count = 0
+for index, line in enumerate(open(file,&apos;r&apos;)):
+    count += 1
+
+print count
+</code></pre><a id="more"></a>
+<p>方式一效果</p>
+<pre><code>root@pts/0 # time python /tmp/test.py 
+56733
+
+real    0m1.973s
+user    0m0.051s
+sys    0m0.248s
+</code></pre><p>方式二效果</p>
+<pre><code>root@pts/0 # time python /tmp/test.py 
+56733
+
+real    0m0.076s
+user    0m0.034s
+sys    0m0.037s
+</code></pre><hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;enumerate-说明&quot;&gt;&lt;a href=&quot;#enumerate-说明&quot; class=&quot;headerlink&quot; title=&quot;enumerate()说明&quot;&gt;&lt;/a&gt;enumerate()说明&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;enumerate()是python的内置函数&lt;/li&gt;
+&lt;li&gt;enumerate在字典上是枚举、列举的意思&lt;/li&gt;
+&lt;li&gt;对于一个可迭代的（iterable）/可遍历的对象（如列表、字符串），enumerate将其组成一个索引序列，利用它可以同时获得索引和值&lt;/li&gt;
+&lt;li&gt;enumerate多用于在for循环中得到计数&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;实例&quot;&gt;&lt;a href=&quot;#实例&quot; class=&quot;headerlink&quot; title=&quot;实例&quot;&gt;&lt;/a&gt;实例&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; goods = [[&amp;apos;appple&amp;apos;,70999],[&amp;apos;banaba&amp;apos;,2000],[&amp;apos;orange&amp;apos;,10000]]
+&amp;gt;&amp;gt;&amp;gt; type(goods)
+&amp;lt;type &amp;apos;list&amp;apos;&amp;gt;
+&amp;gt;&amp;gt;&amp;gt; for index,item in enumerate(goods):
+...     print index,item
+... 
+0 [&amp;apos;appple&amp;apos;, 70999]
+1 [&amp;apos;banaba&amp;apos;, 2000]
+2 [&amp;apos;orange&amp;apos;, 10000]
+&amp;gt;&amp;gt;&amp;gt; for index,item in enumerate(goods):
+...     print index,item[0],item[1]
+... 
+0 appple 70999
+1 banaba 2000
+2 orange 10000
+&amp;gt;&amp;gt;&amp;gt; 
+
+## enumerate可以有第二个参数
+&amp;gt;&amp;gt;&amp;gt; for index,item in enumerate(goods,2):
+...     print index,item[0],item[1]
+... 
+2 appple 70999
+3 banaba 2000
+4 orange 10000
+&amp;gt;&amp;gt;&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;特殊说明&quot;&gt;&lt;a href=&quot;#特殊说明&quot; class=&quot;headerlink&quot; title=&quot;特殊说明&quot;&gt;&lt;/a&gt;特殊说明&lt;/h2&gt;&lt;p&gt;文件大小为83M，用python计算文件行数&lt;/p&gt;
+&lt;p&gt;实际脚本&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#!/usr/bin/env python
+#-*- coding:utf8 -*-
+
+file = &amp;apos;/usr/local/tomcat/logs/appLog/appLog.2016-11-08.log&amp;apos;
+
+
+## 方式一，对于文件很大的时候比较慢
+#count = len(open(file,&amp;apos;r&amp;apos;).readlines())
+#print count
+
+
+## 方式二，相对比较高效
+count = 0
+for index, line in enumerate(open(file,&amp;apos;r&amp;apos;)):
+    count += 1
+
+print count
+&lt;/code&gt;&lt;/pre&gt;
+    
+    </summary>
+    
+      <category term="Python" scheme="http://yoursite.com/categories/Python/"/>
+    
+    
+      <category term="python" scheme="http://yoursite.com/tags/python/"/>
+    
+      <category term="enumerate" scheme="http://yoursite.com/tags/enumerate/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hexo错误集合</title>
+    <link href="http://yoursite.com/2016/11/15/2016-11-15-Hexo-Error-Collections/"/>
+    <id>http://yoursite.com/2016/11/15/2016-11-15-Hexo-Error-Collections/</id>
+    <published>2016-11-15T06:37:15.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>整理hexo遇到的各种问题和解决办法</p>
+</blockquote>
+<hr>
+<h2 id="ERROR-Deployer-not-found-git"><a href="#ERROR-Deployer-not-found-git" class="headerlink" title="ERROR Deployer not found: git"></a>ERROR Deployer not found: git</h2><p><strong>遇到问题</strong></p>
+<pre><code>升级hexo之后，执行`hexo d` 遇到问题如下：
+hexo  ERROR Deployer not found: git
+</code></pre><p><strong>解决</strong></p>
+<pre><code>npm install hexo-deployer-git --save
+</code></pre><h2 id="hexo-next主题博客在本地显示正常，github内容空白的问题"><a href="#hexo-next主题博客在本地显示正常，github内容空白的问题" class="headerlink" title="hexo next主题博客在本地显示正常，github内容空白的问题"></a>hexo next主题博客在本地显示正常，github内容空白的问题</h2><p><strong>遇到问题</strong></p>
+<pre><code>copy原有的hexo项目升级之后，推送最新的代码到github,结果hexo next主题博客在本地显示正常，deploy到github上后只显示框架，内容空白的问题
+</code></pre><p><strong>解决</strong></p>
+<pre><code>进入next主题的source目录，将vendors文件的文件名改成任意其他名字，如：lcvendors
+
+vim themes/next/_config.yml
+vendors:
+  # Internal path prefix. Please do not edit it.
+  _internal: lcvendors
+
+然后
+    hexo clean
+    hexo g
+    hexo d
+</code></pre><p><strong>参考</strong></p>
+<p><a href="http://blog.csdn.net/xiangwanpeng/article/details/53155642" target="_blank" rel="external">xiangwanpeng的CSDN博客</a></p>
+<h2 id="Error-Cannot-find-module-‘-build-Release-DTraceProviderBindings"><a href="#Error-Cannot-find-module-‘-build-Release-DTraceProviderBindings" class="headerlink" title="Error: Cannot find module ‘./build/Release/DTraceProviderBindings"></a>Error: Cannot find module ‘./build/Release/DTraceProviderBindings</h2><p>这里提示是<code>DTraceProviderBindings</code>模块没有安装</p>
+<pre><code>npm install -g dtrace-provider
+</code></pre><p>之后再执行 Hexo 相关的命令，但是报上面的错误。</p>
+<p><strong>解决</strong></p>
+<pre><code>执行下面的命令安装，即可解决
+install hexo --no-optional
+</code></pre><hr>
+<h2 id="待续…"><a href="#待续…" class="headerlink" title="待续…"></a>待续…</h2><hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;整理hexo遇到的各种问题和解决办法&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id=&quot;ERROR-Deployer-not-found-git&quot;&gt;&lt;a href=&quot;#ERROR-Deployer-not-found-git&quot; clas
+    
+    </summary>
+    
+      <category term="Hexo" scheme="http://yoursite.com/categories/Hexo/"/>
+    
+    
+      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+    
+      <category term="Hexo" scheme="http://yoursite.com/tags/Hexo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Flask的config使用总结</title>
+    <link href="http://yoursite.com/2016/11/14/2016-11-14-Flask-config/"/>
+    <id>http://yoursite.com/2016/11/14/2016-11-14-Flask-config/</id>
+    <published>2016-11-14T07:58:55.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>针对项目的不同， <code>flask</code> 可以采用不同配置方式来快速开发</p>
+</blockquote>
+<h2 id="直接配置"><a href="#直接配置" class="headerlink" title="直接配置"></a>直接配置</h2><pre><code>app.config[&apos;HOST&apos;] = &apos;www.baidu.com&apos;
+app.config.update(
+    &apos;HOST&apos; = &apos;www.baidu.com&apos;,
+    &apos;PORT&apos; = 3306
+)
+</code></pre><p>查看具体的配置 <code>print app.config.get(&#39;HOST&#39;)</code></p>
+<h2 id="通过环境变量加载"><a href="#通过环境变量加载" class="headerlink" title="通过环境变量加载"></a>通过环境变量加载</h2><pre><code>export MyAppConfig=&apos;/etc/flask-setting.cfg&apos;
+
+app.config.from_envvar(&apos;MyAppConfig&apos;)
+</code></pre><a id="more"></a>
+<h2 id="通过对象加载-1"><a href="#通过对象加载-1" class="headerlink" title="通过对象加载(1)"></a>通过对象加载(1)</h2><pre><code>class Config(object):
+    pass
+
+class ProductionConfig(Config):
+    pass
+
+app.config.from_object(ProductionConfig)
+</code></pre><h2 id="通过对象加载-2"><a href="#通过对象加载-2" class="headerlink" title="通过对象加载(2)"></a>通过对象加载(2)</h2><pre><code>import default_config
+
+app.config.from_object(default_config) ## default_config 是个对象
+</code></pre><h2 id="通过配置文件加载"><a href="#通过配置文件加载" class="headerlink" title="通过配置文件加载"></a>通过配置文件加载</h2><pre><code>app.config.from_pyfile(&apos;default_config.py&apos;)
+</code></pre><p>注意区分 <code>通过对象加载(2)</code> 和 <code>通过配置文件加载</code>的不同<br>附加：</p>
+<pre><code>## default_config.py
+HOST = &apos;app-test&apos;
+PORT = 3306
+</code></pre><hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>
+
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;针对项目的不同， &lt;code&gt;flask&lt;/code&gt; 可以采用不同配置方式来快速开发&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;直接配置&quot;&gt;&lt;a href=&quot;#直接配置&quot; class=&quot;headerlink&quot; title=&quot;直接配置&quot;&gt;&lt;/a&gt;直接配置&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;app.config[&amp;apos;HOST&amp;apos;] = &amp;apos;www.baidu.com&amp;apos;
+app.config.update(
+    &amp;apos;HOST&amp;apos; = &amp;apos;www.baidu.com&amp;apos;,
+    &amp;apos;PORT&amp;apos; = 3306
+)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;查看具体的配置 &lt;code&gt;print app.config.get(&amp;#39;HOST&amp;#39;)&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&quot;通过环境变量加载&quot;&gt;&lt;a href=&quot;#通过环境变量加载&quot; class=&quot;headerlink&quot; title=&quot;通过环境变量加载&quot;&gt;&lt;/a&gt;通过环境变量加载&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;export MyAppConfig=&amp;apos;/etc/flask-setting.cfg&amp;apos;
+
+app.config.from_envvar(&amp;apos;MyAppConfig&amp;apos;)
+&lt;/code&gt;&lt;/pre&gt;
+    
+    </summary>
+    
+      <category term="Flask" scheme="http://yoursite.com/categories/Flask/"/>
+    
+    
+      <category term="Flask" scheme="http://yoursite.com/tags/Flask/"/>
+    
+      <category term="Flask config" scheme="http://yoursite.com/tags/Flask-config/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Nginx - Centos下Nginx报错集合</title>
+    <link href="http://yoursite.com/2016/11/07/2016-11-07-Nginx-error-collections-under-centos/"/>
+    <id>http://yoursite.com/2016/11/07/2016-11-07-Nginx-error-collections-under-centos/</id>
+    <published>2016-11-07T04:06:28.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>整理Centos系统下Nginx遇到的问题，一遍后续排查问题方便</p>
+</blockquote>
+<hr>
+<h2 id="emerg-could-not-build-the-server-names-hash…"><a href="#emerg-could-not-build-the-server-names-hash…" class="headerlink" title="[emerg] could not build the server_names_hash…"></a>[emerg] could not build the server_names_hash…</h2><p>开始使用nginx只有一个虚拟主机，默认server_name 会使用 localhost, 今天配置nginx的server_name是一个正式存在的域名的时候，报错如下：</p>
+<pre><code>root@pts/0 $ nginx -t
+nginx: [emerg] could not build the server_names_hash, you should increase server_names_hash_bucket_size: 32
+nginx: configuration file /etc/nginx/nginx.conf test failed
+</code></pre><h2 id="How-to-fix"><a href="#How-to-fix" class="headerlink" title="How to fix"></a>How to fix</h2><p>在nginx的配置文件nginx.conf的http段添加如下配置：</p>
+<pre><code># vi /etc/nginx/nginx.conf
+...
+http {
+        ...
+        server_names_hash_max_size 512;
+        server_names_hash_bucket_size 128;
+        ...
+}
+...
+
+root@pts/0 $ nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+</code></pre><h2 id="nginx官方对server-name的说明请参考-链接"><a href="#nginx官方对server-name的说明请参考-链接" class="headerlink" title="nginx官方对server_name的说明请参考 链接"></a>nginx官方对<code>server_name</code>的说明请参考 <a href="http://nginx.org/en/docs/http/server_names.html" target="_blank" rel="external">链接</a></h2><div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;整理Centos系统下Nginx遇到的问题，一遍后续排查问题方便&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id=&quot;emerg-could-not-build-the-server-names-hash…&quot;&gt;&lt;a href=&quot;#emer
+    
+    </summary>
+    
+      <category term="Nginx" scheme="http://yoursite.com/categories/Nginx/"/>
+    
+    
+      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+    
+      <category term="nginx" scheme="http://yoursite.com/tags/nginx/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>centos7下python2.7.5安装MySQL模块失败</title>
+    <link href="http://yoursite.com/2016/10/14/2016-10-14-install-mysql-module-failed-under-centos7-for-python2-7-5/"/>
+    <id>http://yoursite.com/2016/10/14/2016-10-14-install-mysql-module-failed-under-centos7-for-python2-7-5/</id>
+    <published>2016-10-14T12:13:12.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="导语"><a href="#导语" class="headerlink" title="导语"></a>导语</h2><blockquote>
+<p>在Centos7下，当前python版本是2.7.5，测试实时获取日志然后解析入库中，安装<code>MySQL-python</code>模块报错如<br><code>EnvironmentError: mysql_config not found</code>，原因是缺少了 mysql 相关支持。<br>这里把解决过程记录一下</p>
+</blockquote>
+<hr>
+<p>具体报错信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">root@pts/4 $ pip install MySQL-python</div><div class="line">Collecting MySQL-python</div><div class="line">  Using cached MySQL-python-1.2.5.zip</div><div class="line">    Complete output from command python setup.py egg_info:</div><div class="line">    sh: mysql_config: command not found</div><div class="line">    Traceback (most recent call last):</div><div class="line">      File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;</div><div class="line">      File &quot;/tmp/pip-build-kWowP9/MySQL-python/setup.py&quot;, line 17, in &lt;module&gt;</div><div class="line">        metadata, options = get_config()</div><div class="line">      File &quot;setup_posix.py&quot;, line 43, in get_config</div><div class="line">        libs = mysql_config(&quot;libs_r&quot;)</div><div class="line">      File &quot;setup_posix.py&quot;, line 25, in mysql_config</div><div class="line">        raise EnvironmentError(&quot;%s not found&quot; % (mysql_config.path,))</div><div class="line">    EnvironmentError: mysql_config not found</div><div class="line">    </div><div class="line">    ----------------------------------------</div><div class="line">Command &quot;python setup.py egg_info&quot; failed with error code 1 in /tmp/pip-build-kWowP9/MySQL-python/</div></pre></td></tr></table></figure></p>
+<hr>
+<p>mysql_config是来自于 <code>mysql-devel</code> ，我用的是MySQL社区版，所以实际安装的是<code>mysql-community-devel</code>，网上的说法是同时安装<code>python-devel</code>，如果你没有安装的话一起安装</p>
+<pre><code>yum install python-devel mysql-community-devel -y
+</code></pre><p>安装完成之后尝试再次 pip 安装 MySQL-python</p>
+<hr>
+<h2 id="再次安装"><a href="#再次安装" class="headerlink" title="再次安装"></a>再次安装</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">root@pts/4 $ pip install MySQL-python</div><div class="line">Collecting MySQL-python</div><div class="line">  Using cached MySQL-python-1.2.5.zip</div><div class="line">Installing collected packages: MySQL-python</div><div class="line">  Running setup.py install for MySQL-python ... done</div><div class="line">Successfully installed MySQL-python-1.2.5</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">root@pts/1 $ python</div><div class="line">Python 2.7.5 (default, Sep 15 2016, 22:37:39) </div><div class="line">[GCC 4.8.5 20150623 (Red Hat 4.8.5-4)] on linux2</div><div class="line">Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.</div><div class="line">&gt;&gt;&gt; import MySQLdb</div><div class="line">&gt;&gt;&gt; MySQLdb.</div><div class="line">MySQLdb.BINARY                                    MySQLdb.OperationalError(                         MySQLdb.__hash__(                                 MySQLdb.debug(</div><div class="line">MySQLdb.Binary(                                   MySQLdb.ProgrammingError(                         MySQLdb.__init__(                                 MySQLdb.escape(</div><div class="line">MySQLdb.Connect(                                  MySQLdb.ROWID                                     MySQLdb.__name__                                  MySQLdb.escape_dict(</div><div class="line">MySQLdb.Connection(                               MySQLdb.STRING                                    MySQLdb.__new__(                                  MySQLdb.escape_sequence(</div><div class="line">MySQLdb.DATE                                      MySQLdb.TIME                                      MySQLdb.__package__                               MySQLdb.escape_string(</div><div class="line">MySQLdb.DATETIME                                  MySQLdb.TIMESTAMP                                 MySQLdb.__path__                                  MySQLdb.get_client_info(</div><div class="line">MySQLdb.DBAPISet(                                 MySQLdb.Time(                                     MySQLdb.__reduce__(                               MySQLdb.paramstyle</div><div class="line">MySQLdb.DataError(                                MySQLdb.TimeFromTicks(                            MySQLdb.__reduce_ex__(                            MySQLdb.release</div><div class="line">MySQLdb.DatabaseError(                            MySQLdb.Timestamp(                                MySQLdb.__repr__(                                 MySQLdb.result(</div><div class="line">MySQLdb.Date(                                     MySQLdb.TimestampFromTicks(                       MySQLdb.__revision__                              MySQLdb.server_end(</div><div class="line">MySQLdb.DateFromTicks(                            MySQLdb.Warning(                                  MySQLdb.__setattr__(                              MySQLdb.server_init(</div><div class="line">MySQLdb.Error(                                    MySQLdb.__all__                                   MySQLdb.__sizeof__(                               MySQLdb.string_literal(</div><div class="line">MySQLdb.FIELD_TYPE                                MySQLdb.__author__                                MySQLdb.__str__(                                  MySQLdb.test_DBAPISet_set_equality(</div><div class="line">MySQLdb.IntegrityError(                           MySQLdb.__class__(                                MySQLdb.__subclasshook__(                         MySQLdb.test_DBAPISet_set_equality_membership(</div><div class="line">MySQLdb.InterfaceError(                           MySQLdb.__delattr__(                              MySQLdb.__version__                               MySQLdb.test_DBAPISet_set_inequality(</div><div class="line">MySQLdb.InternalError(                            MySQLdb.__dict__                                  MySQLdb._mysql                                    MySQLdb.test_DBAPISet_set_inequality_membership(</div><div class="line">MySQLdb.MySQLError(                               MySQLdb.__doc__                                   MySQLdb.apilevel                                  MySQLdb.thread_safe(</div><div class="line">MySQLdb.NULL                                      MySQLdb.__file__                                  MySQLdb.connect(                                  MySQLdb.threadsafety</div><div class="line">MySQLdb.NUMBER                                    MySQLdb.__format__(                               MySQLdb.connection(                               MySQLdb.times</div><div class="line">MySQLdb.NotSupportedError(                        MySQLdb.__getattribute__(                         MySQLdb.constants                                 MySQLdb.version_info</div><div class="line">&gt;&gt;&gt; </div><div class="line">&gt;&gt;&gt; MySQLdb.version_info</div><div class="line">(1, 2, 5, &apos;final&apos;, 1)</div><div class="line">&gt;&gt;&gt;</div></pre></td></tr></table></figure>
+<hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;导语&quot;&gt;&lt;a href=&quot;#导语&quot; class=&quot;headerlink&quot; title=&quot;导语&quot;&gt;&lt;/a&gt;导语&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;在Centos7下，当前python版本是2.7.5，测试实时获取日志然后解析入库中，安装&lt;code&gt;MySQL-
+    
+    </summary>
+    
+      <category term="Python" scheme="http://yoursite.com/categories/Python/"/>
+    
+    
+      <category term="python" scheme="http://yoursite.com/tags/python/"/>
+    
+      <category term="centos" scheme="http://yoursite.com/tags/centos/"/>
+    
+      <category term="MySQLdb-python" scheme="http://yoursite.com/tags/MySQLdb-python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>pymongo连接MongoDB系列一</title>
+    <link href="http://yoursite.com/2016/10/12/2016-10-12-pymongo-connect-to-MongoDB-1/"/>
+    <id>http://yoursite.com/2016/10/12/2016-10-12-pymongo-connect-to-MongoDB-1/</id>
+    <published>2016-10-12T06:40:23.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="导语"><a href="#导语" class="headerlink" title="导语"></a>导语</h2><blockquote>
+<p>pymongo 是目前用的相对普遍一个python用来连接MongoDB的库，是工作中各种基本需求都能满足<br>具体api可以参考 <a href="https://api.mongodb.com/python/current/" target="_blank" rel="external">pymongo API</a><br><a href="https://github.com/mongodb/mongo-python-driver" target="_blank" rel="external">pymongo github</a> </p>
+</blockquote>
+<hr>
+<h2 id="安装-MongoDB"><a href="#安装-MongoDB" class="headerlink" title="安装 MongoDB"></a>安装 MongoDB</h2><p>为了测试pyMongo连接mongodb，首先当然需要在centos下安装mongo，详细参考 <a href="http://blog.liuc.me/2015/10/10/Centos%E4%B8%8B%E5%AE%89%E8%A3%85MongoDB/" target="_blank" rel="external">Centos下安装MongoDB</a></p>
+<h2 id="安装-pymongo"><a href="#安装-pymongo" class="headerlink" title="安装 pymongo"></a>安装 pymongo</h2><p>如果没有pip， 建议先安装，至于为啥要用pip你懂得</p>
+<pre><code>yum install python-pip
+</code></pre><p>pip 安装 pymongo</p>
+<pre><code>pip install pymongo
+</code></pre><p>查看 pymongo是否安装成功</p>
+<pre><code>root@pts/4 $ python
+Python 2.7.5 (default, Nov 20 2015, 02:00:19) 
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-4)] on linux2
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; import pymongo        
+&gt;&gt;&gt; pymongo.version
+&apos;3.2.2&apos;
+</code></pre><hr>
+<h2 id="使用-pymongo"><a href="#使用-pymongo" class="headerlink" title="使用 pymongo"></a>使用 pymongo</h2><h3 id="连接到-MongoDB"><a href="#连接到-MongoDB" class="headerlink" title="连接到 MongoDB"></a>连接到 MongoDB</h3><p>有两种方式，等同</p>
+<pre><code>&gt;&gt;&gt; client = pymongo.MongoClient(&apos;192.168.100.3&apos;, 27017)
+&gt;&gt;&gt; print client
+MongoClient(host=[&apos;192.168.100.3:27017&apos;], document_class=dict, tz_aware=False, connect=True)
+&gt;&gt;&gt; client2 = pymongo.MongoClient(&apos;mongodb://192.168.100.3:27017/&apos;)
+&gt;&gt;&gt; print client2
+MongoClient(host=[&apos;192.168.100.3:27017&apos;], document_class=dict, tz_aware=False, connect=True)
+&gt;&gt;&gt; 
+</code></pre><h3 id="得到-db-和-collection"><a href="#得到-db-和-collection" class="headerlink" title="得到 db 和 collection"></a>得到 db 和 collection</h3><p>有时候在脚本中会把 db 和 collection 作为参数使用，可以参考第二种方式</p>
+<p>直接链接</p>
+<pre><code>&gt;&gt;&gt; db = client.report
+&gt;&gt;&gt; print db
+Database(MongoClient(host=[&apos;192.168.100.3:27017&apos;], document_class=dict, tz_aware=False, connect=True), u&apos;report&apos;)
+&gt;&gt;&gt; collection = db.source_register
+&gt;&gt;&gt; print collection
+Collection(Database(MongoClient(host=[&apos;192.168.100.3:27017&apos;], document_class=dict, tz_aware=False, connect=True), u&apos;report&apos;), u&apos;source_register&apos;)
+&gt;&gt;&gt; 
+</code></pre><p>参数链接， 这种形式又有两种方法</p>
+<pre><code>## 定义参数
+&gt;&gt;&gt; pramadb = &apos;report&apos;
+&gt;&gt;&gt; pramacoll = &apos;source_register&apos;
+
+## get db 
+&gt;&gt;&gt; db2 = client[pramadb]
+&gt;&gt;&gt; db3 = client.get_database(pramadb)
+&gt;&gt;&gt; print db2
+Database(MongoClient(host=[&apos;192.168.100.3:27017&apos;], document_class=dict, tz_aware=False, connect=True), u&apos;report&apos;)
+&gt;&gt;&gt; print db3
+Database(MongoClient(host=[&apos;192.168.100.3:27017&apos;], document_class=dict, tz_aware=False, connect=True), u&apos;report&apos;)
+&gt;&gt;&gt; 
+
+## get collection 
+&gt;&gt;&gt; coll2 = db2[pramacoll]
+&gt;&gt;&gt; coll3 = db3.get_collection(pramacoll)
+&gt;&gt;&gt; print coll2
+Collection(Database(MongoClient(host=[&apos;192.168.100.3:27017&apos;], document_class=dict, tz_aware=False, connect=True), u&apos;report&apos;), u&apos;source_register&apos;)
+&gt;&gt;&gt; print coll3
+Collection(Database(MongoClient(host=[&apos;192.168.100.3:27017&apos;], document_class=dict, tz_aware=False, connect=True), u&apos;report&apos;), u&apos;source_register&apos;)
+&gt;&gt;&gt; 
+</code></pre><h3 id="常规操作举例"><a href="#常规操作举例" class="headerlink" title="常规操作举例"></a>常规操作举例</h3><pre><code>## insert or save 
+&gt;&gt;&gt; mydict = {&quot;name&quot;:&quot;James&quot;, &quot;age&quot;: 28}
+&gt;&gt;&gt; collection.save(mydict)
+ObjectId(&apos;57fdf212bcd34f48c4fce15a&apos;)
+
+
+## find
+&gt;&gt;&gt; collection.find({&quot;name&quot;:&quot;James&quot;})[0]
+{u&apos;age&apos;: 28, u&apos;_id&apos;: ObjectId(&apos;57fdf212bcd34f48c4fce15a&apos;), u&apos;name&apos;: u&apos;James&apos;}
+&gt;&gt;&gt; 
+</code></pre><p>^<em>^ ^</em>^ ^<em>^ 未完待续… ^</em>^ ^<em>^ ^</em>^</p>
+<hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;导语&quot;&gt;&lt;a href=&quot;#导语&quot; class=&quot;headerlink&quot; title=&quot;导语&quot;&gt;&lt;/a&gt;导语&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;pymongo 是目前用的相对普遍一个python用来连接MongoDB的库，是工作中各种基本需求都能满足&lt;br&gt;
+    
+    </summary>
+    
+      <category term="MongoDB" scheme="http://yoursite.com/categories/MongoDB/"/>
+    
+    
+      <category term="python" scheme="http://yoursite.com/tags/python/"/>
+    
+      <category term="centos" scheme="http://yoursite.com/tags/centos/"/>
+    
+      <category term="pymongo" scheme="http://yoursite.com/tags/pymongo/"/>
+    
+      <category term="mongo" scheme="http://yoursite.com/tags/mongo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>python配置tab自动不全</title>
+    <link href="http://yoursite.com/2016/09/29/2016-09-29-python%E9%85%8D%E7%BD%AEtab%E8%87%AA%E5%8A%A8%E4%B8%8D%E5%85%A8/"/>
+    <id>http://yoursite.com/2016/09/29/2016-09-29-python配置tab自动不全/</id>
+    <published>2016-09-29T11:34:55.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><pre><code>有时候Centos系统默认安装的python进入交互模式下不能使用tab快捷键功能，这个时候需要自己进行相关配置
+</code></pre><hr>
+<h2 id="tab-py"><a href="#tab-py" class="headerlink" title="tab.py"></a>tab.py</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python </span></div><div class="line"><span class="comment"># python startup file </span></div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> readline</div><div class="line"><span class="keyword">import</span> rlcompleter</div><div class="line"><span class="keyword">import</span> atexit</div><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="comment"># tab completion </span></div><div class="line">readline.parse_and_bind(<span class="string">'tab: complete'</span>)</div><div class="line"><span class="comment"># history file </span></div><div class="line">histfile = os.path.join(os.environ[<span class="string">'HOME'</span>], <span class="string">'.pythonhistory'</span>)</div><div class="line"><span class="keyword">try</span>:</div><div class="line">    readline.read_history_file(histfile)</div><div class="line"><span class="keyword">except</span> IOError:</div><div class="line">    <span class="keyword">pass</span></div><div class="line">atexit.register(readline.write_history_file, histfile)</div><div class="line"><span class="keyword">del</span> os, histfile, readline, rlcompleter</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><pre><code>这里以python.27为例，把
+</code></pre><ul>
+<li>上面的tab.py 放到 /usr/lib/python2.7/site-packages/ 下面，需要先导入sys，再倒入tab模块</li>
+<li>可以把tab.py的内容放到 <code>/root/.pythontab</code>文件中，然后在<code>/root/.bash_profile</code>中添加<code>export PYTHONSTARTUP=~/.pythontab</code>， 这种方式不需要再次导入 tab 模块</li>
+</ul>
+<hr>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><pre><code class="python">root@pts/<span class="number">2</span> $ python 
+Python <span class="number">2.7</span><span class="number">.5</span> (default, Sep <span class="number">15</span> <span class="number">2016</span>, <span class="number">22</span>:<span class="number">37</span>:<span class="number">39</span>) 
+[GCC <span class="number">4.8</span><span class="number">.5</span> <span class="number">20150623</span> (Red Hat <span class="number">4.8</span><span class="number">.5</span><span class="number">-4</span>)] on linux2
+Type <span class="string">"help"</span>, <span class="string">"copyright"</span>, <span class="string">"credits"</span> <span class="keyword">or</span> <span class="string">"license"</span> <span class="keyword">for</span> more information.
+<span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> sys
+<span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> tab
+<span class="meta">&gt;&gt;&gt; </span>sys.
+sys.__class__(              sys.__stdout__              sys.executable              sys.path
+sys.__delattr__(            sys.__str__(                sys.exit(                   sys.path_hooks
+sys.__dict__                sys.__subclasshook__(       sys.exitfunc(               sys.path_importer_cache
+</code></pre>
+<h2 id="附加"><a href="#附加" class="headerlink" title="附加"></a>附加</h2><pre><code>PYTHONSTARTUP 官网解释：
+If this is the name of a readable file, the Python commands in that file are executed before the first prompt is displayed in interactive mode. The file is executed in the same namespace where interactive commands are executed so that objects defined or imported in it can be used without qualification in the interactive session. You can also change the prompts sys.ps1 and sys.ps2 in this file.
+
+简单来说就是这个文件会在第一次进入交互模式的时候会被执行，所以把tab.py 加入到这个变量设定的文件中就可以达到自动导入tab.py，实现自动补全的功能
+</code></pre><hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>    ]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;说明&quot;&gt;&lt;a href=&quot;#说明&quot; class=&quot;headerlink&quot; title=&quot;说明&quot;&gt;&lt;/a&gt;说明&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;有时候Centos系统默认安装的python进入交互模式下不能使用tab快捷键功能，这个时候需要自己进行相关配置
+&lt;/cod
+    
+    </summary>
+    
+      <category term="Python" scheme="http://yoursite.com/categories/Python/"/>
+    
+    
+      <category term="python" scheme="http://yoursite.com/tags/python/"/>
+    
+      <category term="tab" scheme="http://yoursite.com/tags/tab/"/>
+    
+      <category term="自动补全" scheme="http://yoursite.com/tags/%E8%87%AA%E5%8A%A8%E8%A1%A5%E5%85%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hexo配置评论统计搜索</title>
+    <link href="http://yoursite.com/2016/09/26/2016-09-26-Hexo%E9%85%8D%E7%BD%AE%E8%AF%84%E8%AE%BA%E7%BB%9F%E8%AE%A1%E6%90%9C%E7%B4%A2/"/>
+    <id>http://yoursite.com/2016/09/26/2016-09-26-Hexo配置评论统计搜索/</id>
+    <published>2016-09-26T13:01:10.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>Hexo搭建好之后,可以编写markdown文档，渲染之后就可以生成静态页面博客，如果此时能有评论模块可以增加和同行之间的互动和知识交流，能有访问统计等，只能知道那篇博客的内容更受大家欢迎等等。</p>
+</blockquote>
+<hr>
+<h2 id="配置-duoshuo-评论"><a href="#配置-duoshuo-评论" class="headerlink" title="配置 duoshuo 评论"></a>配置 duoshuo 评论</h2><h3 id="创建多说账号"><a href="#创建多说账号" class="headerlink" title="创建多说账号"></a>创建多说账号</h3><h4 id="多说网站-注册自己账号"><a href="#多说网站-注册自己账号" class="headerlink" title="多说网站 注册自己账号"></a>多说网站 注册自己账号</h4><p><img src="/images/duoshuo-1.png" alt="多说官网注册"></p>
+<h4 id="一般情况可以用百度账号或者QQ等直接登录"><a href="#一般情况可以用百度账号或者QQ等直接登录" class="headerlink" title="一般情况可以用百度账号或者QQ等直接登录"></a>一般情况可以用百度账号或者QQ等直接登录</h4><p><img src="/images/duoshuo-2.png" alt="用QQ或者百度账号直接登录"></p>
+<h4 id="duoshuo-shortname-设置"><a href="#duoshuo-shortname-设置" class="headerlink" title="duoshuo_shortname 设置"></a>duoshuo_shortname 设置</h4><p>在如下图中的“多说域名”这里填写的 “liuc” 就是 duoshuo_shortname<br><img src="/images/duoshuo-3.png" alt="duoshuo_shortname 设置"></p>
+<p>修改站点配置文件 _config.yml 添加如下配置</p>
+<pre><code>## duoshuo
+duoshuo_shortname: liuc
+</code></pre><h4 id="评论测试"><a href="#评论测试" class="headerlink" title="评论测试"></a>评论测试</h4><p><code>hexo d -g</code> 发布代码查看效果，发现多说评论系统已经添加<br><img src="/images/duoshuo-4.png" alt="多说评论效果测试"></p>
+<h3 id="评论开启或者关闭设置"><a href="#评论开启或者关闭设置" class="headerlink" title="评论开启或者关闭设置"></a>评论开启或者关闭设置</h3><p>默认情况下，需要在每篇文章中开启评论，但是在标签页，分类页、关于页等关掉评论</p>
+<pre><code>comments: true 开启评论
+comments: false 关闭评论
+</code></pre><p>但是手动在每篇文章中添加比较费事，可以按下面的步骤添加默认行为</p>
+<h4 id="文章页默认开启"><a href="#文章页默认开启" class="headerlink" title="文章页默认开启"></a>文章页默认开启</h4><pre><code>root@pts/3 $ cat scaffolds/post.md 
+---
+title: {{ title }}
+date: {{ date }}
+tags: 
+categories: 
+toc: true
+comments:true
+---
+</code></pre><h4 id="关闭标签页，分类页、关于页等评论"><a href="#关闭标签页，分类页、关于页等评论" class="headerlink" title="关闭标签页，分类页、关于页等评论"></a>关闭标签页，分类页、关于页等评论</h4><p>这里以标签页为例子</p>
+<pre><code>root@pts/3 $ cat source/tags/index.md 
+---
+title: tags
+date: 2016-09-24 17:59:42
+type: &quot;tags&quot;
+comments: false
+---
+</code></pre><hr>
+<h2 id="配置-阅读次数统计"><a href="#配置-阅读次数统计" class="headerlink" title="配置 阅读次数统计"></a>配置 阅读次数统计</h2><pre><code>待续
+</code></pre><h2 id="配置-Swiftype-搜索"><a href="#配置-Swiftype-搜索" class="headerlink" title="配置 Swiftype 搜索"></a>配置 Swiftype 搜索</h2><pre><code>待续
+</code></pre><hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;Hexo搭建好之后,可以编写markdown文档，渲染之后就可以生成静态页面博客，如果此时能有评论模块可以增加和同
+    
+    </summary>
+    
+      <category term="Hexo" scheme="http://yoursite.com/categories/Hexo/"/>
+    
+    
+      <category term="Hexo" scheme="http://yoursite.com/tags/Hexo/"/>
+    
+      <category term="duoshuo" scheme="http://yoursite.com/tags/duoshuo/"/>
+    
+      <category term="多说" scheme="http://yoursite.com/tags/%E5%A4%9A%E8%AF%B4/"/>
+    
+      <category term="LeanCloud" scheme="http://yoursite.com/tags/LeanCloud/"/>
+    
+      <category term="Swiftype" scheme="http://yoursite.com/tags/Swiftype/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Centos下pyenv安装python多版本(增强版)</title>
+    <link href="http://yoursite.com/2016/09/25/2016-09-25-Centos%E4%B8%8Bpyenv%E5%AE%89%E8%A3%85python%E5%A4%9A%E7%89%88%E6%9C%AC-%E5%A2%9E%E5%BC%BA%E7%89%88/"/>
+    <id>http://yoursite.com/2016/09/25/2016-09-25-Centos下pyenv安装python多版本-增强版/</id>
+    <published>2016-09-25T12:35:17.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Centos-下-pyenv-安装-python-多版本"><a href="#Centos-下-pyenv-安装-python-多版本" class="headerlink" title="Centos 下 pyenv 安装 python 多版本"></a>Centos 下 pyenv 安装 python 多版本</h2><blockquote>
+<p>在学习和利用python开发的很多情况下，需要多版本的Python并存。此时需要在系统中安装多个Python，但又不能影响系统自带的 Python。pyenv 就是这样一个 Python 版本管理器。</p>
+</blockquote>
+<h2 id="当前情况"><a href="#当前情况" class="headerlink" title="当前情况"></a>当前情况</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">## 当天系统</div><div class="line">root@pts/2 $ cat /etc/redhat-release </div><div class="line">CentOS Linux release 7.1.1503 (Core) </div><div class="line"></div><div class="line">## 当前 python 情况</div><div class="line">root@pts/2 $ python</div><div class="line">python            python2           python2.7         python2.7-config  python2-config    python-config     </div><div class="line">root@pts/2 $ python -V</div><div class="line">Python 2.7.5</div></pre></td></tr></table></figure>
+<h2 id="安装-pyenv"><a href="#安装-pyenv" class="headerlink" title="安装 pyenv"></a>安装 pyenv</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">## 安装</div><div class="line">root@pts/2 $ git clone https://github.com/yyuu/pyenv.git ~/.pyenv</div><div class="line">Cloning into &apos;/root/.pyenv&apos;...</div><div class="line">remote: Counting objects: 12744, done.</div><div class="line">remote: Total 12744 (delta 0), reused 0 (delta 0), pack-reused 12744</div><div class="line">Receiving objects: 100% (12744/12744), 2.26 MiB | 453.00 KiB/s, done.</div><div class="line">Resolving deltas: 100% (8837/8837), done.</div><div class="line"></div><div class="line">## 配置</div><div class="line">root@pts/2 $ vim ~/.bashrc </div><div class="line">root@pts/2 $ cat ~/.bashrc </div><div class="line">    # .bashrc</div><div class="line">    </div><div class="line">    # User specific aliases and functions</div><div class="line">    </div><div class="line">    alias rm=&apos;rm -i&apos;</div><div class="line">    alias cp=&apos;cp -i&apos;</div><div class="line">    alias mv=&apos;mv -i&apos;</div><div class="line">    </div><div class="line">    ## add by liuchao at 20160607</div><div class="line">    export PYENV_ROOT=&quot;$HOME/.pyenv&quot;</div><div class="line">    export PATH=&quot;$PYENV_ROOT/bin:$PATH&quot;</div><div class="line">    eval &quot;$(pyenv init -)&quot;</div><div class="line">    </div><div class="line">    # Source global definitions</div><div class="line">    if [ -f /etc/bashrc ]; then</div><div class="line">    	. /etc/bashrc</div><div class="line">    fi</div><div class="line"></div><div class="line">## 配置生效</div><div class="line">    ### 方式一</div><div class="line">    重新打开一个session</div><div class="line">    ### 方式二</div><div class="line">    source ~/.bashrc</div><div class="line">    ### 方式三</div><div class="line">    exec $SHELL -l</div></pre></td></tr></table></figure>
+<h2 id="安装多版本"><a href="#安装多版本" class="headerlink" title="安装多版本"></a>安装多版本</h2><h3 id="检查pyenv-安装的版本"><a href="#检查pyenv-安装的版本" class="headerlink" title="检查pyenv 安装的版本"></a>检查pyenv 安装的版本</h3><pre><code>root@pts/3 $ pyenv versions
+* system (set by /root/.pyenv/version)
+</code></pre><p><code>安装之前需要安装一些依赖包，否则会报如下错误</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">root@pts/2 $ pyenv install 3.4.4</div><div class="line">Downloading Python-3.4.4.tgz...</div><div class="line">-&gt; https://www.python.org/ftp/python/3.4.4/Python-3.4.4.tgz</div><div class="line">Installing Python-3.4.4...</div><div class="line">WARNING: The Python bz2 extension was not compiled. Missing the bzip2 lib?</div><div class="line">WARNING: The Python readline extension was not compiled. Missing the GNU readline lib?</div><div class="line">ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?</div><div class="line"></div><div class="line">Please consult to the Wiki page to fix the problem.</div><div class="line">https://github.com/yyuu/pyenv/wiki/Common-build-problems</div><div class="line"></div><div class="line"></div><div class="line">BUILD FAILED (CentOS Linux 7 using python-build 20160509-25-g4c654d7)</div><div class="line"></div><div class="line">Inspect or clean up the working tree at /tmp/python-build.20160607105740.3166</div><div class="line">Results logged to /tmp/python-build.20160607105740.3166.log</div><div class="line"></div><div class="line">Last 10 log lines:</div><div class="line">(cd /root/.pyenv/versions/3.4.4/share/man/man1; ln -s python3.4.1 python3.1)</div><div class="line">if test &quot;xupgrade&quot; != &quot;xno&quot;  ; then \</div><div class="line">	case upgrade in \</div><div class="line">		upgrade) ensurepip=&quot;--upgrade&quot; ;; \</div><div class="line">		install|*) ensurepip=&quot;&quot; ;; \</div><div class="line">	esac; \</div><div class="line">	 ./python -E -m ensurepip \</div><div class="line">		$ensurepip --root=/ ; \</div><div class="line">fi</div><div class="line">Ignoring ensurepip failure: pip 7.1.2 requires SSL/TLS</div></pre></td></tr></table></figure></p>
+<h3 id="安装相关依赖"><a href="#安装相关依赖" class="headerlink" title="安装相关依赖"></a>安装相关依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">yum install readline readline-devel readline-static -y</div><div class="line">yum install openssl openssl-devel openssl-static -y</div><div class="line">yum install sqlite-devel -y</div><div class="line">yum install bzip2-devel bzip2-libs -y</div></pre></td></tr></table></figure>
+<h3 id="安装多版本-1"><a href="#安装多版本-1" class="headerlink" title="安装多版本"></a>安装多版本</h3><blockquote>
+<ul>
+<li>pyenv 安装原理：<br>  从官网下载对应的版本压缩包到<code>/tmp/目录</code>，然后在<code>/tmp/目录</code> 执行编译安装，安装到<code>~/.pyenv/versions/</code>下面</li>
+<li>pyenv 安装很慢的解决办法：<br> 可以先手动下载对应的版本压缩包，放到<code>~/.pyenv/cache/</code>下面，pyenv会校验md5值和完整性，确认无误的话就不会重新下载直接从这里安装</li>
+</ul>
+</blockquote>
+<p><strong> &gt;&gt;附件修改 201606008&lt;&lt;</strong><br>详细可以参考 <a href="http://www.jianshu.com/p/f3190b697e8d" target="_blank" rel="external">pyenv ~/.pyenv/cache 不生效问题</a></p>
+<blockquote>
+<p>关于上面说的如果用 <code>pyenv install</code> 安装很慢的话，可以下载版本压缩包到 <code>~/.pyenv/cache/</code> 目录，这里有个很关键的问题所在，具体如下：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">添加 -v 参数安装的时候看到下载的文件名字是 &apos;Python-3.4.4.tgz&apos;，如果</div><div class="line">把这个文件名copy到 ~/.pyenv/cache/ 下面的是不起作用的，还是会继续</div><div class="line">重新下载。</div><div class="line"></div><div class="line">查找问题后发现，-v 显示的是下载 &apos;Python-3.4.4.tgz&apos;， 但是</div><div class="line">在/tmp/python-xxxxxx.xxxx/ 目录下面却显示的是 &apos;Python-3.4.4.tar.gz&apos; 文件。</div><div class="line"></div><div class="line">所以把下载的 &apos;Python-3.4.4.tgz&apos; 改名为 &apos;Python-3.4.4.tar.gz&apos; 后放到</div><div class="line"> ~/.pyenv/cache/ 下面后，然后 pyenv install 3.4.4 -v 就不会重新下载了。</div><div class="line"></div><div class="line">注意： </div><div class="line">    不能采用把 Python-3.4.4.tgz 解压之后才压缩成 Python-3.4.4.tar.gz 的方式，</div><div class="line">因为这样的话会导致源文件的md5值发生变化。而校验失败重新下载</div></pre></td></tr></table></figure>
+<p><code>-v</code> 显示完整的安装过程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">root@pts/2 $ pyenv install 3.4.4 `[-v]`</div><div class="line">Downloading Python-3.4.4.tgz...</div><div class="line">-&gt; https://www.python.org/ftp/python/3.4.4/Python-3.4.4.tgz</div><div class="line">Installing Python-3.4.4...</div><div class="line">Installed Python-3.4.4 to /root/.pyenv/versions/3.4.4</div></pre></td></tr></table></figure></p>
+<h2 id="检查"><a href="#检查" class="headerlink" title="检查"></a>检查</h2><pre><code>## 查看目前已经安装的
+## system 表示系统安装的
+## * 代表当前使用的是那个版本
+root@pts/3 $ pyenv versions
+* system (set by /root/.pyenv/version)
+  3.4.4
+</code></pre><h2 id="更新数据库"><a href="#更新数据库" class="headerlink" title="更新数据库"></a>更新数据库</h2><pre><code>pyenv rehash 
+</code></pre><h2 id="设置全局python"><a href="#设置全局python" class="headerlink" title="设置全局python"></a>设置全局python</h2><pre><code>root@pts/3 $ python -V
+Python 2.7.5
+
+root@pts/3 $ pyenv global 3.4.4 
+root@pts/3 $ pyenv versions
+  system
+* 3.4.4 (set by /root/.pyenv/version)
+
+root@pts/3 $ python -V
+Python 3.4.4
+</code></pre><h2 id="设置临时python版本"><a href="#设置临时python版本" class="headerlink" title="设置临时python版本"></a>设置临时python版本</h2><pre><code>## 在当前session执行
+pyenv local 2.7.11
+pyenv shell 2.7.11
+
+## 检查发现是从/tmp来设置的临时
+root@pts/3 $ pyenv versions
+  system
+* 2.7.11 (set by /tmp/python-build.20160607105740.3166/Python-3.4.4/.python-version)
+  3.4.4
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">## 在另外一个session中验证</div><div class="line">root@pts/5 $ python -V</div><div class="line">Python 3.4.4</div><div class="line">Dev-mysql-mem [~] 2016-06-07 11:44:30</div><div class="line">root@pts/5 $ pyenv versions </div><div class="line">system</div><div class="line">2.7.11</div><div class="line">* 3.4.4 (set by /root/.pyenv/version)</div></pre></td></tr></table></figure>
+<h2 id="Refer-to"><a href="#Refer-to" class="headerlink" title="Refer to"></a>Refer to</h2><blockquote>
+<p><a href="https://github.com/yyuu/pyenv/blob/master/COMMANDS.md#command-reference" target="_blank" rel="external">pyenv命令列表</a></p>
+</blockquote>
+<hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Centos-下-pyenv-安装-python-多版本&quot;&gt;&lt;a href=&quot;#Centos-下-pyenv-安装-python-多版本&quot; class=&quot;headerlink&quot; title=&quot;Centos 下 pyenv 安装 python 多版本&quot;&gt;&lt;/a&gt;Ce
+    
+    </summary>
+    
+      <category term="Python" scheme="http://yoursite.com/categories/Python/"/>
+    
+    
+      <category term="python" scheme="http://yoursite.com/tags/python/"/>
+    
+      <category term="pyenv" scheme="http://yoursite.com/tags/pyenv/"/>
+    
+      <category term="virtualenv" scheme="http://yoursite.com/tags/virtualenv/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Centos下python纯净虚拟环境</title>
+    <link href="http://yoursite.com/2016/09/25/2016-09-25-Centos%E4%B8%8Bpython%E7%BA%AF%E5%87%80%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/"/>
+    <id>http://yoursite.com/2016/09/25/2016-09-25-Centos下python纯净虚拟环境/</id>
+    <published>2016-09-25T12:18:58.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Centos-下-python-纯净虚拟环境"><a href="#Centos-下-python-纯净虚拟环境" class="headerlink" title="Centos 下 python 纯净虚拟环境"></a>Centos 下 python 纯净虚拟环境</h2><blockquote>
+<p>实际python开发中，可能并行的有多个python项目的开发，他们用到的python版本可能不一样，这个时候就<code>需要有多个相互不依赖的环境来运行多个python项目</code>，<code>virtualenv</code> 就刚好满足这个需求</p>
+</blockquote>
+<hr>
+<h2 id="安装-virtualenv"><a href="#安装-virtualenv" class="headerlink" title="安装 virtualenv"></a>安装 virtualenv</h2><blockquote>
+<p>可以用 <code>pip</code>、<code>easy_install</code> 或者 <code>pyenv</code>来安装virtualenv，但是<code>推荐pyenv来安装</code>，pyenv-virtualenv是pyenv的插件。有助于后面的环境切换等</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">root@pts/5 $ ls -l ~/.pyenv/plugins/</div><div class="line">total 4</div><div class="line">drwxr-xr-x 5 root root 4096 Jun  7 10:51 python-build</div><div class="line"></div><div class="line">root@pts/5 $ git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv</div><div class="line">Cloning into &apos;/root/.pyenv/plugins/pyenv-virtualenv&apos;...</div><div class="line">remote: Counting objects: 1800, done.</div><div class="line">remote: Total 1800 (delta 0), reused 0 (delta 0), pack-reused 1800</div><div class="line">Receiving objects: 100% (1800/1800), 517.45 KiB | 143.00 KiB/s, done.</div><div class="line">Resolving deltas: 100% (1230/1230), done.</div><div class="line"></div><div class="line">root@pts/5 $ ls -l ~/.pyenv/plugins/</div><div class="line">total 8</div><div class="line">drwxr-xr-x 7 root root 4096 Jun  7 12:00 pyenv-virtualenv</div><div class="line">drwxr-xr-x 5 root root 4096 Jun  7 10:51 python-build</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">root@pts/5 $ vim ~/.bashrc </div><div class="line">Dev-mysql-mem [~] 2016-06-07 12:01:08</div><div class="line">root@pts/5 $ cat ~/.bashrc |egrep &apos;virtualenv&apos;</div><div class="line">eval &quot;$(pyenv virtualenv-init -)&quot;</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="配置生效"><a href="#配置生效" class="headerlink" title="配置生效"></a>配置生效</h2><pre><code>### 方式一
+重新打开一个session
+### 方式二
+source ~/.bashrc
+### 方式三
+exec $SHELL -l
+</code></pre><hr>
+<h2 id="创建虚拟环境"><a href="#创建虚拟环境" class="headerlink" title="创建虚拟环境"></a>创建虚拟环境</h2><blockquote>
+<p>创建新的虚拟环境实际存在于<code>~/.pyenv/versions/</code>目录</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">## 创建 名字为py3.4.3的虚拟环境</div><div class="line">## 注意 第三个 &apos;3.4.4&apos; 版本号码是必须的</div><div class="line">root@pts/5 $  pyenv virtualenv 3.4.4 py3.4.4</div><div class="line">Ignoring indexes: https://pypi.python.org/simple</div><div class="line">Requirement already satisfied (use --upgrade to upgrade): setuptools in /root/.pyenv/versions/3.4.4/envs/py3.4.4/lib/python3.4/site-packages</div><div class="line">Requirement already satisfied (use --upgrade to upgrade): pip in /root/.pyenv/versions/3.4.4/envs/py3.4.4/lib/python3.4/site-packages</div><div class="line"></div><div class="line">## 查看新增的虚拟环境</div><div class="line">root@pts/5 $ ls -l ~/.pyenv/versions/</div><div class="line">total 8</div><div class="line">drwxr-xr-x 6 root root 4096 Jun  7 11:43 2.7.11</div><div class="line">drwxr-xr-x 7 root root 4096 Jun  7 12:05 3.4.4</div><div class="line">lrwxrwxrwx 1 root root   40 Jun  7 12:05 py3.4.4 -&gt; /root/.pyenv/versions/3.4.4/envs/py3.4.4</div><div class="line"></div><div class="line">root@pts/5 $ pyenv versions</div><div class="line">  system</div><div class="line">  2.7.11</div><div class="line">* 3.4.4 (set by /root/.pyenv/version)</div><div class="line">  3.4.4/envs/py3.4.4</div><div class="line">  py3.4.4</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="虚拟环境使用"><a href="#虚拟环境使用" class="headerlink" title="虚拟环境使用"></a>虚拟环境使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">## 进入虚拟环境</div><div class="line">root@pts/6 $ pyenv activate py3.4.4</div><div class="line">pyenv-virtualenv: prompt changing will be removed from future release. configure &apos;export PYENV_VIRTUALENV_DISABLE_PROMPT=1&apos; to simulate the behavior.</div><div class="line">(py3.4.4) Dev-mysql-mem [~] 2016-06-07 12:12:35</div><div class="line"></div><div class="line">## 查看虚拟环境版本</div><div class="line">root@pts/6 $ python -V</div><div class="line">Python 3.4.4</div><div class="line"></div><div class="line">## 退出到系统环境</div><div class="line">root@pts/6 $ pyenv deactivate</div><div class="line">Dev-mysql-mem [~] 2016-06-07 12:14:46</div><div class="line">root@pts/6 $</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="卸载虚拟环境"><a href="#卸载虚拟环境" class="headerlink" title="卸载虚拟环境"></a>卸载虚拟环境</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">## 方式一：暴力删除</div><div class="line">rm -rf ~/.pyenv/versions/py3.4.4</div><div class="line"></div><div class="line">## 方式二：温柔卸载</div><div class="line">pyenv uninstall py3.4.4</div></pre></td></tr></table></figure>
+<h2 id="Refer-to"><a href="#Refer-to" class="headerlink" title="Refer to"></a>Refer to</h2><blockquote>
+<p><a href="https://github.com/yyuu/pyenv-virtualenv" target="_blank" rel="external">pyenv插件virtualenv</a></p>
+</blockquote>
+<hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Centos-下-python-纯净虚拟环境&quot;&gt;&lt;a href=&quot;#Centos-下-python-纯净虚拟环境&quot; class=&quot;headerlink&quot; title=&quot;Centos 下 python 纯净虚拟环境&quot;&gt;&lt;/a&gt;Centos 下 python 纯净虚拟
+    
+    </summary>
+    
+      <category term="Python" scheme="http://yoursite.com/categories/Python/"/>
+    
+    
+      <category term="python" scheme="http://yoursite.com/tags/python/"/>
+    
+      <category term="virtualenv" scheme="http://yoursite.com/tags/virtualenv/"/>
+    
+      <category term="Centos" scheme="http://yoursite.com/tags/Centos/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一款图形化memcache监控工具</title>
+    <link href="http://yoursite.com/2015/10/16/2015-10-16-%E4%B8%80%E6%AC%BE%E5%9B%BE%E5%BD%A2%E5%8C%96memcache%E7%9B%91%E6%8E%A7%E5%B7%A5%E5%85%B7/"/>
+    <id>http://yoursite.com/2015/10/16/2015-10-16-一款图形化memcache监控工具/</id>
+    <published>2015-10-16T03:19:11.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>对于memcache监控，一般可以利用memcache自带的<code>STAT</code>命令来查看，但是其输出的结果对于开发而言不是很明了，监控的目的是让开发通过监控的结果去调优程序。这里介绍一款形化memcache监控工具<code>memcachephp</code>,<br>memcachephp是一款memcache图形界面的监控工具，可以通过这个工具查看到局域网内所有部署memcache机器或者端口的memcache的运行情况，对我们监控memcache的缓存命中率、cache利用率、点击率等信息有很好的帮助作用</p>
+</blockquote>
+<hr>
+<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><pre><code>可一个通过下面的地址下载对应的版本，最新版是3.0.8，但是这里建议选择`稳定版2.7.7`
+http://pecl.php.net/package/memcache
+</code></pre><p><img src="/images/memcache/memcache-php.png" alt="memcache-php.png"></p>
+<p><strong>实际的下载地址 </strong></p>
+<p><a href="http://pecl.php.net/get/memcache-2.2.7.tgz" target="_blank" rel="external">http://pecl.php.net/get/memcache-2.2.7.tgz</a></p>
+<h2 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h2><pre><code>下载解压之后，修改 `memcache.php` 文件，这里需要修改如图A/B两处
+</code></pre><p><img src="/images/memcache/memcache-php-config.png" alt="memcache-php-config.php"></p>
+<pre><code>**A处修改：**
+    这里其实也可以采用默认的账号密码，但是建议修改为自己的账号密码
+
+**B处修改：**
+    这里是添加你需要的memcache主机，通过 $MEMCACHE_SERVERS[]可以配置多个memcache实例去监控
+</code></pre><h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><pre><code>把修改好的`memcache.php` 复制到网站对应的位置，
+然后通过 `http://real-ip/memcache.php` 去访问，
+访问的时候需要账号密码，如果修改了就是自己修改的账号密码
+</code></pre><h2 id="实际效过展示"><a href="#实际效过展示" class="headerlink" title="实际效过展示"></a>实际效过展示</h2><p><strong>全局效果展示</strong></p>
+<p><img src="/images/memcache/memcache-php-show.png" alt="memcache-php-show.png"></p>
+<p><strong>具体memcache实例效果展示</strong></p>
+<p><img src="/images/memcache/memcache-php-show-host.png" alt="memcache-php-show-host.png"></p>
+<hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;对于memcache监控，一般可以利用memcache自带的&lt;code&gt;STAT&lt;/code&gt;命令来查看，但是其输出的结果对于开发而言不是很明了，监控的目的是让开发通过监控的结果去调优程序。这里介绍一款形化memcache监控工具&lt;code&gt;mem
+    
+    </summary>
+    
+      <category term="Memcache" scheme="http://yoursite.com/categories/Memcache/"/>
+    
+    
+      <category term="memcache" scheme="http://yoursite.com/tags/memcache/"/>
+    
+      <category term="php" scheme="http://yoursite.com/tags/php/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Centos下安装MongoDB</title>
+    <link href="http://yoursite.com/2015/10/10/2016-10-12-Centos-install-MongoDB/"/>
+    <id>http://yoursite.com/2015/10/10/2016-10-12-Centos-install-MongoDB/</id>
+    <published>2015-10-10T06:38:45.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="导语"><a href="#导语" class="headerlink" title="导语"></a>导语</h2><blockquote>
+<p>MongoDB 是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。是一个基于分布式文件存储的开源数据库系统。<br>在高负载的情况下，添加更多的节点，可以保证服务器性能。<br>MongoDB 是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。<br>MongoDB 将数据存储为一个文档，数据结构由键值(key=&gt;value)对组成。MongoDB 文档类似于 JSON 对象。字段值可以包含其他文档，数组及文档数组。</p>
+</blockquote>
+<hr>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>Centos下安装MongoDB有多种方式，这里介绍yum安装和tar包安装两种方式</p>
+<h3 id="YUM-安装"><a href="#YUM-安装" class="headerlink" title="YUM 安装"></a>YUM 安装</h3><p>在 /etc/yum.repos.d/下面新增文件 mongodb.repo</p>
+<pre><code>root@pts/2 $ cat mongodb.repo 
+[mongodb]
+name=MongoDB repo
+baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/
+gpgcheck=0
+enabled=1
+</code></pre><p>yum安装</p>
+<pre><code>yum install mongodb-org mongodb-org-server
+</code></pre><h3 id="Tar-安装"><a href="#Tar-安装" class="headerlink" title="Tar 安装"></a>Tar 安装</h3><pre><code># download page
+http://www.mongodb.org/downloads
+
+# use `wget` or `curl` to get file
+wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-3.0.6.tgz 
+curl -O https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-3.0.6.tgz 
+
+# untar 
+tar -zxvf mongodb-linux-x86_64-3.0.6.tgz   
+
+# move to appropriate path
+mv mongodb-linux-x86_64-3.0.6 /usr/local/mongodb
+</code></pre><h3 id="Configure"><a href="#Configure" class="headerlink" title="Configure"></a>Configure</h3><pre><code>## add mongodba user
+useradd mongodba
+
+## create configuration and data folder, then set privilege
+mkdir -p /usr/local/mongodb/{conf,data}
+chown -R mongodba:mongodba /usr/local/mongodb/
+
+## add below command into /etc/profile
+MONGO_HOME=/usr/local/mongodb
+PATH=$PATH:$JAVA_HOME/bin:${MONGO_HOME}/bin
+</code></pre><hr>
+<h2 id="Verify"><a href="#Verify" class="headerlink" title="Verify"></a>Verify</h2><p>无论哪种安装方式最终都采用如下方式验证是否安装成功</p>
+<pre><code>root@pts/2 $ mongod --version
+db version v3.0.6
+git version: 1ef45a23a4c5e3480ac919b28afcba3c615488f2
+</code></pre><h2 id="附加"><a href="#附加" class="headerlink" title="附加"></a>附加</h2><pre><code>## start mongo
+mongod --dbpath /usr/local/mongodb/data/ --logpath /var/log/mongod.log --logappend &amp;
+
+## mongo shell
+## you can use mongo or /usr/local/mongodb/bin/mongo
+root@pts/2 $ mongo
+MongoDB shell version: 3.0.6
+connecting to: test
+</code></pre><hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;导语&quot;&gt;&lt;a href=&quot;#导语&quot; class=&quot;headerlink&quot; title=&quot;导语&quot;&gt;&lt;/a&gt;导语&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;MongoDB 是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据
+    
+    </summary>
+    
+      <category term="MongoDB" scheme="http://yoursite.com/categories/MongoDB/"/>
+    
+    
+      <category term="mongodb" scheme="http://yoursite.com/tags/mongodb/"/>
+    
+      <category term="db" scheme="http://yoursite.com/tags/db/"/>
+    
+      <category term="centos" scheme="http://yoursite.com/tags/centos/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>memcache监控小工具stats命令</title>
+    <link href="http://yoursite.com/2015/08/16/2015-08-16-memcache%E7%9B%91%E6%8E%A7%E5%B0%8F%E5%B7%A5%E5%85%B7stats%E5%91%BD%E4%BB%A4/"/>
+    <id>http://yoursite.com/2015/08/16/2015-08-16-memcache监控小工具stats命令/</id>
+    <published>2015-08-16T03:50:47.000Z</published>
+    <updated>2017-06-13T14:29:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>这里介绍memcache自带的监控小工具<code>stats命令</code><br>可以监控基本的memcache信息，像服务器信息，内存分配数据等</p>
+</blockquote>
+<hr>
+<h2 id="stats"><a href="#stats" class="headerlink" title="stats"></a>stats</h2><p>显示服务器信息、统计数据等</p>
+<pre><code>root@pts/1 $ echo &quot;stats&quot;|nc 192.168.100.13 11211
+STAT pid 23160
+STAT uptime 505840
+STAT time 1479269732
+STAT version 1.4.15
+STAT libevent 2.0.21-stable
+STAT pointer_size 64
+STAT rusage_user 165.030300
+STAT rusage_system 543.017059
+STAT curr_connections 45
+STAT total_connections 1363
+STAT connection_structures 61
+STAT reserved_fds 20
+STAT cmd_get 30320614
+STAT cmd_set 873560
+STAT cmd_flush 0
+STAT cmd_touch 13123
+STAT get_hits 4126857
+STAT get_misses 26193757
+STAT delete_misses 2267
+STAT delete_hits 23858
+STAT incr_misses 12718
+STAT incr_hits 610
+...
+STAT evictions 0
+STAT reclaimed 84878
+END
+</code></pre><h2 id="stats-reset"><a href="#stats-reset" class="headerlink" title="stats reset"></a>stats reset</h2><p>清空统计数据</p>
+<h2 id="stats-items"><a href="#stats-items" class="headerlink" title="stats items"></a>stats items</h2><p>输出各个slab中的item的数目和最老item的年龄(最后一次访问距离现在的秒数) .</p>
+<pre><code>root@pts/1 $ echo &quot;stats items&quot;|nc 192.168.100.13 11211
+STAT items:1:number 12854
+STAT items:1:age 506027
+STAT items:1:evicted 0
+STAT items:1:evicted_nonzero 0
+STAT items:1:evicted_time 0
+STAT items:1:outofmemory 0
+STAT items:1:tailrepairs 0
+STAT items:1:reclaimed 521
+STAT items:1:expired_unfetched 521
+STAT items:1:evicted_unfetched 0
+STAT items:2:number 28683
+STAT items:2:age 506072
+...
+STAT items:18:evicted_unfetched 0
+STAT items:19:number 1
+STAT items:19:age 78406
+STAT items:19:evicted 0
+STAT items:19:evicted_nonzero 0
+STAT items:19:evicted_time 0
+STAT items:19:outofmemory 0
+STAT items:19:tailrepairs 0
+STAT items:19:reclaimed 41
+STAT items:19:expired_unfetched 33
+STAT items:19:evicted_unfetched 0
+END
+</code></pre><h2 id="stats-slabs"><a href="#stats-slabs" class="headerlink" title="stats slabs"></a>stats slabs</h2><pre><code>输出slab中更详细的item信息
+</code></pre><h2 id="stats-sizes"><a href="#stats-sizes" class="headerlink" title="stats sizes"></a>stats sizes</h2><pre><code>输出所有item的大小和个数
+</code></pre><h2 id="stats-cachedump"><a href="#stats-cachedump" class="headerlink" title="stats cachedump  "></a>stats cachedump <slab_id> <limit_num></limit_num></slab_id></h2><pre><code>根据&lt;slab_id&gt;输出相同的&lt;slab_id&gt;中的item信息。
+&lt;limit_num&gt;是输出的个数，
+当&lt;limit_num&gt;为0是输出所有的item。
+</code></pre><h2 id="flush-all"><a href="#flush-all" class="headerlink" title="flush_all"></a>flush_all</h2><pre><code>使在内存中所有的item失效。加入参数则表示在N秒后失效所有item。
+这项操作会立即返回，不会暂停服务器。
+这个操作并`不会真的释放内存空间，而是标志所有的item为失效`
+</code></pre><h2 id="stats-detail-on-off-dump"><a href="#stats-detail-on-off-dump" class="headerlink" title="stats detail [on|off|dump]"></a>stats detail [on|off|dump]</h2><pre><code>设置或者显示详细操作记录
+参数为on，打开详细操作记录
+参数为off，关闭详细操作记录
+参数为dump，显示详细操作记录(每一个键值get、set、hit、del的次数)
+</code></pre><h2 id="特殊说明"><a href="#特殊说明" class="headerlink" title="特殊说明"></a>特殊说明</h2><p>用<code>watch</code>命令来`实时查看·memcache状态 </p>
+<pre><code>watch echo &quot;stats&quot; |nc 192.168.100.13 11211
+</code></pre><hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;这里介绍memcache自带的监控小工具&lt;code&gt;stats命令&lt;/code&gt;&lt;br&gt;可以监控基本的memcache信息，像服务器信息，内存分配数据等&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id=&quot;stats&quot;&gt;&lt;a href=&quot;
+    
+    </summary>
+    
+      <category term="Memcache" scheme="http://yoursite.com/categories/Memcache/"/>
+    
+    
+      <category term="memcache" scheme="http://yoursite.com/tags/memcache/"/>
+    
+      <category term="stats" scheme="http://yoursite.com/tags/stats/"/>
+    
+      <category term="nc/telnet" scheme="http://yoursite.com/tags/nc-telnet/"/>
+    
+  </entry>
+  
+</feed>

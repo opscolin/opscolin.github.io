@@ -1,0 +1,921 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="linux,screen," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Colinws 工作室" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="摘要 作为运维人员经常会遇到等到远程主机的链接因为网络原因或者别的其他不可抗拒的原因断掉，此时远程为执行完成的命令也会断掉而导致很多任务需要重新执行。 这给大家介绍一个在这种情况下很好用的命令 screen，具体好用在那里，下面具体介绍，包括从其安装到配置到使用  What to do在正式介绍之前，先给大家介绍下 screen 都能做什么事情  通过一个SSH session使用多个shell窗">
+<meta name="keywords" content="linux,screen">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Centos命令系列 之  screen">
+<meta property="og:url" content="http://yoursite.com/2016/12/06/2016-12-06-Centos-command-screen/index.html">
+<meta property="og:site_name" content="Colinws 工作室">
+<meta property="og:description" content="摘要 作为运维人员经常会遇到等到远程主机的链接因为网络原因或者别的其他不可抗拒的原因断掉，此时远程为执行完成的命令也会断掉而导致很多任务需要重新执行。 这给大家介绍一个在这种情况下很好用的命令 screen，具体好用在那里，下面具体介绍，包括从其安装到配置到使用  What to do在正式介绍之前，先给大家介绍下 screen 都能做什么事情  通过一个SSH session使用多个shell窗">
+<meta property="og:image" content="http://yoursite.com/images/qrcode_for_gh_da4929fed8ed_430.jpg">
+<meta property="og:updated_time" content="2017-06-13T14:29:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Centos命令系列 之  screen">
+<meta name="twitter:description" content="摘要 作为运维人员经常会遇到等到远程主机的链接因为网络原因或者别的其他不可抗拒的原因断掉，此时远程为执行完成的命令也会断掉而导致很多任务需要重新执行。 这给大家介绍一个在这种情况下很好用的命令 screen，具体好用在那里，下面具体介绍，包括从其安装到配置到使用  What to do在正式介绍之前，先给大家介绍下 screen 都能做什么事情  通过一个SSH session使用多个shell窗">
+<meta name="twitter:image" content="http://yoursite.com/images/qrcode_for_gh_da4929fed8ed_430.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/06/2016-12-06-Centos-command-screen/"/>
+
+
+
+
+
+  <title>Centos命令系列 之  screen | Colinws 工作室</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1261041972&web_id=1261041972" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Colinws 工作室</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">专注于技术</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/06/2016-12-06-Centos-command-screen/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Colin.Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/colinws.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Colinws 工作室">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Centos命令系列 之  screen</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-06T11:18:36+08:00">
+                2016-12-06
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-06-13T22:29:00+08:00">
+                2017-06-13
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><blockquote>
+<p>作为运维人员经常会遇到等到远程主机的链接因为网络原因或者别的其他不可抗拒的原因断掉，此时远程为执行完成的命令也会断掉而导致很多任务需要重新执行。</p>
+<p>这给大家介绍一个在这种情况下很好用的命令 <code>screen</code>，具体好用在那里，下面具体介绍，包括从其安装到配置到使用</p>
+</blockquote>
+<h2 id="What-to-do"><a href="#What-to-do" class="headerlink" title="What to do"></a>What to do</h2><p>在正式介绍之前，先给大家介绍下 <code>screen</code> 都能做什么事情</p>
+<ul>
+<li>通过一个SSH session使用多个shell窗口</li>
+<li>即使网络断开链接也能保持shell窗口处理激活状态</li>
+<li>可以在任何地方断开或者重连同一个shell session</li>
+<li>不用为了跑一个耗时的任务而长时间保持几个shell session处于激活状态</li>
+</ul>
+<h2 id=""><a href="#" class="headerlink" title=""></a><a id="more"></a></h2><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>Centos下命令安装一般都采用两种方式，YUM和RPM包的方式。这里分别介绍</p>
+<h3 id="YUM安装"><a href="#YUM安装" class="headerlink" title="YUM安装"></a>YUM安装</h3><pre><code>yum install -y screen
+</code></pre><h3 id="RPM安装"><a href="#RPM安装" class="headerlink" title="RPM安装"></a>RPM安装</h3><p>对于下载 RPM 包，建议去 <a href="http://rpm.pbone.net/" target="_blank" rel="external">http://rpm.pbone.net/</a> 下载</p>
+<pre><code>wget ftp://bo.mirror.garr.it/1/slc/centos/7.1.1503/os/x86_64/Packages/screen-4.1.0-0.19.20120314git3c2946.el7.x86_64.rpm
+rpm -ivh screen-4.1.0-0.19.20120314git3c2946.el7.x86_64.rpm
+</code></pre><h2 id="验证安装"><a href="#验证安装" class="headerlink" title="验证安装"></a>验证安装</h2><pre><code>root@pts/1 $ which screen
+/usr/bin/screen
+
+root@pts/1 $ screen -v
+Screen version 4.01.00devel (GNU) 2-May-06
+</code></pre><hr>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="screen"><a href="#screen" class="headerlink" title="screen"></a>screen</h3><p>在开始使用 <code>screen</code> 之前，执行下面的命令</p>
+<pre><code>root@pts/1 $ ps -ef|grep screen
+root      6297  2410  0 14:02 pts/1    00:00:00 grep --color=auto screen
+</code></pre><p>然后输入 <code>screen</code> 回车，感觉打开了一个新的shell session</p>
+<h3 id="screen-list"><a href="#screen-list" class="headerlink" title="screen -list"></a>screen -list</h3><p>这个时候我们在执行上面的<code>ps</code>命令和<code>screen -list</code>查看结果</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">root@pts/2 $ ps -ef|grep screen</div><div class="line">root      6335  2410  0 14:02 pts/1    00:00:00 screen</div><div class="line">root      6476  6337  0 14:02 pts/2    00:00:00 grep --color=auto screen</div><div class="line"></div><div class="line">root@pts/2 $ screen -list</div><div class="line">There is a screen on:</div><div class="line">        6336.pts-1.192  (Attached)</div><div class="line">1 Socket in /var/run/screen/S-root.</div></pre></td></tr></table></figure>
+<p><code>screen -list</code>是查看开启的screen列表</p>
+<h3 id="新增screen-ctrl-a-c"><a href="#新增screen-ctrl-a-c" class="headerlink" title="新增screen ctrl+a+c"></a>新增screen <code>ctrl+a+c</code></h3><p>为了验证新增screen和后面的功能，在上面的开启的第一个screen session中执行<code>top</code>命令</p>
+<p>从当前的screen session开启一个新的screen session可以使用快捷键 <code>ctrl+a+c</code></p>
+<p>看到开启了一个新的 screen session，一个没有执行<code>top</code>的新session</p>
+<h3 id="screen切换-ctrl-a-n-p"><a href="#screen切换-ctrl-a-n-p" class="headerlink" title="screen切换 ctrl+a+n/p"></a>screen切换 ctrl+a+n/p</h3><pre><code>ctrl+a+n 切换到下一个
+
+ctrl+a+p 切换到上一个
+</code></pre><p>需要说明的是在切换的时候N多session组成一个<code>类似环状</code>，ctrl+a+n切换到最后一个之后在切换久切换到了第一个，</p>
+<p>同理ctrl+a+p切换到第一个之后在切换久切换到了最后一个screen session</p>
+<h3 id="离开screen-ctrl-a-d"><a href="#离开screen-ctrl-a-d" class="headerlink" title="离开screen ctrl+a+d"></a>离开screen ctrl+a+d</h3><p>注意括号中的状态值，由<code>Attached</code>变成<code>Detached</code></p>
+<pre><code>[detached from 6336.pts-1.192]
+
+root@pts/1 $ screen -list
+There is a screen on:
+    6336.pts-1.192  (Detached)
+1 Socket in /var/run/screen/S-root.
+</code></pre><h3 id="再连接到screen-ctrl-r-name"><a href="#再连接到screen-ctrl-r-name" class="headerlink" title="再连接到screen ctrl+r[+name]"></a>再连接到screen ctrl+r[+name]</h3><p>当系统只有一个screen处于 Detached状态的话，直接输入<code>ctrl+r</code>回车就可以进入screen</p>
+<p>如果有多个<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">root@pts/1 $ screen -list</div><div class="line">There are screens on:</div><div class="line">        9944.lc (Detached)</div><div class="line">        9766.pts-1.192  (Detached)</div><div class="line">        6336.pts-1.192  (Detached)</div><div class="line">3 Sockets in /var/run/screen/S-root.</div></pre></td></tr></table></figure></p>
+<p>就需要执行<code>ctrl+r+9766.pts-1.192</code></p>
+<p>这里其实输入前面的数字或者后面的字符串都行，比如</p>
+<pre><code>ctrl+r+6336
+ctrl+r+pts-1.192
+</code></pre><p><code>pts-1.192</code> 是由系统生成的，对应用户而言没有明确的意义。我们可以通过<code>screen -S lc</code> 命令去自定义这个值，结果如上面的<code>9944.lc</code></p>
+<h2 id="锁住screen-ctrl-a-x"><a href="#锁住screen-ctrl-a-x" class="headerlink" title="锁住screen ctrl+a+x"></a>锁住screen ctrl+a+x</h2><pre><code>Screen used by root &lt;root&gt; on 192.
+Password:  
+</code></pre><p>使用的时候输入密码即可</p>
+<h2 id="停止screen-exit-or-ctrl-a-k"><a href="#停止screen-exit-or-ctrl-a-k" class="headerlink" title="停止screen exit or ctrl+a+k"></a>停止screen exit or ctrl+a+k</h2><p>当你跑完脚本或者执行完任务的时候，一般建议<code>停止screen</code>，也就是<code>真正的退出screen</code></p>
+<hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/screen/" rel="tag"># screen</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/29/2016-11-29-Testing-Flask-mail-and-meet-some-errors/" rel="next" title="Flask-mail测试和遇到的问题">
+                <i class="fa fa-chevron-left"></i> Flask-mail测试和遇到的问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/13/2016-12-13-Mysql-ERROR-1175-SQL-SAFE-UPDATES/" rel="prev" title="Mysql ERROR 1175 - SQL_SAFE_UPDATES">
+                Mysql ERROR 1175 - SQL_SAFE_UPDATES <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/colinws.jpg"
+               alt="Colin.Liu" />
+          <p class="site-author-name" itemprop="name">Colin.Liu</p>
+           
+              <p class="site-description motion-element" itemprop="description">colinws工作室</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/opscolin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/users/6d793fbacc88/latest_articles" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  简书
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/eagle5063" target="_blank" title="CSDN">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.python.org/" title="Python" target="_blank">Python</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.djangoproject.com/" title="Django" target="_blank">Django</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.hhzzer.com/" title="惠露的博客" target="_blank">惠露的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://brucephaner.github.io" title="潘东升" target="_blank">潘东升</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#摘要"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-to-do"><span class="nav-number">2.</span> <span class="nav-text">What to do</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#"><span class="nav-number">3.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">4.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#YUM安装"><span class="nav-number">4.1.</span> <span class="nav-text">YUM安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RPM安装"><span class="nav-number">4.2.</span> <span class="nav-text">RPM安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#验证安装"><span class="nav-number">5.</span> <span class="nav-text">验证安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number">6.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#screen"><span class="nav-number">6.1.</span> <span class="nav-text">screen</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#screen-list"><span class="nav-number">6.2.</span> <span class="nav-text">screen -list</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新增screen-ctrl-a-c"><span class="nav-number">6.3.</span> <span class="nav-text">新增screen ctrl+a+c</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#screen切换-ctrl-a-n-p"><span class="nav-number">6.4.</span> <span class="nav-text">screen切换 ctrl+a+n/p</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#离开screen-ctrl-a-d"><span class="nav-number">6.5.</span> <span class="nav-text">离开screen ctrl+a+d</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#再连接到screen-ctrl-r-name"><span class="nav-number">6.6.</span> <span class="nav-text">再连接到screen ctrl+r[+name]</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁住screen-ctrl-a-x"><span class="nav-number">7.</span> <span class="nav-text">锁住screen ctrl+a+x</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#停止screen-exit-or-ctrl-a-k"><span class="nav-number">8.</span> <span class="nav-text">停止screen exit or ctrl+a+k</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Colin.Liu</span>
+
+
+ <span class="site-pv">
+   <script src="http://s6.cnzz.com/stat.php?id=1261041972&web_id=1261041972" type="text/javascript"></script>
+</span>
+ 
+
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+<br>
+
+<!-- 
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次 | 
+</span>
+
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

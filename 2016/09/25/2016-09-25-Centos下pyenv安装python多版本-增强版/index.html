@@ -1,0 +1,919 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python,pyenv,virtualenv," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Colinws 工作室" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Centos 下 pyenv 安装 python 多版本 在学习和利用python开发的很多情况下，需要多版本的Python并存。此时需要在系统中安装多个Python，但又不能影响系统自带的 Python。pyenv 就是这样一个 Python 版本管理器。  当前情况123456789## 当天系统root@pts/2 $ cat /etc/redhat-release CentOS Linux">
+<meta name="keywords" content="python,pyenv,virtualenv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Centos下pyenv安装python多版本(增强版)">
+<meta property="og:url" content="http://yoursite.com/2016/09/25/2016-09-25-Centos下pyenv安装python多版本-增强版/index.html">
+<meta property="og:site_name" content="Colinws 工作室">
+<meta property="og:description" content="Centos 下 pyenv 安装 python 多版本 在学习和利用python开发的很多情况下，需要多版本的Python并存。此时需要在系统中安装多个Python，但又不能影响系统自带的 Python。pyenv 就是这样一个 Python 版本管理器。  当前情况123456789## 当天系统root@pts/2 $ cat /etc/redhat-release CentOS Linux">
+<meta property="og:image" content="http://yoursite.com/images/qrcode_for_gh_da4929fed8ed_430.jpg">
+<meta property="og:updated_time" content="2017-06-13T14:29:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Centos下pyenv安装python多版本(增强版)">
+<meta name="twitter:description" content="Centos 下 pyenv 安装 python 多版本 在学习和利用python开发的很多情况下，需要多版本的Python并存。此时需要在系统中安装多个Python，但又不能影响系统自带的 Python。pyenv 就是这样一个 Python 版本管理器。  当前情况123456789## 当天系统root@pts/2 $ cat /etc/redhat-release CentOS Linux">
+<meta name="twitter:image" content="http://yoursite.com/images/qrcode_for_gh_da4929fed8ed_430.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/09/25/2016-09-25-Centos下pyenv安装python多版本-增强版/"/>
+
+
+
+
+
+  <title>Centos下pyenv安装python多版本(增强版) | Colinws 工作室</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1261041972&web_id=1261041972" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Colinws 工作室</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">专注于技术</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/25/2016-09-25-Centos下pyenv安装python多版本-增强版/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Colin.Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/colinws.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Colinws 工作室">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Centos下pyenv安装python多版本(增强版)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-25T20:35:17+08:00">
+                2016-09-25
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-06-13T22:29:00+08:00">
+                2017-06-13
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Centos-下-pyenv-安装-python-多版本"><a href="#Centos-下-pyenv-安装-python-多版本" class="headerlink" title="Centos 下 pyenv 安装 python 多版本"></a>Centos 下 pyenv 安装 python 多版本</h2><blockquote>
+<p>在学习和利用python开发的很多情况下，需要多版本的Python并存。此时需要在系统中安装多个Python，但又不能影响系统自带的 Python。pyenv 就是这样一个 Python 版本管理器。</p>
+</blockquote>
+<h2 id="当前情况"><a href="#当前情况" class="headerlink" title="当前情况"></a>当前情况</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">## 当天系统</div><div class="line">root@pts/2 $ cat /etc/redhat-release </div><div class="line">CentOS Linux release 7.1.1503 (Core) </div><div class="line"></div><div class="line">## 当前 python 情况</div><div class="line">root@pts/2 $ python</div><div class="line">python            python2           python2.7         python2.7-config  python2-config    python-config     </div><div class="line">root@pts/2 $ python -V</div><div class="line">Python 2.7.5</div></pre></td></tr></table></figure>
+<h2 id="安装-pyenv"><a href="#安装-pyenv" class="headerlink" title="安装 pyenv"></a>安装 pyenv</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">## 安装</div><div class="line">root@pts/2 $ git clone https://github.com/yyuu/pyenv.git ~/.pyenv</div><div class="line">Cloning into &apos;/root/.pyenv&apos;...</div><div class="line">remote: Counting objects: 12744, done.</div><div class="line">remote: Total 12744 (delta 0), reused 0 (delta 0), pack-reused 12744</div><div class="line">Receiving objects: 100% (12744/12744), 2.26 MiB | 453.00 KiB/s, done.</div><div class="line">Resolving deltas: 100% (8837/8837), done.</div><div class="line"></div><div class="line">## 配置</div><div class="line">root@pts/2 $ vim ~/.bashrc </div><div class="line">root@pts/2 $ cat ~/.bashrc </div><div class="line">    # .bashrc</div><div class="line">    </div><div class="line">    # User specific aliases and functions</div><div class="line">    </div><div class="line">    alias rm=&apos;rm -i&apos;</div><div class="line">    alias cp=&apos;cp -i&apos;</div><div class="line">    alias mv=&apos;mv -i&apos;</div><div class="line">    </div><div class="line">    ## add by liuchao at 20160607</div><div class="line">    export PYENV_ROOT=&quot;$HOME/.pyenv&quot;</div><div class="line">    export PATH=&quot;$PYENV_ROOT/bin:$PATH&quot;</div><div class="line">    eval &quot;$(pyenv init -)&quot;</div><div class="line">    </div><div class="line">    # Source global definitions</div><div class="line">    if [ -f /etc/bashrc ]; then</div><div class="line">    	. /etc/bashrc</div><div class="line">    fi</div><div class="line"></div><div class="line">## 配置生效</div><div class="line">    ### 方式一</div><div class="line">    重新打开一个session</div><div class="line">    ### 方式二</div><div class="line">    source ~/.bashrc</div><div class="line">    ### 方式三</div><div class="line">    exec $SHELL -l</div></pre></td></tr></table></figure>
+<h2 id="安装多版本"><a href="#安装多版本" class="headerlink" title="安装多版本"></a>安装多版本</h2><h3 id="检查pyenv-安装的版本"><a href="#检查pyenv-安装的版本" class="headerlink" title="检查pyenv 安装的版本"></a>检查pyenv 安装的版本</h3><pre><code>root@pts/3 $ pyenv versions
+* system (set by /root/.pyenv/version)
+</code></pre><p><code>安装之前需要安装一些依赖包，否则会报如下错误</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">root@pts/2 $ pyenv install 3.4.4</div><div class="line">Downloading Python-3.4.4.tgz...</div><div class="line">-&gt; https://www.python.org/ftp/python/3.4.4/Python-3.4.4.tgz</div><div class="line">Installing Python-3.4.4...</div><div class="line">WARNING: The Python bz2 extension was not compiled. Missing the bzip2 lib?</div><div class="line">WARNING: The Python readline extension was not compiled. Missing the GNU readline lib?</div><div class="line">ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?</div><div class="line"></div><div class="line">Please consult to the Wiki page to fix the problem.</div><div class="line">https://github.com/yyuu/pyenv/wiki/Common-build-problems</div><div class="line"></div><div class="line"></div><div class="line">BUILD FAILED (CentOS Linux 7 using python-build 20160509-25-g4c654d7)</div><div class="line"></div><div class="line">Inspect or clean up the working tree at /tmp/python-build.20160607105740.3166</div><div class="line">Results logged to /tmp/python-build.20160607105740.3166.log</div><div class="line"></div><div class="line">Last 10 log lines:</div><div class="line">(cd /root/.pyenv/versions/3.4.4/share/man/man1; ln -s python3.4.1 python3.1)</div><div class="line">if test &quot;xupgrade&quot; != &quot;xno&quot;  ; then \</div><div class="line">	case upgrade in \</div><div class="line">		upgrade) ensurepip=&quot;--upgrade&quot; ;; \</div><div class="line">		install|*) ensurepip=&quot;&quot; ;; \</div><div class="line">	esac; \</div><div class="line">	 ./python -E -m ensurepip \</div><div class="line">		$ensurepip --root=/ ; \</div><div class="line">fi</div><div class="line">Ignoring ensurepip failure: pip 7.1.2 requires SSL/TLS</div></pre></td></tr></table></figure></p>
+<h3 id="安装相关依赖"><a href="#安装相关依赖" class="headerlink" title="安装相关依赖"></a>安装相关依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">yum install readline readline-devel readline-static -y</div><div class="line">yum install openssl openssl-devel openssl-static -y</div><div class="line">yum install sqlite-devel -y</div><div class="line">yum install bzip2-devel bzip2-libs -y</div></pre></td></tr></table></figure>
+<h3 id="安装多版本-1"><a href="#安装多版本-1" class="headerlink" title="安装多版本"></a>安装多版本</h3><blockquote>
+<ul>
+<li>pyenv 安装原理：<br>  从官网下载对应的版本压缩包到<code>/tmp/目录</code>，然后在<code>/tmp/目录</code> 执行编译安装，安装到<code>~/.pyenv/versions/</code>下面</li>
+<li>pyenv 安装很慢的解决办法：<br> 可以先手动下载对应的版本压缩包，放到<code>~/.pyenv/cache/</code>下面，pyenv会校验md5值和完整性，确认无误的话就不会重新下载直接从这里安装</li>
+</ul>
+</blockquote>
+<p><strong> &gt;&gt;附件修改 201606008&lt;&lt;</strong><br>详细可以参考 <a href="http://www.jianshu.com/p/f3190b697e8d" target="_blank" rel="external">pyenv ~/.pyenv/cache 不生效问题</a></p>
+<blockquote>
+<p>关于上面说的如果用 <code>pyenv install</code> 安装很慢的话，可以下载版本压缩包到 <code>~/.pyenv/cache/</code> 目录，这里有个很关键的问题所在，具体如下：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">添加 -v 参数安装的时候看到下载的文件名字是 &apos;Python-3.4.4.tgz&apos;，如果</div><div class="line">把这个文件名copy到 ~/.pyenv/cache/ 下面的是不起作用的，还是会继续</div><div class="line">重新下载。</div><div class="line"></div><div class="line">查找问题后发现，-v 显示的是下载 &apos;Python-3.4.4.tgz&apos;， 但是</div><div class="line">在/tmp/python-xxxxxx.xxxx/ 目录下面却显示的是 &apos;Python-3.4.4.tar.gz&apos; 文件。</div><div class="line"></div><div class="line">所以把下载的 &apos;Python-3.4.4.tgz&apos; 改名为 &apos;Python-3.4.4.tar.gz&apos; 后放到</div><div class="line"> ~/.pyenv/cache/ 下面后，然后 pyenv install 3.4.4 -v 就不会重新下载了。</div><div class="line"></div><div class="line">注意： </div><div class="line">    不能采用把 Python-3.4.4.tgz 解压之后才压缩成 Python-3.4.4.tar.gz 的方式，</div><div class="line">因为这样的话会导致源文件的md5值发生变化。而校验失败重新下载</div></pre></td></tr></table></figure>
+<p><code>-v</code> 显示完整的安装过程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">root@pts/2 $ pyenv install 3.4.4 `[-v]`</div><div class="line">Downloading Python-3.4.4.tgz...</div><div class="line">-&gt; https://www.python.org/ftp/python/3.4.4/Python-3.4.4.tgz</div><div class="line">Installing Python-3.4.4...</div><div class="line">Installed Python-3.4.4 to /root/.pyenv/versions/3.4.4</div></pre></td></tr></table></figure></p>
+<h2 id="检查"><a href="#检查" class="headerlink" title="检查"></a>检查</h2><pre><code>## 查看目前已经安装的
+## system 表示系统安装的
+## * 代表当前使用的是那个版本
+root@pts/3 $ pyenv versions
+* system (set by /root/.pyenv/version)
+  3.4.4
+</code></pre><h2 id="更新数据库"><a href="#更新数据库" class="headerlink" title="更新数据库"></a>更新数据库</h2><pre><code>pyenv rehash 
+</code></pre><h2 id="设置全局python"><a href="#设置全局python" class="headerlink" title="设置全局python"></a>设置全局python</h2><pre><code>root@pts/3 $ python -V
+Python 2.7.5
+
+root@pts/3 $ pyenv global 3.4.4 
+root@pts/3 $ pyenv versions
+  system
+* 3.4.4 (set by /root/.pyenv/version)
+
+root@pts/3 $ python -V
+Python 3.4.4
+</code></pre><h2 id="设置临时python版本"><a href="#设置临时python版本" class="headerlink" title="设置临时python版本"></a>设置临时python版本</h2><pre><code>## 在当前session执行
+pyenv local 2.7.11
+pyenv shell 2.7.11
+
+## 检查发现是从/tmp来设置的临时
+root@pts/3 $ pyenv versions
+  system
+* 2.7.11 (set by /tmp/python-build.20160607105740.3166/Python-3.4.4/.python-version)
+  3.4.4
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">## 在另外一个session中验证</div><div class="line">root@pts/5 $ python -V</div><div class="line">Python 3.4.4</div><div class="line">Dev-mysql-mem [~] 2016-06-07 11:44:30</div><div class="line">root@pts/5 $ pyenv versions </div><div class="line">system</div><div class="line">2.7.11</div><div class="line">* 3.4.4 (set by /root/.pyenv/version)</div></pre></td></tr></table></figure>
+<h2 id="Refer-to"><a href="#Refer-to" class="headerlink" title="Refer to"></a>Refer to</h2><blockquote>
+<p><a href="https://github.com/yyuu/pyenv/blob/master/COMMANDS.md#command-reference" target="_blank" rel="external">pyenv命令列表</a></p>
+</blockquote>
+<hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/pyenv/" rel="tag"># pyenv</a>
+          
+            <a href="/tags/virtualenv/" rel="tag"># virtualenv</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/25/2016-09-25-Centos下python纯净虚拟环境/" rel="next" title="Centos下python纯净虚拟环境">
+                <i class="fa fa-chevron-left"></i> Centos下python纯净虚拟环境
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/26/2016-09-26-Hexo配置评论统计搜索/" rel="prev" title="Hexo配置评论统计搜索">
+                Hexo配置评论统计搜索 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/colinws.jpg"
+               alt="Colin.Liu" />
+          <p class="site-author-name" itemprop="name">Colin.Liu</p>
+           
+              <p class="site-description motion-element" itemprop="description">colinws工作室</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/opscolin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/users/6d793fbacc88/latest_articles" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  简书
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/eagle5063" target="_blank" title="CSDN">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.python.org/" title="Python" target="_blank">Python</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.djangoproject.com/" title="Django" target="_blank">Django</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.hhzzer.com/" title="惠露的博客" target="_blank">惠露的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://brucephaner.github.io" title="潘东升" target="_blank">潘东升</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Centos-下-pyenv-安装-python-多版本"><span class="nav-number">1.</span> <span class="nav-text">Centos 下 pyenv 安装 python 多版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#当前情况"><span class="nav-number">2.</span> <span class="nav-text">当前情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-pyenv"><span class="nav-number">3.</span> <span class="nav-text">安装 pyenv</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装多版本"><span class="nav-number">4.</span> <span class="nav-text">安装多版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#检查pyenv-安装的版本"><span class="nav-number">4.1.</span> <span class="nav-text">检查pyenv 安装的版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装相关依赖"><span class="nav-number">4.2.</span> <span class="nav-text">安装相关依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装多版本-1"><span class="nav-number">4.3.</span> <span class="nav-text">安装多版本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检查"><span class="nav-number">5.</span> <span class="nav-text">检查</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更新数据库"><span class="nav-number">6.</span> <span class="nav-text">更新数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置全局python"><span class="nav-number">7.</span> <span class="nav-text">设置全局python</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置临时python版本"><span class="nav-number">8.</span> <span class="nav-text">设置临时python版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Refer-to"><span class="nav-number">9.</span> <span class="nav-text">Refer to</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Colin.Liu</span>
+
+
+ <span class="site-pv">
+   <script src="http://s6.cnzz.com/stat.php?id=1261041972&web_id=1261041972" type="text/javascript"></script>
+</span>
+ 
+
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+<br>
+
+<!-- 
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次 | 
+</span>
+
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
