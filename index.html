@@ -216,6 +216,26 @@
         </li>
       
         
+        <li class="menu-item menu-item-python">
+          <a href="/Python/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-mysql">
+          <a href="/MySQL/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            MySQL
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-categories">
           <a href="/categories/" rel="section">
             
@@ -255,26 +275,6 @@
           </a>
         </li>
       
-        
-        <li class="menu-item menu-item-sitemap">
-          <a href="/sitemap.xml" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
-            
-            站点地图
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-commonweal">
-          <a href="/404.html" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
-            
-            公益404
-          </a>
-        </li>
-      
 
       
     </ul>
@@ -294,6 +294,170 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/12/Linux中crontab中不能执行Python脚本/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Colin.Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/colinws.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Colinws 工作室">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/05/12/Linux中crontab中不能执行Python脚本/" itemprop="url">Linux中crontab中不能执行Python脚本</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-12T13:55:11+08:00">
+                2017-05-12
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-06-14T13:56:28+08:00">
+                2017-06-14
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Linux crontab中不能执行Python脚本</p>
+<h2 id="gt-gt-摘要"><a href="#gt-gt-摘要" class="headerlink" title="&gt;&gt;摘要"></a>&gt;&gt;摘要</h2><blockquote>
+<p>在Linux下的crontab定时执行shell脚本和Python的时候存在一定的问题，导致某些系统变量取不到，以至于定时计划不能很好的执行。究其原因是因为crontab不能取到全部的环境变量</p>
+</blockquote>
+<hr>
+<h2 id="gt-gt-依赖环境"><a href="#gt-gt-依赖环境" class="headerlink" title="&gt;&gt;依赖环境"></a>&gt;&gt;依赖环境</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[root@i-vowirco9 bin]# cat /etc/redhat-release</div><div class="line">CentOS release 6.8 (Final)</div><div class="line"></div><div class="line">[root@i-vowirco9 bin]# python -V</div><div class="line">Python 2.6.6</div><div class="line"></div><div class="line">[root@i-vowirco9 bin]# pip -V</div><div class="line">pip 9.0.1 from /usr/lib/python2.6/site-packages/pip-9.0.1-py2.6.egg (python 2.6)</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="gt-gt-验证crontab取到的环境变量"><a href="#gt-gt-验证crontab取到的环境变量" class="headerlink" title="&gt;&gt;验证crontab取到的环境变量"></a>&gt;&gt;验证crontab取到的环境变量</h2><p><strong>全新主机上面编写如下shell脚本测试crontab服务可获取到的环境变量</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## 脚本内容</span></div><div class="line"></div><div class="line">vim  /root/bin/test_crontab_env.sh</div><div class="line"></div><div class="line">	<span class="comment">#!/usr/bin/env bash</span></div><div class="line">	<span class="comment">#-*- coding: utf-8 -*-</span></div><div class="line">	<span class="comment">#Author: Colin</span></div><div class="line">	<span class="comment">#Date: 2017-05-12</span></div><div class="line">	<span class="comment">#Desc: 测试crontab服务可获取到的环境变量</span></div><div class="line">	<span class="comment">#</span></div><div class="line"></div><div class="line">	/usr/bin/env &gt; /tmp/colin_env.log</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">## 赋权限</span></div><div class="line"></div><div class="line">	chmod a+x /root/bin/test_crontab_env.sh</div></pre></td></tr></table></figure>
+<p><strong>配置crontab定制执行</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## 配置crontab</span></div><div class="line"></div><div class="line">crontab -e</div><div class="line"></div><div class="line">	*/2 * * * * /root/bin/test_crontab_env.sh</div><div class="line"></div><div class="line"></div><div class="line">两分钟之后查看/tmp/colin_env.log日志</div><div class="line"></div><div class="line">[root@i-vowirco9 bin]<span class="comment"># cat /tmp/colin_env.log</span></div><div class="line">SHELL=/bin/sh</div><div class="line">USER=root</div><div class="line">PATH=/usr/bin:/bin</div><div class="line">_=/usr/bin/env</div><div class="line">PWD=/root</div><div class="line">LANG=en_US.utf8</div><div class="line">HOME=/root</div><div class="line">SHLVL=2</div><div class="line">LOGNAME=root</div><div class="line">LC_CTYPE=en_US.utf8</div></pre></td></tr></table></figure>
+<hr>
+<p>从上面的结果可以看到，crontab运行环境中取到的系统环境变量少之又少</p>
+<hr>
+<h2 id="gt-gt-解决之道"><a href="#gt-gt-解决之道" class="headerlink" title="&gt;&gt;解决之道"></a>&gt;&gt;解决之道</h2><h3 id="gt-gt-gt-用Shell执行Python脚本"><a href="#gt-gt-gt-用Shell执行Python脚本" class="headerlink" title="&gt;&gt;&gt;用Shell执行Python脚本"></a>&gt;&gt;&gt;用Shell执行Python脚本</h3><p>示例如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">## 配置所需系统变量</div><div class="line">[root@i-vowirco9 bin]# tail -2 /etc/profile</div><div class="line">## add for test</div><div class="line">export COLINNAME=&apos;Colin&apos;</div><div class="line"></div><div class="line"></div><div class="line">## 测试脚本</div><div class="line"></div><div class="line">	vim /root/bin/get_crontab_variable.sh</div><div class="line">	#!/usr/bin/env bash</div><div class="line">	#-*- coding: utf-8 -*-</div><div class="line">	#Author: Colin</div><div class="line">	#Date: 2017-05-12</div><div class="line">	#Desc: 测试crontab服务获取指定的变量</div><div class="line">	#</div><div class="line"></div><div class="line">	## 关键所在</div><div class="line">	source /etc/profile</div><div class="line"></div><div class="line">	echo &quot;The given variable is: $&#123;COLINNAME&#125;&quot; &gt; /tmp/colin_env_profile.log</div><div class="line"></div><div class="line">## 执行脚本</div><div class="line"></div><div class="line">	crontab 配置执行脚本，观察输出日志内容</div><div class="line"></div><div class="line">	cat /tmp/colin_env_profile.log</div><div class="line"></div><div class="line">		The given variable is: Colin</div><div class="line"></div><div class="line">## 备注</div><div class="line">		</div><div class="line">	如果注释小 source 所在行，执行脚本，则获取不到COLINNAME变量值</div><div class="line"></div><div class="line">	cat /tmp/colin_env_profile.log</div><div class="line"></div><div class="line">		The given variable is:</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="gt-gt-gt-crontab-配置所需变量"><a href="#gt-gt-gt-crontab-配置所需变量" class="headerlink" title="&gt;&gt;&gt;crontab 配置所需变量"></a>&gt;&gt;&gt;crontab 配置所需变量</h3><p>示例如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">## 在crontab中直接配置变量 如下</span></div><div class="line"></div><div class="line">	[root@i-vowirco9 bin]<span class="comment"># crontab -l |head -1</span></div><div class="line">	COLINNAME=<span class="string">'Colin'</span></div><div class="line"></div><div class="line"><span class="comment">## 测试脚本 /root/bin/get_crontab_variable_v2.sh 只有一行内容，注意没有source那行</span></div><div class="line"></div><div class="line">	[root@i-vowirco9 bin]<span class="comment"># cat get_crontab_variable_v2.sh</span></div><div class="line">	<span class="comment">#!/usr/bin/env bash</span></div><div class="line">	<span class="comment">#-*- coding: utf-8 -*-</span></div><div class="line">	<span class="comment">#Author: Colin</span></div><div class="line">	<span class="comment">#Date: 2017-05-12</span></div><div class="line">	<span class="comment">#Desc: 测试crontab服务获取指定的变量</span></div><div class="line">	<span class="comment">#</span></div><div class="line"></div><div class="line">	<span class="built_in">echo</span> <span class="string">"The given variable is: <span class="variable">$&#123;COLINNAME&#125;</span>"</span> &gt; /tmp/colin_env_crontab.log</div><div class="line"></div><div class="line"><span class="comment">## 执行脚本</span></div><div class="line"></div><div class="line">	crontab 配置执行脚本，观察输出日志内容</div><div class="line"></div><div class="line">	cat /tmp/colin_env_crontab.log</div><div class="line"></div><div class="line">		The given variable is: Colin</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
       
 
@@ -409,7 +573,7 @@
             <h2 id="Requirements"><a href="#Requirements" class="headerlink" title="Requirements"></a>Requirements</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">root@pts/6 $ java -version</div><div class="line">java version "1.8.0_91"</div><div class="line">Java(TM) SE Runtime Environment (build 1.8.0_91-b14)</div><div class="line">Java HotSpot(TM) 64-Bit Server VM (build 25.91-b14, mixed mode)</div></pre></td></tr></table></figure>
 <p>refer to <a href="http://lucene.apache.org/solr/6_3_0/SYSTEM_REQUIREMENTS.html" target="_blank" rel="external"><strong>solr system requirements</strong></a></p>
 <h2 id="Installation-solr"><a href="#Installation-solr" class="headerlink" title="Installation solr"></a>Installation solr</h2><p>这篇主要是以单实例Solr为说明</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span> download new version </div><div class="line">wget https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/solr/6.3.0/solr-6.3.0.zip</div><div class="line"><span class="meta"></span></div><div class="line"># init directory about solr</div><div class="line"><span class="meta">#</span> separate installation folder and data folder</div><div class="line">mkdir /TestDisk/solrtest/&#123;installation,data&#125;</div><div class="line"><span class="meta"></span></div><div class="line"># installation </div><div class="line">root@pts/6 $ solr-6.3.0/bin/install_solr_service.sh solr-6.3.0.zip \</div><div class="line">-d /TestDisk/solrtest/data/ -i /TestDisk/solrtest/installation \</div><div class="line">-p 8985 -s lcsolr</div><div class="line"></div><div class="line">Extracting solr-6.3.0.zip to /TestDisk/solrtest/installation</div><div class="line"></div><div class="line"></div><div class="line">Installing symlink /TestDisk/solrtest/installation/lcsolr -&gt; /TestDisk/solrtest/installation/solr-6.3.0 ...</div><div class="line"></div><div class="line"></div><div class="line">Installing /etc/init.d/lcsolr script ...</div><div class="line"></div><div class="line"></div><div class="line">Installing /etc/default/lcsolr.in.sh ...</div><div class="line"></div><div class="line">Service lcsolr installed.</div><div class="line">Customize Solr startup configuration in /etc/default/lcsolr.in.sh</div><div class="line">Waiting up to 180 seconds to see Solr running on port 8985 [\]</div><div class="line">Started Solr server on port 8985 (pid=17625). Happy searching!</div><div class="line"></div><div class="line"></div><div class="line">Found 1 Solr nodes:</div><div class="line"></div><div class="line">Solr process 17625 running on port 8985</div><div class="line">&#123;</div><div class="line">  "solr_home":"/TestDisk/solrtest/data/data",</div><div class="line">  "version":"6.3.0 a66a44513ee8191e25b477372094bfa846450316 - shalin - 2016-11-02 19:52:42",</div><div class="line">  "startTime":"2016-12-26T11:35:08.023Z",</div><div class="line">  "uptime":"0 days, 0 hours, 0 minutes, 8 seconds",</div><div class="line">  "memory":"84 MB (%17.1) of 490.7 MB"&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"> download new version </span></div><div class="line">wget https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/solr/6.3.0/solr-6.3.0.zip</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"> init directory about solr</span></div><div class="line"><span class="meta">#</span><span class="bash"> separate installation folder and data folder</span></div><div class="line">mkdir /TestDisk/solrtest/&#123;installation,data&#125;</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"> installation </span></div><div class="line">root@pts/6 $ solr-6.3.0/bin/install_solr_service.sh solr-6.3.0.zip \</div><div class="line">-d /TestDisk/solrtest/data/ -i /TestDisk/solrtest/installation \</div><div class="line">-p 8985 -s lcsolr</div><div class="line"></div><div class="line">Extracting solr-6.3.0.zip to /TestDisk/solrtest/installation</div><div class="line"></div><div class="line"></div><div class="line">Installing symlink /TestDisk/solrtest/installation/lcsolr -&gt; /TestDisk/solrtest/installation/solr-6.3.0 ...</div><div class="line"></div><div class="line"></div><div class="line">Installing /etc/init.d/lcsolr script ...</div><div class="line"></div><div class="line"></div><div class="line">Installing /etc/default/lcsolr.in.sh ...</div><div class="line"></div><div class="line">Service lcsolr installed.</div><div class="line">Customize Solr startup configuration in /etc/default/lcsolr.in.sh</div><div class="line">Waiting up to 180 seconds to see Solr running on port 8985 [\]</div><div class="line">Started Solr server on port 8985 (pid=17625). Happy searching!</div><div class="line"></div><div class="line"></div><div class="line">Found 1 Solr nodes:</div><div class="line"></div><div class="line">Solr process 17625 running on port 8985</div><div class="line">&#123;</div><div class="line">  "solr_home":"/TestDisk/solrtest/data/data",</div><div class="line">  "version":"6.3.0 a66a44513ee8191e25b477372094bfa846450316 - shalin - 2016-11-02 19:52:42",</div><div class="line">  "startTime":"2016-12-26T11:35:08.023Z",</div><div class="line">  "uptime":"0 days, 0 hours, 0 minutes, 8 seconds",</div><div class="line">  "memory":"84 MB (%17.1) of 490.7 MB"&#125;</div></pre></td></tr></table></figure>
 <p><code>install_solr_service.sh</code> 参数说明：</p>
 <p>安装脚本自身必须是<code>root</code>运行才行</p>
 <ul>
@@ -1810,168 +1974,6 @@ install hexo --no-optional
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/14/2016-11-14-Flask-config/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Colin.Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/colinws.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Colinws 工作室">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/11/14/2016-11-14-Flask-config/" itemprop="url">Flask的config使用总结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-14T15:58:55+08:00">
-                2016-11-14
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2017-06-13T22:29:00+08:00">
-                2017-06-13
-              </time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Flask/" itemprop="url" rel="index">
-                    <span itemprop="name">Flask</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <blockquote>
-<p>针对项目的不同， <code>flask</code> 可以采用不同配置方式来快速开发</p>
-</blockquote>
-<h2 id="直接配置"><a href="#直接配置" class="headerlink" title="直接配置"></a>直接配置</h2><pre><code>app.config[&apos;HOST&apos;] = &apos;www.baidu.com&apos;
-app.config.update(
-    &apos;HOST&apos; = &apos;www.baidu.com&apos;,
-    &apos;PORT&apos; = 3306
-)
-</code></pre><p>查看具体的配置 <code>print app.config.get(&#39;HOST&#39;)</code></p>
-<h2 id="通过环境变量加载"><a href="#通过环境变量加载" class="headerlink" title="通过环境变量加载"></a>通过环境变量加载</h2><pre><code>export MyAppConfig=&apos;/etc/flask-setting.cfg&apos;
-
-app.config.from_envvar(&apos;MyAppConfig&apos;)
-</code></pre>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/11/14/2016-11-14-Flask-config/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -2021,7 +2023,7 @@ app.config.from_envvar(&apos;MyAppConfig&apos;)
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2043,7 +2045,7 @@ app.config.from_envvar(&apos;MyAppConfig&apos;)
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

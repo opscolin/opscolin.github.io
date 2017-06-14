@@ -216,6 +216,26 @@
         </li>
       
         
+        <li class="menu-item menu-item-python">
+          <a href="/Python/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-mysql">
+          <a href="/MySQL/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            MySQL
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-categories">
           <a href="/categories/" rel="section">
             
@@ -255,26 +275,6 @@
           </a>
         </li>
       
-        
-        <li class="menu-item menu-item-sitemap">
-          <a href="/sitemap.xml" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
-            
-            站点地图
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-commonweal">
-          <a href="/404.html" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
-            
-            公益404
-          </a>
-        </li>
-      
 
       
     </ul>
@@ -294,6 +294,168 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/14/2016-11-14-Flask-config/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Colin.Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/colinws.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Colinws 工作室">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/11/14/2016-11-14-Flask-config/" itemprop="url">Flask的config使用总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-14T15:58:55+08:00">
+                2016-11-14
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-06-13T22:29:00+08:00">
+                2017-06-13
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Flask/" itemprop="url" rel="index">
+                    <span itemprop="name">Flask</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <blockquote>
+<p>针对项目的不同， <code>flask</code> 可以采用不同配置方式来快速开发</p>
+</blockquote>
+<h2 id="直接配置"><a href="#直接配置" class="headerlink" title="直接配置"></a>直接配置</h2><pre><code>app.config[&apos;HOST&apos;] = &apos;www.baidu.com&apos;
+app.config.update(
+    &apos;HOST&apos; = &apos;www.baidu.com&apos;,
+    &apos;PORT&apos; = 3306
+)
+</code></pre><p>查看具体的配置 <code>print app.config.get(&#39;HOST&#39;)</code></p>
+<h2 id="通过环境变量加载"><a href="#通过环境变量加载" class="headerlink" title="通过环境变量加载"></a>通过环境变量加载</h2><pre><code>export MyAppConfig=&apos;/etc/flask-setting.cfg&apos;
+
+app.config.from_envvar(&apos;MyAppConfig&apos;)
+</code></pre>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/11/14/2016-11-14-Flask-config/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
       
 
@@ -1924,226 +2086,6 @@ connecting to: test
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/08/16/2015-08-16-memcache监控小工具stats命令/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Colin.Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/colinws.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Colinws 工作室">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2015/08/16/2015-08-16-memcache监控小工具stats命令/" itemprop="url">memcache监控小工具stats命令</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-08-16T11:50:47+08:00">
-                2015-08-16
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2017-06-13T22:29:00+08:00">
-                2017-06-13
-              </time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Memcache/" itemprop="url" rel="index">
-                    <span itemprop="name">Memcache</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>这里介绍memcache自带的监控小工具<code>stats命令</code><br>可以监控基本的memcache信息，像服务器信息，内存分配数据等</p>
-</blockquote>
-<hr>
-<h2 id="stats"><a href="#stats" class="headerlink" title="stats"></a>stats</h2><p>显示服务器信息、统计数据等</p>
-<pre><code>root@pts/1 $ echo &quot;stats&quot;|nc 192.168.100.13 11211
-STAT pid 23160
-STAT uptime 505840
-STAT time 1479269732
-STAT version 1.4.15
-STAT libevent 2.0.21-stable
-STAT pointer_size 64
-STAT rusage_user 165.030300
-STAT rusage_system 543.017059
-STAT curr_connections 45
-STAT total_connections 1363
-STAT connection_structures 61
-STAT reserved_fds 20
-STAT cmd_get 30320614
-STAT cmd_set 873560
-STAT cmd_flush 0
-STAT cmd_touch 13123
-STAT get_hits 4126857
-STAT get_misses 26193757
-STAT delete_misses 2267
-STAT delete_hits 23858
-STAT incr_misses 12718
-STAT incr_hits 610
-...
-STAT evictions 0
-STAT reclaimed 84878
-END
-</code></pre><h2 id="stats-reset"><a href="#stats-reset" class="headerlink" title="stats reset"></a>stats reset</h2><p>清空统计数据</p>
-<h2 id="stats-items"><a href="#stats-items" class="headerlink" title="stats items"></a>stats items</h2><p>输出各个slab中的item的数目和最老item的年龄(最后一次访问距离现在的秒数) .</p>
-<pre><code>root@pts/1 $ echo &quot;stats items&quot;|nc 192.168.100.13 11211
-STAT items:1:number 12854
-STAT items:1:age 506027
-STAT items:1:evicted 0
-STAT items:1:evicted_nonzero 0
-STAT items:1:evicted_time 0
-STAT items:1:outofmemory 0
-STAT items:1:tailrepairs 0
-STAT items:1:reclaimed 521
-STAT items:1:expired_unfetched 521
-STAT items:1:evicted_unfetched 0
-STAT items:2:number 28683
-STAT items:2:age 506072
-...
-STAT items:18:evicted_unfetched 0
-STAT items:19:number 1
-STAT items:19:age 78406
-STAT items:19:evicted 0
-STAT items:19:evicted_nonzero 0
-STAT items:19:evicted_time 0
-STAT items:19:outofmemory 0
-STAT items:19:tailrepairs 0
-STAT items:19:reclaimed 41
-STAT items:19:expired_unfetched 33
-STAT items:19:evicted_unfetched 0
-END
-</code></pre><h2 id="stats-slabs"><a href="#stats-slabs" class="headerlink" title="stats slabs"></a>stats slabs</h2><pre><code>输出slab中更详细的item信息
-</code></pre><h2 id="stats-sizes"><a href="#stats-sizes" class="headerlink" title="stats sizes"></a>stats sizes</h2><pre><code>输出所有item的大小和个数
-</code></pre><h2 id="stats-cachedump"><a href="#stats-cachedump" class="headerlink" title="stats cachedump  "></a>stats cachedump <slab_id> <limit_num></limit_num></slab_id></h2><pre><code>根据&lt;slab_id&gt;输出相同的&lt;slab_id&gt;中的item信息。
-&lt;limit_num&gt;是输出的个数，
-当&lt;limit_num&gt;为0是输出所有的item。
-</code></pre><h2 id="flush-all"><a href="#flush-all" class="headerlink" title="flush_all"></a>flush_all</h2><pre><code>使在内存中所有的item失效。加入参数则表示在N秒后失效所有item。
-这项操作会立即返回，不会暂停服务器。
-这个操作并`不会真的释放内存空间，而是标志所有的item为失效`
-</code></pre><h2 id="stats-detail-on-off-dump"><a href="#stats-detail-on-off-dump" class="headerlink" title="stats detail [on|off|dump]"></a>stats detail [on|off|dump]</h2><pre><code>设置或者显示详细操作记录
-参数为on，打开详细操作记录
-参数为off，关闭详细操作记录
-参数为dump，显示详细操作记录(每一个键值get、set、hit、del的次数)
-</code></pre><h2 id="特殊说明"><a href="#特殊说明" class="headerlink" title="特殊说明"></a>特殊说明</h2><p>用<code>watch</code>命令来`实时查看·memcache状态 </p>
-<pre><code>watch echo &quot;stats&quot; |nc 192.168.100.13 11211
-</code></pre><hr>
-<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -2193,7 +2135,7 @@ END
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2215,7 +2157,7 @@ END
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
