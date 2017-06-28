@@ -1,0 +1,918 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Linux,git," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="全栈运维" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="原作者：温叶   前言：本教程只面向那些个人开发者，想要自己在linux上搭建一个git中央仓库用来上传发布自己的项目。但是对于团队来说可能有更高的要求，可以使用gitlab搭建一个可视化的类似github的版本管理系统测试环境我使用的linux版本是Centos7，如果大家使用的是其他发行版本，步骤也都是一样的  安装GitCentos上使用的是yum的安装方式 yum install -y g">
+<meta name="keywords" content="Linux,git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在Linux上搭建一个Git中央仓库">
+<meta property="og:url" content="http://yoursite.com/2017/06/28/Linux-build-git-respository/index.html">
+<meta property="og:site_name" content="全栈运维">
+<meta property="og:description" content="原作者：温叶   前言：本教程只面向那些个人开发者，想要自己在linux上搭建一个git中央仓库用来上传发布自己的项目。但是对于团队来说可能有更高的要求，可以使用gitlab搭建一个可视化的类似github的版本管理系统测试环境我使用的linux版本是Centos7，如果大家使用的是其他发行版本，步骤也都是一样的  安装GitCentos上使用的是yum的安装方式 yum install -y g">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1394001-01b0b8b162202586.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1394001-cb23ed39087edab0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/200">
+<meta property="og:updated_time" content="2017-06-28T08:54:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何在Linux上搭建一个Git中央仓库">
+<meta name="twitter:description" content="原作者：温叶   前言：本教程只面向那些个人开发者，想要自己在linux上搭建一个git中央仓库用来上传发布自己的项目。但是对于团队来说可能有更高的要求，可以使用gitlab搭建一个可视化的类似github的版本管理系统测试环境我使用的linux版本是Centos7，如果大家使用的是其他发行版本，步骤也都是一样的  安装GitCentos上使用的是yum的安装方式 yum install -y g">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1394001-01b0b8b162202586.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/28/Linux-build-git-respository/"/>
+
+
+
+
+
+  <title>如何在Linux上搭建一个Git中央仓库 | 全栈运维</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1262262453&web_id=1262262453" language="JavaScript"></script>
+  </div>
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">全栈运维</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">专注于技术</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/Python/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            Python
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-mysql">
+          <a href="/MySQL/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            MySQL
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-download">
+          <a href="/Download/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            下载
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/28/Linux-build-git-respository/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Colin.Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/colinws.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="全栈运维">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">如何在Linux上搭建一个Git中央仓库</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-28T16:47:18+08:00">
+                2017-06-28
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-06-28T16:54:50+08:00">
+                2017-06-28
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="http://upload-images.jianshu.io/upload_images/1394001-01b0b8b162202586.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="git.jpg"><br>原作者：温叶</p>
+<hr>
+<blockquote>
+<p>前言：本教程只面向那些个人开发者，想要自己在<code>linux</code>上搭建一个<code>git</code>中央仓库用来上传发布自己的项目。但是对于团队来说可能有更高的要求，可以使用<code>gitlab</code>搭建一个可视化的类似github的版本管理系统测试环境我使用的<code>linux</code>版本是<code>Centos7</code>，如果大家使用的是其他发行版本，步骤也都是一样的</p>
+</blockquote>
+<h2 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h2><p><code>Centos</code>上使用的是<code>yum</code>的安装方式</p>
+<pre><code>yum install -y git
+</code></pre><h2 id="创建一个Git用户来运行Git服务"><a href="#创建一个Git用户来运行Git服务" class="headerlink" title="创建一个Git用户来运行Git服务"></a>创建一个Git用户来运行Git服务</h2><p>1.创建<code>git</code>用户</p>
+<pre><code>adduser git
+</code></pre><p>2.设置用户密码</p>
+<pre><code>passwd git
+</code></pre><p>3.禁止<code>shell</code>登录</p>
+<pre><code>vim /etc/passwd
+</code></pre><p>找到<code>git</code>用户的那一行并进行修改</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">将</div><div class="line">git:x:1001:1001:,,,:/home/git:/bin/bash</div><div class="line">修改为</div><div class="line">git:x:1001:1001:,,,:/home/git:/usr/bin/git-shell</div></pre></td></tr></table></figure>
+<p>这样一来刚创建<code>git</code>用户可以正常通过<code>ssh</code>使用<code>git</code>，但是无法登录<code>shell</code>，会更加的安全</p>
+<a id="more"></a>
+<h2 id="创建客户端登录证书"><a href="#创建客户端登录证书" class="headerlink" title="创建客户端登录证书"></a>创建客户端登录证书</h2><p>1.客户端创建私钥和公钥</p>
+<pre><code>ssh-keygen -t rsa -C &quot;12345678@qq.com&quot;
+</code></pre><p>创建后你的用户主目录下面就有个<code>.ssh</code>文件夹，里面的<code>id.rsa</code>就是私钥，<code>id.rsa_pub</code>就是公钥。公钥里面的内容待会要用到</p>
+<p>2.<code>git</code>服务器打开<code>RSA</code>验证</p>
+<pre><code>vim /etc/ssh/sshd_config
+</code></pre><p>找到并去掉前面的#号</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">RSAAuthentication yes</div><div class="line">PubkeyAuthentication yes</div><div class="line">AuthorizedKeysFile  .ssh/authorized_keys</div></pre></td></tr></table></figure>
+<p>最后效果如图所示</p>
+<p>3.在<code>git</code>用户的主目录里新建<code>.ssh</code>文件夹，然后在文件夹里面新建文件<code>authorized_keys</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> /home/git</div><div class="line">mkdir .ssh</div><div class="line"><span class="built_in">cd</span> .ssh</div><div class="line">vim authorized_keys</div></pre></td></tr></table></figure>
+<p>4.将客户端的<code>id.rsa_pub</code>公钥写进文件<code>authorized_keys</code>，一行一个。添加了这个以后你连接中央仓库就不需要输入密码了，直接使用公钥和私钥的验证方式</p>
+<h2 id="创建git中央仓库"><a href="#创建git中央仓库" class="headerlink" title="创建git中央仓库"></a>创建git中央仓库</h2><p>1.进入<code>git</code>用户主目录</p>
+<pre><code>cd /home/git
+</code></pre><p>2.创建一个裸仓库 (一般以<code>.git</code>结尾)</p>
+<pre><code>git init --bare test.git #以test.git为例子,当然你可以叫任意名字
+</code></pre><p>裸仓库是没有工作区的，纯粹为了共享</p>
+<p>3.修改仓库用户属主</p>
+<pre><code>chown -R git:git test.git
+</code></pre><h2 id="使用git-hook"><a href="#使用git-hook" class="headerlink" title="使用git hook"></a>使用<code>git hook</code></h2><blockquote>
+<p>中央仓库其实只是一个中介，如果你想要把中央仓库的代码关联到你域名挂载下的文件夹时候，就需要使用到git的钩子来实现，当客户端提交代码到中央仓库，中央仓库能将代码也推送到另外的一个文件夹下面</p>
+</blockquote>
+<p>1.在服务器初始化一个本地仓库</p>
+<p>这个仓库就是你虚拟主机指定的文件夹，也就是你输入域名后会访问到的那个文件夹</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> /var/www     <span class="comment">#进入你虚拟主机的挂载目录</span></div><div class="line">git init         <span class="comment">#初始化git</span></div><div class="line">git remote add origin /home/git/test.git     <span class="comment">#添加远程仓库到隔壁的中央仓库(滑稽)</span></div><div class="line">chown -R git:git /var/www     <span class="comment">#修改服务器本地仓库的用户属组</span></div></pre></td></tr></table></figure>
+<p>2.在中央仓库中设置钩子</p>
+<p>进入远程仓库的钩子目录</p>
+<pre><code>cd /home/git/test.git/hooks
+</code></pre><p>新建一个文件<code>post-receive</code></p>
+<pre><code>vim post-receive
+</code></pre><p>编写<code>shell</code>脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/sh</span></div><div class="line"></div><div class="line"><span class="built_in">unset</span> GIT_DIR</div><div class="line">DeployPath=/var/www         <span class="comment">#这里的目录是你自己虚拟主机的目录</span></div><div class="line"></div><div class="line"><span class="built_in">cd</span> <span class="variable">$DeployPath</span></div><div class="line">git add . -A &amp;&amp; git stash</div><div class="line">git pull origin master</div></pre></td></tr></table></figure>
+<p>当然你也可以视情况而定，将这个脚本编写得更加强大</p>
+<p>给文件<code>post-receive</code>添加可执行权限</p>
+<pre><code>chmod +x post-receive
+</code></pre><h2 id="客户端远程git服务器"><a href="#客户端远程git服务器" class="headerlink" title="客户端远程git服务器"></a>客户端远程<code>git</code>服务器</h2><blockquote>
+<p>这应该也是大家最期待的步骤了，实现本地提交代码上服务器，通过钩子实现项目的自动部署<br>其实到了这一步，就和你以前使用<code>git</code>上传代码到<code>github</code>上面没有什么区别了</p>
+</blockquote>
+<p>1.克隆中央仓库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">方法一</div><div class="line">git <span class="built_in">clone</span> git@192.168.229.130:test.git        <span class="comment">#把ip换成你自己服务器的ip</span></div><div class="line"></div><div class="line">方法二</div><div class="line">git init</div><div class="line">git remote add origin git@118.89.28.249:test.git    <span class="comment">#把ip换成你自己服务器的ip</span></div></pre></td></tr></table></figure>
+<p>2.推送远程服务器 (第一次加上<code>-u</code>参数)</p>
+<pre><code>git push -u origin master
+</code></pre><h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>通过上面的这些步骤其实就可以实现一个简易的<code>git</code>服务器了，是不是很简单呢?</p>
+<blockquote>
+<p>原文地址： <a href="https://segmentfault.com/a/1190000009673544" target="_blank" rel="external">https://segmentfault.com/a/1190000009673544</a></p>
+</blockquote>
+<hr>
+<p>———————————————-<strong><em>更多精彩请关注</em></strong>————————————-<br><img src="http://upload-images.jianshu.io/upload_images/1394001-cb23ed39087edab0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/200" alt="公众号: DailyJobOps"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/git/" rel="tag"># git</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/12/Linux中crontab中不能执行Python脚本/" rel="next" title="Linux中crontab中不能执行Python脚本">
+                <i class="fa fa-chevron-left"></i> Linux中crontab中不能执行Python脚本
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/28/upgrade-docker-to-1-9-under-centos6-6/" rel="prev" title="Centos6.6升级docker到1.9">
+                Centos6.6升级docker到1.9 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/colinws.jpg"
+               alt="Colin.Liu" />
+          <p class="site-author-name" itemprop="name">Colin.Liu</p>
+           
+              <p class="site-description motion-element" itemprop="description">努力奔向全栈运维</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">51</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/opscolin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/users/6d793fbacc88/latest_articles" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  简书
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/eagle5063" target="_blank" title="CSDN">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.python.org/" title="Python" target="_blank">Python</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.djangoproject.com/" title="Django" target="_blank">Django</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.hhzzer.com/" title="惠露的博客" target="_blank">惠露的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://brucephaner.github.io" title="潘东升" target="_blank">潘东升</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Git"><span class="nav-number">1.</span> <span class="nav-text">安装Git</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建一个Git用户来运行Git服务"><span class="nav-number">2.</span> <span class="nav-text">创建一个Git用户来运行Git服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建客户端登录证书"><span class="nav-number">3.</span> <span class="nav-text">创建客户端登录证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建git中央仓库"><span class="nav-number">4.</span> <span class="nav-text">创建git中央仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用git-hook"><span class="nav-number">5.</span> <span class="nav-text">使用git hook</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端远程git服务器"><span class="nav-number">6.</span> <span class="nav-text">客户端远程git服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结尾"><span class="nav-number">7.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Colin.Liu | </span>
+
+
+ <span class="site-pv">
+   <script src="http://s6.cnzz.com/stat.php?id=1262262453&web_id=1262262453" type="text/javascript"></script>
+</span>
+ 
+
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+<br>
+
+<!-- 
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次 | 
+</span>
+
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

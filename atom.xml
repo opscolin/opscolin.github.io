@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-06-14T06:04:14.000Z</updated>
+  <updated>2017-06-28T08:55:24.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,209 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>docker配置daocloud加速器</title>
+    <link href="http://yoursite.com/2017/06/28/config-daocloudaccelerator-under-centos/"/>
+    <id>http://yoursite.com/2017/06/28/config-daocloudaccelerator-under-centos/</id>
+    <published>2017-06-28T08:49:18.000Z</published>
+    <updated>2017-06-28T08:55:24.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><blockquote>
+<p>国内环境的问题，访问<code>docker</code>官网的镜像源超级慢。现在各种翻墙也在封杀中。如可以通过配置加速器来加班docker镜像的拉取、build等过程，国内知名的有<code>DaoCloud</code>、<code>阿里云</code>等都有提供<code>加速器</code></p>
+</blockquote>
+<p><img src="http://upload-images.jianshu.io/upload_images/1394001-ee8de7c1a642fa60.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Docker.jpg"></p>
+<hr>
+<p>这里采用DaoCloud的加速器配置加速</p>
+<p>登录DaoCloud官网注册账号之后进入到 <a href="https://www.daocloud.io/mirror#accelerator-doc" target="_blank" rel="external">加速器页面</a>，会得到如下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://eddfa622.m.daocloud.io</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<h5 id="在Linux上面用root执行该命令"><a href="#在Linux上面用root执行该命令" class="headerlink" title="在Linux上面用root执行该命令"></a>在<code>Linux</code>上面用<code>root</code>执行该命令</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">root@pts/0 $ curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://eddfa622.m.daocloud.io</div><div class="line">please upgrade your docker to v1.9 or later</div></pre></td></tr></table></figure>
+<h5 id="docker-version-检查版本"><a href="#docker-version-检查版本" class="headerlink" title="docker version 检查版本"></a><code>docker version</code> 检查版本</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">root@pts/0 <span class="comment"># docker version</span></div><div class="line">Client:</div><div class="line"> Version:      1.7.1</div><div class="line"> API version:  1.21</div><div class="line"> Go version:   go1.4.3</div><div class="line"> Git commit:   a34a1d5</div><div class="line"> Built:        Fri Nov 20 17:56:04 UTC 2015</div><div class="line"> OS/Arch:      linux/amd64</div><div class="line"></div><div class="line">Server:</div><div class="line"> Version:      1.7.1</div><div class="line"> API version:  1.21</div><div class="line"> Go version:   go1.4.3</div><div class="line"> Git commit:   a34a1d5</div><div class="line"> Built:        Fri Nov 20 17:56:04 UTC 2015</div><div class="line"> OS/Arch:      linux/amd64</div></pre></td></tr></table></figure>
+<hr>
+<p>故需要<code>docker升级</code>，同时建议<code>内核版本</code>也升级到 <code>3.10</code><br>具体升级请参考如下链接：</p>
+<blockquote>
+<p><a href="http://www.jianshu.com/p/14069fd3bce2" target="_blank" rel="external">centos下内核升级</a></p>
+</blockquote>
+<p><strong>注意</strong>：</p>
+<p>之前的写过一篇升级到docker1.6，但是该方式是得到最近最新版，可以通过 <a href="https://get.docker.com/builds/" target="_blank" rel="external">该链接</a> 确认最新版是<code>17.05.0</code>，该版本<code>docker官网</code>强烈建议用<code>centos7</code></p>
+<p>关于docker升级可以参考下面的连接</p>
+<blockquote>
+<p><a href="http://www.jianshu.com/p/31248c006c06" target="_blank" rel="external">centos6.6升级docker到1.9</a></p>
+</blockquote>
+<hr>
+<p>升级之后继续执行之前的命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">root@pts/0 $ curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://eddfa622.m.daocloud.io</div><div class="line">docker version &gt;= 1.12</div><div class="line">&#123;<span class="string">"registry-mirrors"</span>: [<span class="string">"http://eddfa622.m.daocloud.io"</span>],&#125;</div><div class="line">Success.</div><div class="line">You need to restart docker to take effect: sudo systemctl restart docker</div></pre></td></tr></table></figure>
+<p>发现在<code>/etc/docker/daemon.json</code>中新增如下配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">root@pts/0 $ cat /etc/docker/daemon.json</div><div class="line">&#123;&quot;registry-mirrors&quot;: [&quot;http://eddfa622.m.daocloud.io&quot;],&#125;</div></pre></td></tr></table></figure>
+<p>这里请 <strong>注意</strong> 倒数第二个字符 <code>&#39;,&#39;</code><br>如果只是这个配置，记得<code>去掉</code>后面的<code>&#39;,&#39;</code> 在重启<code>docker</code>服务，不然肯定会语法错误哦~</p>
+<h2 id="重启docker"><a href="#重启docker" class="headerlink" title="重启docker"></a>重启docker</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/etc/init.d/docker restart</div></pre></td></tr></table></figure>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>然后<code>docker pull</code>去拉取一些镜像的时候明显发现速度相比快了很多！</p>
+<hr>
+<p>———————————————-<strong><em>更多精彩请关注</em></strong>————————————-<br><img src="http://upload-images.jianshu.io/upload_images/1394001-cb23ed39087edab0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/200" alt="公众号: DailyJobOps"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;摘要&quot;&gt;&lt;a href=&quot;#摘要&quot; class=&quot;headerlink&quot; title=&quot;摘要&quot;&gt;&lt;/a&gt;摘要&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;国内环境的问题，访问&lt;code&gt;docker&lt;/code&gt;官网的镜像源超级慢。现在各种翻墙也在封杀中。如可以通过配置加速器来加班docker镜像的拉取、build等过程，国内知名的有&lt;code&gt;DaoCloud&lt;/code&gt;、&lt;code&gt;阿里云&lt;/code&gt;等都有提供&lt;code&gt;加速器&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/1394001-ee8de7c1a642fa60.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;Docker.jpg&quot;&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;这里采用DaoCloud的加速器配置加速&lt;/p&gt;
+&lt;p&gt;登录DaoCloud官网注册账号之后进入到 &lt;a href=&quot;https://www.daocloud.io/mirror#accelerator-doc&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;加速器页面&lt;/a&gt;，会得到如下命令&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://eddfa622.m.daocloud.io&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+    
+    </summary>
+    
+    
+      <category term="docker" scheme="http://yoursite.com/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Centos6.6升级docker到1.9</title>
+    <link href="http://yoursite.com/2017/06/28/upgrade-docker-to-1-9-under-centos6-6/"/>
+    <id>http://yoursite.com/2017/06/28/upgrade-docker-to-1-9-under-centos6-6/</id>
+    <published>2017-06-28T08:47:48.000Z</published>
+    <updated>2017-06-28T08:55:05.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><blockquote>
+<p>为了加快docker镜像的拉取和构建，采用DaoCloud等docker加速器来加快镜像的拉取。<br>但是像DaoCloud等需要docker版本1.9+</p>
+</blockquote>
+<p><img src="http://upload-images.jianshu.io/upload_images/1394001-3233f71289f9a6af.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Docker.jpg"></p>
+<hr>
+<p>Centos6.6下采用最新<code>epel</code>的YUM源可以安装到<code>docker 1.7</code>版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## centos6下安装epel源</span></div><div class="line">wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm</div><div class="line">sudo rpm -Uvh epel-release-6*.rpm</div><div class="line"></div><div class="line"><span class="comment">## centos6安装docker1.7</span></div><div class="line">yum install docker-io</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="安装docker-1-9"><a href="#安装docker-1-9" class="headerlink" title="安装docker 1.9"></a>安装<code>docker 1.9</code></h2><a id="more"></a>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## download</span></div><div class="line">curl -sSL -O https://get.docker.com/builds/Linux/x86_64/docker-1.9.1</div><div class="line"><span class="comment">## grant privilege</span></div><div class="line">chmod +x docker-1.9.1 </div><div class="line"><span class="comment">## backup and make new</span></div><div class="line">mv /usr/bin/docker /usr/bin/docker-1.7</div><div class="line">cp ./docker-1.9.1 /usr/bin/docker</div><div class="line"></div><div class="line"><span class="comment">## restart docker</span></div><div class="line">/etc/init.d/docker restart</div></pre></td></tr></table></figure>
+<h2 id="验证安装"><a href="#验证安装" class="headerlink" title="验证安装"></a>验证安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">root@pts/0 <span class="comment"># docker version</span></div><div class="line">Client:</div><div class="line"> Version:      1.9.1</div><div class="line"> API version:  1.21</div><div class="line"> Go version:   go1.4.3</div><div class="line"> Git commit:   a34a1d5</div><div class="line"> Built:        Fri Nov 20 17:56:04 UTC 2015</div><div class="line"> OS/Arch:      linux/amd64</div><div class="line"></div><div class="line">Server:</div><div class="line"> Version:      1.9.1</div><div class="line"> API version:  1.21</div><div class="line"> Go version:   go1.4.3</div><div class="line"> Git commit:   a34a1d5</div><div class="line"> Built:        Fri Nov 20 17:56:04 UTC 2015</div><div class="line"> OS/Arch:      linux/amd64</div></pre></td></tr></table></figure>
+<h2 id="小福利"><a href="#小福利" class="headerlink" title="小福利"></a>小福利</h2><p>docker官网下载很慢，我把下载的docker1.9放到了自己的Blog，欢迎大家下载</p>
+<p>blog地址 <a href="http://blog.colinspace.com/" target="_blank" rel="external">http://blog.colinspace.com/</a><br><a href="http://blog.colinspace.com/downpath/docker-1.9.1" target="_blank" rel="external">docker1.9下载地址</a></p>
+<hr>
+<p>———————————————-<strong><em>更多精彩请关注</em></strong>————————————-<br><img src="http://upload-images.jianshu.io/upload_images/1394001-cb23ed39087edab0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/200" alt="公众号: DailyJobOps"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;摘要&quot;&gt;&lt;a href=&quot;#摘要&quot; class=&quot;headerlink&quot; title=&quot;摘要&quot;&gt;&lt;/a&gt;摘要&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;为了加快docker镜像的拉取和构建，采用DaoCloud等docker加速器来加快镜像的拉取。&lt;br&gt;但是像DaoCloud等需要docker版本1.9+&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/1394001-3233f71289f9a6af.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;Docker.jpg&quot;&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Centos6.6下采用最新&lt;code&gt;epel&lt;/code&gt;的YUM源可以安装到&lt;code&gt;docker 1.7&lt;/code&gt;版本&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;## centos6下安装epel源&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;sudo rpm -Uvh epel-release-6*.rpm&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;## centos6安装docker1.7&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;yum install docker-io&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;hr&gt;
+&lt;h2 id=&quot;安装docker-1-9&quot;&gt;&lt;a href=&quot;#安装docker-1-9&quot; class=&quot;headerlink&quot; title=&quot;安装docker 1.9&quot;&gt;&lt;/a&gt;安装&lt;code&gt;docker 1.9&lt;/code&gt;&lt;/h2&gt;
+    
+    </summary>
+    
+    
+      <category term="docker" scheme="http://yoursite.com/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>如何在Linux上搭建一个Git中央仓库</title>
+    <link href="http://yoursite.com/2017/06/28/Linux-build-git-respository/"/>
+    <id>http://yoursite.com/2017/06/28/Linux-build-git-respository/</id>
+    <published>2017-06-28T08:47:18.000Z</published>
+    <updated>2017-06-28T08:54:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="http://upload-images.jianshu.io/upload_images/1394001-01b0b8b162202586.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="git.jpg"><br>原作者：温叶</p>
+<hr>
+<blockquote>
+<p>前言：本教程只面向那些个人开发者，想要自己在<code>linux</code>上搭建一个<code>git</code>中央仓库用来上传发布自己的项目。但是对于团队来说可能有更高的要求，可以使用<code>gitlab</code>搭建一个可视化的类似github的版本管理系统测试环境我使用的<code>linux</code>版本是<code>Centos7</code>，如果大家使用的是其他发行版本，步骤也都是一样的</p>
+</blockquote>
+<h2 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h2><p><code>Centos</code>上使用的是<code>yum</code>的安装方式</p>
+<pre><code>yum install -y git
+</code></pre><h2 id="创建一个Git用户来运行Git服务"><a href="#创建一个Git用户来运行Git服务" class="headerlink" title="创建一个Git用户来运行Git服务"></a>创建一个Git用户来运行Git服务</h2><p>1.创建<code>git</code>用户</p>
+<pre><code>adduser git
+</code></pre><p>2.设置用户密码</p>
+<pre><code>passwd git
+</code></pre><p>3.禁止<code>shell</code>登录</p>
+<pre><code>vim /etc/passwd
+</code></pre><p>找到<code>git</code>用户的那一行并进行修改</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">将</div><div class="line">git:x:1001:1001:,,,:/home/git:/bin/bash</div><div class="line">修改为</div><div class="line">git:x:1001:1001:,,,:/home/git:/usr/bin/git-shell</div></pre></td></tr></table></figure>
+<p>这样一来刚创建<code>git</code>用户可以正常通过<code>ssh</code>使用<code>git</code>，但是无法登录<code>shell</code>，会更加的安全</p>
+<a id="more"></a>
+<h2 id="创建客户端登录证书"><a href="#创建客户端登录证书" class="headerlink" title="创建客户端登录证书"></a>创建客户端登录证书</h2><p>1.客户端创建私钥和公钥</p>
+<pre><code>ssh-keygen -t rsa -C &quot;12345678@qq.com&quot;
+</code></pre><p>创建后你的用户主目录下面就有个<code>.ssh</code>文件夹，里面的<code>id.rsa</code>就是私钥，<code>id.rsa_pub</code>就是公钥。公钥里面的内容待会要用到</p>
+<p>2.<code>git</code>服务器打开<code>RSA</code>验证</p>
+<pre><code>vim /etc/ssh/sshd_config
+</code></pre><p>找到并去掉前面的#号</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">RSAAuthentication yes</div><div class="line">PubkeyAuthentication yes</div><div class="line">AuthorizedKeysFile  .ssh/authorized_keys</div></pre></td></tr></table></figure>
+<p>最后效果如图所示</p>
+<p>3.在<code>git</code>用户的主目录里新建<code>.ssh</code>文件夹，然后在文件夹里面新建文件<code>authorized_keys</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> /home/git</div><div class="line">mkdir .ssh</div><div class="line"><span class="built_in">cd</span> .ssh</div><div class="line">vim authorized_keys</div></pre></td></tr></table></figure>
+<p>4.将客户端的<code>id.rsa_pub</code>公钥写进文件<code>authorized_keys</code>，一行一个。添加了这个以后你连接中央仓库就不需要输入密码了，直接使用公钥和私钥的验证方式</p>
+<h2 id="创建git中央仓库"><a href="#创建git中央仓库" class="headerlink" title="创建git中央仓库"></a>创建git中央仓库</h2><p>1.进入<code>git</code>用户主目录</p>
+<pre><code>cd /home/git
+</code></pre><p>2.创建一个裸仓库 (一般以<code>.git</code>结尾)</p>
+<pre><code>git init --bare test.git #以test.git为例子,当然你可以叫任意名字
+</code></pre><p>裸仓库是没有工作区的，纯粹为了共享</p>
+<p>3.修改仓库用户属主</p>
+<pre><code>chown -R git:git test.git
+</code></pre><h2 id="使用git-hook"><a href="#使用git-hook" class="headerlink" title="使用git hook"></a>使用<code>git hook</code></h2><blockquote>
+<p>中央仓库其实只是一个中介，如果你想要把中央仓库的代码关联到你域名挂载下的文件夹时候，就需要使用到git的钩子来实现，当客户端提交代码到中央仓库，中央仓库能将代码也推送到另外的一个文件夹下面</p>
+</blockquote>
+<p>1.在服务器初始化一个本地仓库</p>
+<p>这个仓库就是你虚拟主机指定的文件夹，也就是你输入域名后会访问到的那个文件夹</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> /var/www     <span class="comment">#进入你虚拟主机的挂载目录</span></div><div class="line">git init         <span class="comment">#初始化git</span></div><div class="line">git remote add origin /home/git/test.git     <span class="comment">#添加远程仓库到隔壁的中央仓库(滑稽)</span></div><div class="line">chown -R git:git /var/www     <span class="comment">#修改服务器本地仓库的用户属组</span></div></pre></td></tr></table></figure>
+<p>2.在中央仓库中设置钩子</p>
+<p>进入远程仓库的钩子目录</p>
+<pre><code>cd /home/git/test.git/hooks
+</code></pre><p>新建一个文件<code>post-receive</code></p>
+<pre><code>vim post-receive
+</code></pre><p>编写<code>shell</code>脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/sh</span></div><div class="line"></div><div class="line"><span class="built_in">unset</span> GIT_DIR</div><div class="line">DeployPath=/var/www         <span class="comment">#这里的目录是你自己虚拟主机的目录</span></div><div class="line"></div><div class="line"><span class="built_in">cd</span> <span class="variable">$DeployPath</span></div><div class="line">git add . -A &amp;&amp; git stash</div><div class="line">git pull origin master</div></pre></td></tr></table></figure>
+<p>当然你也可以视情况而定，将这个脚本编写得更加强大</p>
+<p>给文件<code>post-receive</code>添加可执行权限</p>
+<pre><code>chmod +x post-receive
+</code></pre><h2 id="客户端远程git服务器"><a href="#客户端远程git服务器" class="headerlink" title="客户端远程git服务器"></a>客户端远程<code>git</code>服务器</h2><blockquote>
+<p>这应该也是大家最期待的步骤了，实现本地提交代码上服务器，通过钩子实现项目的自动部署<br>其实到了这一步，就和你以前使用<code>git</code>上传代码到<code>github</code>上面没有什么区别了</p>
+</blockquote>
+<p>1.克隆中央仓库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">方法一</div><div class="line">git <span class="built_in">clone</span> git@192.168.229.130:test.git        <span class="comment">#把ip换成你自己服务器的ip</span></div><div class="line"></div><div class="line">方法二</div><div class="line">git init</div><div class="line">git remote add origin git@118.89.28.249:test.git    <span class="comment">#把ip换成你自己服务器的ip</span></div></pre></td></tr></table></figure>
+<p>2.推送远程服务器 (第一次加上<code>-u</code>参数)</p>
+<pre><code>git push -u origin master
+</code></pre><h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>通过上面的这些步骤其实就可以实现一个简易的<code>git</code>服务器了，是不是很简单呢?</p>
+<blockquote>
+<p>原文地址： <a href="https://segmentfault.com/a/1190000009673544" target="_blank" rel="external">https://segmentfault.com/a/1190000009673544</a></p>
+</blockquote>
+<hr>
+<p>———————————————-<strong><em>更多精彩请关注</em></strong>————————————-<br><img src="http://upload-images.jianshu.io/upload_images/1394001-cb23ed39087edab0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/200" alt="公众号: DailyJobOps"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/1394001-01b0b8b162202586.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;git.jpg&quot;&gt;&lt;br&gt;原作者：温叶&lt;/p&gt;
+&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;前言：本教程只面向那些个人开发者，想要自己在&lt;code&gt;linux&lt;/code&gt;上搭建一个&lt;code&gt;git&lt;/code&gt;中央仓库用来上传发布自己的项目。但是对于团队来说可能有更高的要求，可以使用&lt;code&gt;gitlab&lt;/code&gt;搭建一个可视化的类似github的版本管理系统测试环境我使用的&lt;code&gt;linux&lt;/code&gt;版本是&lt;code&gt;Centos7&lt;/code&gt;，如果大家使用的是其他发行版本，步骤也都是一样的&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;安装Git&quot;&gt;&lt;a href=&quot;#安装Git&quot; class=&quot;headerlink&quot; title=&quot;安装Git&quot;&gt;&lt;/a&gt;安装Git&lt;/h2&gt;&lt;p&gt;&lt;code&gt;Centos&lt;/code&gt;上使用的是&lt;code&gt;yum&lt;/code&gt;的安装方式&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;yum install -y git
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;创建一个Git用户来运行Git服务&quot;&gt;&lt;a href=&quot;#创建一个Git用户来运行Git服务&quot; class=&quot;headerlink&quot; title=&quot;创建一个Git用户来运行Git服务&quot;&gt;&lt;/a&gt;创建一个Git用户来运行Git服务&lt;/h2&gt;&lt;p&gt;1.创建&lt;code&gt;git&lt;/code&gt;用户&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adduser git
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;2.设置用户密码&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;passwd git
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;3.禁止&lt;code&gt;shell&lt;/code&gt;登录&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;vim /etc/passwd
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;找到&lt;code&gt;git&lt;/code&gt;用户的那一行并进行修改&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;将&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;git:x:1001:1001:,,,:/home/git:/bin/bash&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;修改为&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;git:x:1001:1001:,,,:/home/git:/usr/bin/git-shell&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;这样一来刚创建&lt;code&gt;git&lt;/code&gt;用户可以正常通过&lt;code&gt;ssh&lt;/code&gt;使用&lt;code&gt;git&lt;/code&gt;，但是无法登录&lt;code&gt;shell&lt;/code&gt;，会更加的安全&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Linux" scheme="http://yoursite.com/tags/Linux/"/>
+    
+      <category term="git" scheme="http://yoursite.com/tags/git/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux中crontab中不能执行Python脚本</title>
@@ -155,24 +358,24 @@ bin/solr create -c james [-p 8985]
 usermod: user James is currently used by process 12345
 </code></pre><p>说明有用<code>james</code>用户运行的程序，需要把相关的程序停掉之后再执行上面的命令</p>
 <p>Examples:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span># add user 'james' for test</div><div class="line">root@pts/0 $ useradd james</div><div class="line"><span class="meta"></span></div><div class="line">## check original id</div><div class="line">root@pts/0 $ id james</div><div class="line">uid=1007(james) gid=1008(james) 组=1008(james)</div><div class="line"><span class="meta"></span></div><div class="line">## check HOME directory</div><div class="line">root@pts/0 $ ls -ld /home/james/</div><div class="line">drwx------ 2 james james 4096 12月 23 11:46 /home/james/</div><div class="line"><span class="meta"></span></div><div class="line">## try to change or rename and verify</div><div class="line">root@pts/0 $ usermod -l newjames james</div><div class="line"></div><div class="line">root@pts/0 $ id james</div><div class="line">id: james: no such user</div><div class="line"></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=1007(newjames) gid=1008(james) 组=1008(james)</div><div class="line"><span class="meta"></span></div><div class="line"></div><div class="line">## check HOME folder</div><div class="line">root@pts/0 $ ls -ld /home/james/</div><div class="line">drwx------ 2 newjames james 4096 12月 23 11:46 /home/james/</div><div class="line"></div><div class="line">root@pts/0 $ ls -ld /home/newjames</div><div class="line">ls: 无法访问/home/newjames: 没有那个文件或目录</div><div class="line">Dev-web-solr [~] 2016-12-23 11:47:22</div><div class="line">root@pts/0 $</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"><span class="comment"># add user 'james' for test</span></span></div><div class="line">root@pts/0 $ useradd james</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># check original id</span></span></div><div class="line">root@pts/0 $ id james</div><div class="line">uid=1007(james) gid=1008(james) 组=1008(james)</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># check HOME directory</span></span></div><div class="line">root@pts/0 $ ls -ld /home/james/</div><div class="line">drwx------ 2 james james 4096 12月 23 11:46 /home/james/</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># try to change or rename and verify</span></span></div><div class="line">root@pts/0 $ usermod -l newjames james</div><div class="line"></div><div class="line">root@pts/0 $ id james</div><div class="line">id: james: no such user</div><div class="line"></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=1007(newjames) gid=1008(james) 组=1008(james)</div><div class="line"><span class="meta"></span></div><div class="line"></div><div class="line">#<span class="bash"><span class="comment"># check HOME folder</span></span></div><div class="line">root@pts/0 $ ls -ld /home/james/</div><div class="line">drwx------ 2 newjames james 4096 12月 23 11:46 /home/james/</div><div class="line"></div><div class="line">root@pts/0 $ ls -ld /home/newjames</div><div class="line">ls: 无法访问/home/newjames: 没有那个文件或目录</div><div class="line">Dev-web-solr [~] 2016-12-23 11:47:22</div><div class="line">root@pts/0 $</div></pre></td></tr></table></figure>
 <p>从上面可以看出，变化只仅仅是username，UID/GUID/HOME目录都没有改变</p>
 <hr>
 <p>修改UID/GID相对很简单，结合上面的例子。继续如下：</p>
 <h3 id="修改UID"><a href="#修改UID" class="headerlink" title="修改UID"></a>修改UID</h3><p>Usage:</p>
 <pre><code>usermod -u NEW-UID username
 </code></pre><p>Examples:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span># original UID is 1007</div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=1007(newjames) gid=1008(james) 组=1008(james)</div><div class="line"><span class="meta"></span></div><div class="line">## change 1007 to 2007</div><div class="line">root@pts/0 $ usermod -u 2007 newjames</div><div class="line"><span class="meta"></span></div><div class="line">## modified to 2007</div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=2007(newjames) gid=1008(james) 组=1008(james)</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"><span class="comment"># original UID is 1007</span></span></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=1007(newjames) gid=1008(james) 组=1008(james)</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># change 1007 to 2007</span></span></div><div class="line">root@pts/0 $ usermod -u 2007 newjames</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># modified to 2007</span></span></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=2007(newjames) gid=1008(james) 组=1008(james)</div></pre></td></tr></table></figure>
 <hr>
 <h3 id="修改GID-group-name"><a href="#修改GID-group-name" class="headerlink" title="修改GID/group-name"></a>修改GID/group-name</h3><p>Usage:</p>
 <pre><code>groupmod -g NEW-GID groupname
 </code></pre><p>Examples:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span># james to newjames, but james's group is still 'james'</div><div class="line">root@pts/0 $ groupmod -g 2007 newjames</div><div class="line">groupmod：“newjames”组不存在</div><div class="line"></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=2007(newjames) gid=1008(james) 组=1008(james)</div><div class="line"></div><div class="line">root@pts/0 $ groupmod -g 2007 james</div><div class="line"><span class="meta"></span></div><div class="line">## try to rename group</div><div class="line">root@pts/0 $ groupmod --help</div><div class="line">用法：groupmod [选项] 组</div><div class="line"></div><div class="line">选项:</div><div class="line">  -g, --gid GID                 将组 ID 改为 GID</div><div class="line">  -h, --help                    显示此帮助信息并推出</div><div class="line">  -n, --new-name NEW_GROUP      改名为 NEW_GROUP</div><div class="line">  -o, --non-unique              允许使用重复的 GID</div><div class="line">  -p, --password PASSWORD	将密码更改为(加密过的) PASSWORD</div><div class="line">  -R, --root CHROOT_DIR         chroot 到的目录</div><div class="line"></div><div class="line"></div><div class="line">root@pts/0 $ groupmod -n newjamesgroup james</div><div class="line"><span class="meta"></span></div><div class="line"></div><div class="line">## find that group was renamed</div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=2007(newjames) gid=1008(newjamesgroup) 组=1008(newjamesgroup)</div><div class="line"><span class="meta"></span></div><div class="line"></div><div class="line">## try to change GID</div><div class="line">root@pts/0 $ groupmod -g 2007 james</div><div class="line"></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=2007(newjames) gid= 2007(newjamesgroup) 组= 2007(newjamesgroup)</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"><span class="comment"># james to newjames, but james's group is still 'james'</span></span></div><div class="line">root@pts/0 $ groupmod -g 2007 newjames</div><div class="line">groupmod：“newjames”组不存在</div><div class="line"></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=2007(newjames) gid=1008(james) 组=1008(james)</div><div class="line"></div><div class="line">root@pts/0 $ groupmod -g 2007 james</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># try to rename group</span></span></div><div class="line">root@pts/0 $ groupmod --help</div><div class="line">用法：groupmod [选项] 组</div><div class="line"></div><div class="line">选项:</div><div class="line">  -g, --gid GID                 将组 ID 改为 GID</div><div class="line">  -h, --help                    显示此帮助信息并推出</div><div class="line">  -n, --new-name NEW_GROUP      改名为 NEW_GROUP</div><div class="line">  -o, --non-unique              允许使用重复的 GID</div><div class="line">  -p, --password PASSWORD	将密码更改为(加密过的) PASSWORD</div><div class="line">  -R, --root CHROOT_DIR         chroot 到的目录</div><div class="line"></div><div class="line"></div><div class="line">root@pts/0 $ groupmod -n newjamesgroup james</div><div class="line"><span class="meta"></span></div><div class="line"></div><div class="line">#<span class="bash"><span class="comment"># find that group was renamed</span></span></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=2007(newjames) gid=1008(newjamesgroup) 组=1008(newjamesgroup)</div><div class="line"><span class="meta"></span></div><div class="line"></div><div class="line">#<span class="bash"><span class="comment"># try to change GID</span></span></div><div class="line">root@pts/0 $ groupmod -g 2007 james</div><div class="line"></div><div class="line">root@pts/0 $ id newjames</div><div class="line">uid=2007(newjames) gid= 2007(newjamesgroup) 组= 2007(newjamesgroup)</div></pre></td></tr></table></figure>
 <h3 id="修改用户HOME显示"><a href="#修改用户HOME显示" class="headerlink" title="修改用户HOME显示"></a>修改用户HOME显示</h3><p>最后我们来考虑下前面说过的rename用户名称之后，HOME家目录的显示没有改变。</p>
 <p>Usage:</p>
 <pre><code>usermod -d /home/new-user -m new-user
 </code></pre><p>Examples:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">root@pts/0 $ ls -ld /home/james</div><div class="line">drwx------ 2 newjames 1008 4096 12月 23 11:46 /home/james</div><div class="line"></div><div class="line">root@pts/0 $ ls -ld /home/newjames</div><div class="line">ls: 无法访问/home/newjames: 没有那个文件或目录</div><div class="line"><span class="meta"></span></div><div class="line">## change HOME folder</div><div class="line">root@pts/0 $ usermod -d /home/newjames -m newjames</div><div class="line"></div><div class="line">root@pts/0 $ ls -ld /home/newjames</div><div class="line">drwx------ 2 newjames 1008 4096 12月 23 11:46 /home/newjames</div><div class="line"></div><div class="line">root@pts/0 $ ls -ld /home/james</div><div class="line">ls: 无法访问/home/james: 没有那个文件或目录</div><div class="line">root@pts/0 $</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">root@pts/0 $ ls -ld /home/james</div><div class="line">drwx------ 2 newjames 1008 4096 12月 23 11:46 /home/james</div><div class="line"></div><div class="line">root@pts/0 $ ls -ld /home/newjames</div><div class="line">ls: 无法访问/home/newjames: 没有那个文件或目录</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"><span class="comment"># change HOME folder</span></span></div><div class="line">root@pts/0 $ usermod -d /home/newjames -m newjames</div><div class="line"></div><div class="line">root@pts/0 $ ls -ld /home/newjames</div><div class="line">drwx------ 2 newjames 1008 4096 12月 23 11:46 /home/newjames</div><div class="line"></div><div class="line">root@pts/0 $ ls -ld /home/james</div><div class="line">ls: 无法访问/home/james: 没有那个文件或目录</div><div class="line">root@pts/0 $</div></pre></td></tr></table></figure>
 <hr>
 <div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
     
@@ -1255,191 +1458,9 @@ root@pts/3 $ pyenv versions
     
       <category term="python" scheme="http://yoursite.com/tags/python/"/>
     
+      <category term="virtualenv" scheme="http://yoursite.com/tags/virtualenv/"/>
+    
       <category term="pyenv" scheme="http://yoursite.com/tags/pyenv/"/>
-    
-      <category term="virtualenv" scheme="http://yoursite.com/tags/virtualenv/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Centos下python纯净虚拟环境</title>
-    <link href="http://yoursite.com/2016/09/25/2016-09-25-Centos%E4%B8%8Bpython%E7%BA%AF%E5%87%80%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/"/>
-    <id>http://yoursite.com/2016/09/25/2016-09-25-Centos下python纯净虚拟环境/</id>
-    <published>2016-09-25T12:18:58.000Z</published>
-    <updated>2017-06-13T14:29:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="Centos-下-python-纯净虚拟环境"><a href="#Centos-下-python-纯净虚拟环境" class="headerlink" title="Centos 下 python 纯净虚拟环境"></a>Centos 下 python 纯净虚拟环境</h2><blockquote>
-<p>实际python开发中，可能并行的有多个python项目的开发，他们用到的python版本可能不一样，这个时候就<code>需要有多个相互不依赖的环境来运行多个python项目</code>，<code>virtualenv</code> 就刚好满足这个需求</p>
-</blockquote>
-<hr>
-<h2 id="安装-virtualenv"><a href="#安装-virtualenv" class="headerlink" title="安装 virtualenv"></a>安装 virtualenv</h2><blockquote>
-<p>可以用 <code>pip</code>、<code>easy_install</code> 或者 <code>pyenv</code>来安装virtualenv，但是<code>推荐pyenv来安装</code>，pyenv-virtualenv是pyenv的插件。有助于后面的环境切换等</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">root@pts/5 $ ls -l ~/.pyenv/plugins/</div><div class="line">total 4</div><div class="line">drwxr-xr-x 5 root root 4096 Jun  7 10:51 python-build</div><div class="line"></div><div class="line">root@pts/5 $ git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv</div><div class="line">Cloning into &apos;/root/.pyenv/plugins/pyenv-virtualenv&apos;...</div><div class="line">remote: Counting objects: 1800, done.</div><div class="line">remote: Total 1800 (delta 0), reused 0 (delta 0), pack-reused 1800</div><div class="line">Receiving objects: 100% (1800/1800), 517.45 KiB | 143.00 KiB/s, done.</div><div class="line">Resolving deltas: 100% (1230/1230), done.</div><div class="line"></div><div class="line">root@pts/5 $ ls -l ~/.pyenv/plugins/</div><div class="line">total 8</div><div class="line">drwxr-xr-x 7 root root 4096 Jun  7 12:00 pyenv-virtualenv</div><div class="line">drwxr-xr-x 5 root root 4096 Jun  7 10:51 python-build</div></pre></td></tr></table></figure>
-<hr>
-<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">root@pts/5 $ vim ~/.bashrc </div><div class="line">Dev-mysql-mem [~] 2016-06-07 12:01:08</div><div class="line">root@pts/5 $ cat ~/.bashrc |egrep &apos;virtualenv&apos;</div><div class="line">eval &quot;$(pyenv virtualenv-init -)&quot;</div></pre></td></tr></table></figure>
-<hr>
-<h2 id="配置生效"><a href="#配置生效" class="headerlink" title="配置生效"></a>配置生效</h2><pre><code>### 方式一
-重新打开一个session
-### 方式二
-source ~/.bashrc
-### 方式三
-exec $SHELL -l
-</code></pre><hr>
-<h2 id="创建虚拟环境"><a href="#创建虚拟环境" class="headerlink" title="创建虚拟环境"></a>创建虚拟环境</h2><blockquote>
-<p>创建新的虚拟环境实际存在于<code>~/.pyenv/versions/</code>目录</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">## 创建 名字为py3.4.3的虚拟环境</div><div class="line">## 注意 第三个 &apos;3.4.4&apos; 版本号码是必须的</div><div class="line">root@pts/5 $  pyenv virtualenv 3.4.4 py3.4.4</div><div class="line">Ignoring indexes: https://pypi.python.org/simple</div><div class="line">Requirement already satisfied (use --upgrade to upgrade): setuptools in /root/.pyenv/versions/3.4.4/envs/py3.4.4/lib/python3.4/site-packages</div><div class="line">Requirement already satisfied (use --upgrade to upgrade): pip in /root/.pyenv/versions/3.4.4/envs/py3.4.4/lib/python3.4/site-packages</div><div class="line"></div><div class="line">## 查看新增的虚拟环境</div><div class="line">root@pts/5 $ ls -l ~/.pyenv/versions/</div><div class="line">total 8</div><div class="line">drwxr-xr-x 6 root root 4096 Jun  7 11:43 2.7.11</div><div class="line">drwxr-xr-x 7 root root 4096 Jun  7 12:05 3.4.4</div><div class="line">lrwxrwxrwx 1 root root   40 Jun  7 12:05 py3.4.4 -&gt; /root/.pyenv/versions/3.4.4/envs/py3.4.4</div><div class="line"></div><div class="line">root@pts/5 $ pyenv versions</div><div class="line">  system</div><div class="line">  2.7.11</div><div class="line">* 3.4.4 (set by /root/.pyenv/version)</div><div class="line">  3.4.4/envs/py3.4.4</div><div class="line">  py3.4.4</div></pre></td></tr></table></figure>
-<hr>
-<h2 id="虚拟环境使用"><a href="#虚拟环境使用" class="headerlink" title="虚拟环境使用"></a>虚拟环境使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">## 进入虚拟环境</div><div class="line">root@pts/6 $ pyenv activate py3.4.4</div><div class="line">pyenv-virtualenv: prompt changing will be removed from future release. configure &apos;export PYENV_VIRTUALENV_DISABLE_PROMPT=1&apos; to simulate the behavior.</div><div class="line">(py3.4.4) Dev-mysql-mem [~] 2016-06-07 12:12:35</div><div class="line"></div><div class="line">## 查看虚拟环境版本</div><div class="line">root@pts/6 $ python -V</div><div class="line">Python 3.4.4</div><div class="line"></div><div class="line">## 退出到系统环境</div><div class="line">root@pts/6 $ pyenv deactivate</div><div class="line">Dev-mysql-mem [~] 2016-06-07 12:14:46</div><div class="line">root@pts/6 $</div></pre></td></tr></table></figure>
-<hr>
-<h2 id="卸载虚拟环境"><a href="#卸载虚拟环境" class="headerlink" title="卸载虚拟环境"></a>卸载虚拟环境</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">## 方式一：暴力删除</div><div class="line">rm -rf ~/.pyenv/versions/py3.4.4</div><div class="line"></div><div class="line">## 方式二：温柔卸载</div><div class="line">pyenv uninstall py3.4.4</div></pre></td></tr></table></figure>
-<h2 id="Refer-to"><a href="#Refer-to" class="headerlink" title="Refer to"></a>Refer to</h2><blockquote>
-<p><a href="https://github.com/yyuu/pyenv-virtualenv" target="_blank" rel="external">pyenv插件virtualenv</a></p>
-</blockquote>
-<hr>
-<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;Centos-下-python-纯净虚拟环境&quot;&gt;&lt;a href=&quot;#Centos-下-python-纯净虚拟环境&quot; class=&quot;headerlink&quot; title=&quot;Centos 下 python 纯净虚拟环境&quot;&gt;&lt;/a&gt;Centos 下 python 纯净虚拟
-    
-    </summary>
-    
-      <category term="Python" scheme="http://yoursite.com/categories/Python/"/>
-    
-    
-      <category term="python" scheme="http://yoursite.com/tags/python/"/>
-    
-      <category term="virtualenv" scheme="http://yoursite.com/tags/virtualenv/"/>
-    
-      <category term="Centos" scheme="http://yoursite.com/tags/Centos/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一款图形化memcache监控工具</title>
-    <link href="http://yoursite.com/2015/10/16/2015-10-16-%E4%B8%80%E6%AC%BE%E5%9B%BE%E5%BD%A2%E5%8C%96memcache%E7%9B%91%E6%8E%A7%E5%B7%A5%E5%85%B7/"/>
-    <id>http://yoursite.com/2015/10/16/2015-10-16-一款图形化memcache监控工具/</id>
-    <published>2015-10-16T03:19:11.000Z</published>
-    <updated>2017-06-13T14:29:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote>
-<p>对于memcache监控，一般可以利用memcache自带的<code>STAT</code>命令来查看，但是其输出的结果对于开发而言不是很明了，监控的目的是让开发通过监控的结果去调优程序。这里介绍一款形化memcache监控工具<code>memcachephp</code>,<br>memcachephp是一款memcache图形界面的监控工具，可以通过这个工具查看到局域网内所有部署memcache机器或者端口的memcache的运行情况，对我们监控memcache的缓存命中率、cache利用率、点击率等信息有很好的帮助作用</p>
-</blockquote>
-<hr>
-<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><pre><code>可一个通过下面的地址下载对应的版本，最新版是3.0.8，但是这里建议选择`稳定版2.7.7`
-http://pecl.php.net/package/memcache
-</code></pre><p><img src="/images/memcache/memcache-php.png" alt="memcache-php.png"></p>
-<p><strong>实际的下载地址 </strong></p>
-<p><a href="http://pecl.php.net/get/memcache-2.2.7.tgz" target="_blank" rel="external">http://pecl.php.net/get/memcache-2.2.7.tgz</a></p>
-<h2 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h2><pre><code>下载解压之后，修改 `memcache.php` 文件，这里需要修改如图A/B两处
-</code></pre><p><img src="/images/memcache/memcache-php-config.png" alt="memcache-php-config.php"></p>
-<pre><code>**A处修改：**
-    这里其实也可以采用默认的账号密码，但是建议修改为自己的账号密码
-
-**B处修改：**
-    这里是添加你需要的memcache主机，通过 $MEMCACHE_SERVERS[]可以配置多个memcache实例去监控
-</code></pre><h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><pre><code>把修改好的`memcache.php` 复制到网站对应的位置，
-然后通过 `http://real-ip/memcache.php` 去访问，
-访问的时候需要账号密码，如果修改了就是自己修改的账号密码
-</code></pre><h2 id="实际效过展示"><a href="#实际效过展示" class="headerlink" title="实际效过展示"></a>实际效过展示</h2><p><strong>全局效果展示</strong></p>
-<p><img src="/images/memcache/memcache-php-show.png" alt="memcache-php-show.png"></p>
-<p><strong>具体memcache实例效果展示</strong></p>
-<p><img src="/images/memcache/memcache-php-show-host.png" alt="memcache-php-show-host.png"></p>
-<hr>
-<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;对于memcache监控，一般可以利用memcache自带的&lt;code&gt;STAT&lt;/code&gt;命令来查看，但是其输出的结果对于开发而言不是很明了，监控的目的是让开发通过监控的结果去调优程序。这里介绍一款形化memcache监控工具&lt;code&gt;mem
-    
-    </summary>
-    
-      <category term="Memcache" scheme="http://yoursite.com/categories/Memcache/"/>
-    
-    
-      <category term="memcache" scheme="http://yoursite.com/tags/memcache/"/>
-    
-      <category term="php" scheme="http://yoursite.com/tags/php/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Centos下安装MongoDB</title>
-    <link href="http://yoursite.com/2015/10/10/2016-10-12-Centos-install-MongoDB/"/>
-    <id>http://yoursite.com/2015/10/10/2016-10-12-Centos-install-MongoDB/</id>
-    <published>2015-10-10T06:38:45.000Z</published>
-    <updated>2017-06-13T14:29:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="导语"><a href="#导语" class="headerlink" title="导语"></a>导语</h2><blockquote>
-<p>MongoDB 是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。是一个基于分布式文件存储的开源数据库系统。<br>在高负载的情况下，添加更多的节点，可以保证服务器性能。<br>MongoDB 是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。<br>MongoDB 将数据存储为一个文档，数据结构由键值(key=&gt;value)对组成。MongoDB 文档类似于 JSON 对象。字段值可以包含其他文档，数组及文档数组。</p>
-</blockquote>
-<hr>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>Centos下安装MongoDB有多种方式，这里介绍yum安装和tar包安装两种方式</p>
-<h3 id="YUM-安装"><a href="#YUM-安装" class="headerlink" title="YUM 安装"></a>YUM 安装</h3><p>在 /etc/yum.repos.d/下面新增文件 mongodb.repo</p>
-<pre><code>root@pts/2 $ cat mongodb.repo 
-[mongodb]
-name=MongoDB repo
-baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/
-gpgcheck=0
-enabled=1
-</code></pre><p>yum安装</p>
-<pre><code>yum install mongodb-org mongodb-org-server
-</code></pre><h3 id="Tar-安装"><a href="#Tar-安装" class="headerlink" title="Tar 安装"></a>Tar 安装</h3><pre><code># download page
-http://www.mongodb.org/downloads
-
-# use `wget` or `curl` to get file
-wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-3.0.6.tgz 
-curl -O https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-3.0.6.tgz 
-
-# untar 
-tar -zxvf mongodb-linux-x86_64-3.0.6.tgz   
-
-# move to appropriate path
-mv mongodb-linux-x86_64-3.0.6 /usr/local/mongodb
-</code></pre><h3 id="Configure"><a href="#Configure" class="headerlink" title="Configure"></a>Configure</h3><pre><code>## add mongodba user
-useradd mongodba
-
-## create configuration and data folder, then set privilege
-mkdir -p /usr/local/mongodb/{conf,data}
-chown -R mongodba:mongodba /usr/local/mongodb/
-
-## add below command into /etc/profile
-MONGO_HOME=/usr/local/mongodb
-PATH=$PATH:$JAVA_HOME/bin:${MONGO_HOME}/bin
-</code></pre><hr>
-<h2 id="Verify"><a href="#Verify" class="headerlink" title="Verify"></a>Verify</h2><p>无论哪种安装方式最终都采用如下方式验证是否安装成功</p>
-<pre><code>root@pts/2 $ mongod --version
-db version v3.0.6
-git version: 1ef45a23a4c5e3480ac919b28afcba3c615488f2
-</code></pre><h2 id="附加"><a href="#附加" class="headerlink" title="附加"></a>附加</h2><pre><code>## start mongo
-mongod --dbpath /usr/local/mongodb/data/ --logpath /var/log/mongod.log --logappend &amp;
-
-## mongo shell
-## you can use mongo or /usr/local/mongodb/bin/mongo
-root@pts/2 $ mongo
-MongoDB shell version: 3.0.6
-connecting to: test
-</code></pre><hr>
-<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;导语&quot;&gt;&lt;a href=&quot;#导语&quot; class=&quot;headerlink&quot; title=&quot;导语&quot;&gt;&lt;/a&gt;导语&lt;/h2&gt;&lt;blockquote&gt;
-&lt;p&gt;MongoDB 是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据
-    
-    </summary>
-    
-      <category term="MongoDB" scheme="http://yoursite.com/categories/MongoDB/"/>
-    
-    
-      <category term="mongodb" scheme="http://yoursite.com/tags/mongodb/"/>
-    
-      <category term="db" scheme="http://yoursite.com/tags/db/"/>
-    
-      <category term="centos" scheme="http://yoursite.com/tags/centos/"/>
     
   </entry>
   

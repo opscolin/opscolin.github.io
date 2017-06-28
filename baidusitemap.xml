@@ -3,6 +3,59 @@
 
 
     
+  <url>
+    <loc>http://yoursite.com/2017/06/28/config-daocloudaccelerator-under-centos/</loc>
+    <lastmod>2017-06-28T08:55:24.000Z</lastmod>
+    <data>
+        <display>
+        <title>docker配置daocloud加速器</title>
+        <pubTime>2017-06-28T08:49:18.000Z</pubTime>
+        
+        <tag>docker</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2017/06/28/upgrade-docker-to-1-9-under-centos6-6/</loc>
+    <lastmod>2017-06-28T08:55:05.000Z</lastmod>
+    <data>
+        <display>
+        <title>Centos6.6升级docker到1.9</title>
+        <pubTime>2017-06-28T08:47:48.000Z</pubTime>
+        
+        <tag>docker</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2017/06/28/Linux-build-git-respository/</loc>
+    <lastmod>2017-06-28T08:54:50.000Z</lastmod>
+    <data>
+        <display>
+        <title>如何在Linux上搭建一个Git中央仓库</title>
+        <pubTime>2017-06-28T08:47:18.000Z</pubTime>
+        
+        <tag>Linux</tag>
+         
+        <tag>git</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
     
   <url>
     <loc>http://yoursite.com/2017/05/12/Linux%E4%B8%ADcrontab%E4%B8%AD%E4%B8%8D%E8%83%BD%E6%89%A7%E8%A1%8CPython%E8%84%9A%E6%9C%AC/</loc>
@@ -70,72 +123,6 @@
            
              
               <breadCrumb title="MongoDB" url="http://yoursite.com/categories/MongoDB/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yoursite.com/2015/04/18/2015-04-18-centos7-%E5%86%85%E6%A0%B8%E5%8D%87%E7%BA%A7/</loc>
-    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
-    <data>
-        <display>
-        <title>centos7 内核升级</title>
-        <pubTime>2015-04-18T07:24:01.000Z</pubTime>
-        
-        <tag>linux</tag>
-         
-        <tag>kernel</tag>
-         
-         
-           
-             
-              <breadCrumb title="Linux" url="http://yoursite.com/categories/Linux/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yoursite.com/2015/04/22/2015-04-22-centos7%E4%B8%8B-Jenkins-%E5%AE%89%E8%A3%85/</loc>
-    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
-    <data>
-        <display>
-        <title>centos7下 Jenkins 安装</title>
-        <pubTime>2015-04-22T05:02:23.000Z</pubTime>
-        
-        <tag>linux</tag>
-         
-        <tag>jenkins</tag>
-         
-         
-           
-             
-              <breadCrumb title="Jenkins" url="http://yoursite.com/categories/Jenkins/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yoursite.com/2015/04/28/2015-04-28-centos6%E4%B8%8BMemcache%E5%AE%89%E8%A3%85/</loc>
-    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
-    <data>
-        <display>
-        <title>centos6下Memcache安装</title>
-        <pubTime>2015-04-28T09:09:32.000Z</pubTime>
-        
-        <tag>linux</tag>
-         
-        <tag>memcache</tag>
-         
-         
-           
-             
-              <breadCrumb title="Memcache" url="http://yoursite.com/categories/Memcache/"/>
           
         </display>
     </data>
@@ -333,16 +320,16 @@
 
     
   <url>
-    <loc>http://yoursite.com/2016/09/25/2016-09-25-Centos%E4%B8%8Bpyenv%E5%AE%89%E8%A3%85python%E5%A4%9A%E7%89%88%E6%9C%AC-%E5%A2%9E%E5%BC%BA%E7%89%88/</loc>
+    <loc>http://yoursite.com/2016/09/25/2016-09-25-Centos%E4%B8%8Bpython%E7%BA%AF%E5%87%80%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/</loc>
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
     <data>
         <display>
-        <title>Centos下pyenv安装python多版本(增强版)</title>
-        <pubTime>2016-09-25T12:35:17.000Z</pubTime>
+        <title>Centos下python纯净虚拟环境</title>
+        <pubTime>2016-09-25T12:18:58.000Z</pubTime>
         
         <tag>python</tag>
          
-        <tag>pyenv</tag>
+        <tag>Centos</tag>
          
         <tag>virtualenv</tag>
          
@@ -357,18 +344,18 @@
 
     
   <url>
-    <loc>http://yoursite.com/2016/09/25/2016-09-25-Centos%E4%B8%8Bpython%E7%BA%AF%E5%87%80%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/</loc>
+    <loc>http://yoursite.com/2016/09/25/2016-09-25-Centos%E4%B8%8Bpyenv%E5%AE%89%E8%A3%85python%E5%A4%9A%E7%89%88%E6%9C%AC-%E5%A2%9E%E5%BC%BA%E7%89%88/</loc>
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
     <data>
         <display>
-        <title>Centos下python纯净虚拟环境</title>
-        <pubTime>2016-09-25T12:18:58.000Z</pubTime>
+        <title>Centos下pyenv安装python多版本(增强版)</title>
+        <pubTime>2016-09-25T12:35:17.000Z</pubTime>
         
         <tag>python</tag>
          
         <tag>virtualenv</tag>
          
-        <tag>Centos</tag>
+        <tag>pyenv</tag>
          
          
            
@@ -457,6 +444,30 @@
 
     
   <url>
+    <loc>http://yoursite.com/2016/10/14/2016-10-14-install-mysql-module-failed-under-centos7-for-python2-7-5/</loc>
+    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>centos7下python2.7.5安装MySQL模块失败</title>
+        <pubTime>2016-10-14T12:13:12.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+        <tag>centos</tag>
+         
+        <tag>MySQLdb-python</tag>
+         
+         
+           
+             
+              <breadCrumb title="Python" url="http://yoursite.com/categories/Python/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2015/04/13/2015-04-13-docker-compose-installation/</loc>
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
     <data>
@@ -501,23 +512,21 @@
 
     
   <url>
-    <loc>http://yoursite.com/2016/10/14/2016-10-14-install-mysql-module-failed-under-centos7-for-python2-7-5/</loc>
+    <loc>http://yoursite.com/2016/11/15/2016-11-15-Hexo-Error-Collections/</loc>
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
     <data>
         <display>
-        <title>centos7下python2.7.5安装MySQL模块失败</title>
-        <pubTime>2016-10-14T12:13:12.000Z</pubTime>
+        <title>Hexo错误集合</title>
+        <pubTime>2016-11-15T06:37:15.000Z</pubTime>
         
-        <tag>python</tag>
+        <tag>linux</tag>
          
-        <tag>centos</tag>
-         
-        <tag>MySQLdb-python</tag>
+        <tag>Hexo</tag>
          
          
            
              
-              <breadCrumb title="Python" url="http://yoursite.com/categories/Python/"/>
+              <breadCrumb title="Hexo" url="http://yoursite.com/categories/Hexo/"/>
           
         </display>
     </data>
@@ -569,28 +578,6 @@
 
     
   <url>
-    <loc>http://yoursite.com/2016/11/15/2016-11-15-Hexo-Error-Collections/</loc>
-    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
-    <data>
-        <display>
-        <title>Hexo错误集合</title>
-        <pubTime>2016-11-15T06:37:15.000Z</pubTime>
-        
-        <tag>linux</tag>
-         
-        <tag>Hexo</tag>
-         
-         
-           
-             
-              <breadCrumb title="Hexo" url="http://yoursite.com/categories/Hexo/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://yoursite.com/2016/11/25/2016-11-25-gitlab-error-RPC-failed/</loc>
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
     <data>
@@ -604,6 +591,28 @@
            
              
               <breadCrumb title="Git" url="http://yoursite.com/categories/Git/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2016/12/06/2016-12-06-Centos-command-screen/</loc>
+    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>Centos命令系列 之  screen</title>
+        <pubTime>2016-12-06T03:18:36.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>screen</tag>
+         
+         
+           
+             
+              <breadCrumb title="Linux" url="http://yoursite.com/categories/Linux/"/>
           
         </display>
     </data>
@@ -657,76 +666,6 @@
 
     
   <url>
-    <loc>http://yoursite.com/2016/12/06/2016-12-06-Centos-command-screen/</loc>
-    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
-    <data>
-        <display>
-        <title>Centos命令系列 之  screen</title>
-        <pubTime>2016-12-06T03:18:36.000Z</pubTime>
-        
-        <tag>linux</tag>
-         
-        <tag>screen</tag>
-         
-         
-           
-             
-              <breadCrumb title="Linux" url="http://yoursite.com/categories/Linux/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yoursite.com/2016/12/13/2016-12-13-Mysql-ERROR-1175-SQL-SAFE-UPDATES/</loc>
-    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
-    <data>
-        <display>
-        <title>Mysql ERROR 1175 - SQL_SAFE_UPDATES</title>
-        <pubTime>2016-12-13T02:39:43.000Z</pubTime>
-        
-        <tag>mysql error</tag>
-         
-        <tag>1175 error</tag>
-         
-        <tag>SQL_SAFE_UPDATES</tag>
-         
-         
-           
-             
-              <breadCrumb title="MySQL" url="http://yoursite.com/categories/MySQL/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yoursite.com/2016/12/23/2016-12-23-rename-username-uid-gid-under-centos7/</loc>
-    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
-    <data>
-        <display>
-        <title>Linux 下修改或者重命名用户名称或者UID/GID</title>
-        <pubTime>2016-12-23T05:42:04.000Z</pubTime>
-        
-        <tag>Linux</tag>
-         
-        <tag>usermode</tag>
-         
-        <tag>groupmode</tag>
-         
-         
-           
-             
-              <breadCrumb title="Linux" url="http://yoursite.com/categories/Linux/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://yoursite.com/2015/04/10/2015-04-10-Docker-%E9%94%99%E8%AF%AF%E9%9B%86%E5%90%88/</loc>
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
     <data>
@@ -741,21 +680,6 @@
              
               <breadCrumb title="Docker" url="http://yoursite.com/categories/Docker/"/>
           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yoursite.com/2015/01/01/hello-world/</loc>
-    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
-    <data>
-        <display>
-        <title>Hello World</title>
-        <pubTime>2014-12-31T16:00:00.000Z</pubTime>
-        
-         
-           
         </display>
     </data>
     </url>
@@ -804,6 +728,30 @@
 
     
   <url>
+    <loc>http://yoursite.com/2016/12/13/2016-12-13-Mysql-ERROR-1175-SQL-SAFE-UPDATES/</loc>
+    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>Mysql ERROR 1175 - SQL_SAFE_UPDATES</title>
+        <pubTime>2016-12-13T02:39:43.000Z</pubTime>
+        
+        <tag>mysql error</tag>
+         
+        <tag>1175 error</tag>
+         
+        <tag>SQL_SAFE_UPDATES</tag>
+         
+         
+           
+             
+              <breadCrumb title="MySQL" url="http://yoursite.com/categories/MySQL/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2015/04/16/2015-04-16-centos7%E4%B8%8BSamba%E5%AE%89%E8%A3%85/</loc>
     <lastmod>2017-06-13T14:29:00.000Z</lastmod>
     <data>
@@ -841,6 +789,111 @@
            
              
               <breadCrumb title="Linux" url="http://yoursite.com/categories/Linux/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2016/12/23/2016-12-23-rename-username-uid-gid-under-centos7/</loc>
+    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>Linux 下修改或者重命名用户名称或者UID/GID</title>
+        <pubTime>2016-12-23T05:42:04.000Z</pubTime>
+        
+        <tag>Linux</tag>
+         
+        <tag>usermode</tag>
+         
+        <tag>groupmode</tag>
+         
+         
+           
+             
+              <breadCrumb title="Linux" url="http://yoursite.com/categories/Linux/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2015/01/01/hello-world/</loc>
+    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>Hello World</title>
+        <pubTime>2014-12-31T16:00:00.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2015/04/18/2015-04-18-centos7-%E5%86%85%E6%A0%B8%E5%8D%87%E7%BA%A7/</loc>
+    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>centos7 内核升级</title>
+        <pubTime>2015-04-18T07:24:01.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>kernel</tag>
+         
+         
+           
+             
+              <breadCrumb title="Linux" url="http://yoursite.com/categories/Linux/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2015/04/22/2015-04-22-centos7%E4%B8%8B-Jenkins-%E5%AE%89%E8%A3%85/</loc>
+    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>centos7下 Jenkins 安装</title>
+        <pubTime>2015-04-22T05:02:23.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>jenkins</tag>
+         
+         
+           
+             
+              <breadCrumb title="Jenkins" url="http://yoursite.com/categories/Jenkins/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2015/04/28/2015-04-28-centos6%E4%B8%8BMemcache%E5%AE%89%E8%A3%85/</loc>
+    <lastmod>2017-06-13T14:29:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>centos6下Memcache安装</title>
+        <pubTime>2015-04-28T09:09:32.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>memcache</tag>
+         
+         
+           
+             
+              <breadCrumb title="Memcache" url="http://yoursite.com/categories/Memcache/"/>
           
         </display>
     </data>

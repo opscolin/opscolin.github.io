@@ -314,6 +314,545 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/25/2016-09-25-Centos下python纯净虚拟环境/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Colin.Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/colinws.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="全栈运维">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/09/25/2016-09-25-Centos下python纯净虚拟环境/" itemprop="url">Centos下python纯净虚拟环境</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-25T20:18:58+08:00">
+                2016-09-25
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-06-13T22:29:00+08:00">
+                2017-06-13
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Centos-下-python-纯净虚拟环境"><a href="#Centos-下-python-纯净虚拟环境" class="headerlink" title="Centos 下 python 纯净虚拟环境"></a>Centos 下 python 纯净虚拟环境</h2><blockquote>
+<p>实际python开发中，可能并行的有多个python项目的开发，他们用到的python版本可能不一样，这个时候就<code>需要有多个相互不依赖的环境来运行多个python项目</code>，<code>virtualenv</code> 就刚好满足这个需求</p>
+</blockquote>
+<hr>
+<h2 id="安装-virtualenv"><a href="#安装-virtualenv" class="headerlink" title="安装 virtualenv"></a>安装 virtualenv</h2><blockquote>
+<p>可以用 <code>pip</code>、<code>easy_install</code> 或者 <code>pyenv</code>来安装virtualenv，但是<code>推荐pyenv来安装</code>，pyenv-virtualenv是pyenv的插件。有助于后面的环境切换等</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">root@pts/5 $ ls -l ~/.pyenv/plugins/</div><div class="line">total 4</div><div class="line">drwxr-xr-x 5 root root 4096 Jun  7 10:51 python-build</div><div class="line"></div><div class="line">root@pts/5 $ git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv</div><div class="line">Cloning into &apos;/root/.pyenv/plugins/pyenv-virtualenv&apos;...</div><div class="line">remote: Counting objects: 1800, done.</div><div class="line">remote: Total 1800 (delta 0), reused 0 (delta 0), pack-reused 1800</div><div class="line">Receiving objects: 100% (1800/1800), 517.45 KiB | 143.00 KiB/s, done.</div><div class="line">Resolving deltas: 100% (1230/1230), done.</div><div class="line"></div><div class="line">root@pts/5 $ ls -l ~/.pyenv/plugins/</div><div class="line">total 8</div><div class="line">drwxr-xr-x 7 root root 4096 Jun  7 12:00 pyenv-virtualenv</div><div class="line">drwxr-xr-x 5 root root 4096 Jun  7 10:51 python-build</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">root@pts/5 $ vim ~/.bashrc </div><div class="line">Dev-mysql-mem [~] 2016-06-07 12:01:08</div><div class="line">root@pts/5 $ cat ~/.bashrc |egrep &apos;virtualenv&apos;</div><div class="line">eval &quot;$(pyenv virtualenv-init -)&quot;</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="配置生效"><a href="#配置生效" class="headerlink" title="配置生效"></a>配置生效</h2><pre><code>### 方式一
+重新打开一个session
+### 方式二
+source ~/.bashrc
+### 方式三
+exec $SHELL -l
+</code></pre><hr>
+<h2 id="创建虚拟环境"><a href="#创建虚拟环境" class="headerlink" title="创建虚拟环境"></a>创建虚拟环境</h2><blockquote>
+<p>创建新的虚拟环境实际存在于<code>~/.pyenv/versions/</code>目录</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">## 创建 名字为py3.4.3的虚拟环境</div><div class="line">## 注意 第三个 &apos;3.4.4&apos; 版本号码是必须的</div><div class="line">root@pts/5 $  pyenv virtualenv 3.4.4 py3.4.4</div><div class="line">Ignoring indexes: https://pypi.python.org/simple</div><div class="line">Requirement already satisfied (use --upgrade to upgrade): setuptools in /root/.pyenv/versions/3.4.4/envs/py3.4.4/lib/python3.4/site-packages</div><div class="line">Requirement already satisfied (use --upgrade to upgrade): pip in /root/.pyenv/versions/3.4.4/envs/py3.4.4/lib/python3.4/site-packages</div><div class="line"></div><div class="line">## 查看新增的虚拟环境</div><div class="line">root@pts/5 $ ls -l ~/.pyenv/versions/</div><div class="line">total 8</div><div class="line">drwxr-xr-x 6 root root 4096 Jun  7 11:43 2.7.11</div><div class="line">drwxr-xr-x 7 root root 4096 Jun  7 12:05 3.4.4</div><div class="line">lrwxrwxrwx 1 root root   40 Jun  7 12:05 py3.4.4 -&gt; /root/.pyenv/versions/3.4.4/envs/py3.4.4</div><div class="line"></div><div class="line">root@pts/5 $ pyenv versions</div><div class="line">  system</div><div class="line">  2.7.11</div><div class="line">* 3.4.4 (set by /root/.pyenv/version)</div><div class="line">  3.4.4/envs/py3.4.4</div><div class="line">  py3.4.4</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="虚拟环境使用"><a href="#虚拟环境使用" class="headerlink" title="虚拟环境使用"></a>虚拟环境使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">## 进入虚拟环境</div><div class="line">root@pts/6 $ pyenv activate py3.4.4</div><div class="line">pyenv-virtualenv: prompt changing will be removed from future release. configure &apos;export PYENV_VIRTUALENV_DISABLE_PROMPT=1&apos; to simulate the behavior.</div><div class="line">(py3.4.4) Dev-mysql-mem [~] 2016-06-07 12:12:35</div><div class="line"></div><div class="line">## 查看虚拟环境版本</div><div class="line">root@pts/6 $ python -V</div><div class="line">Python 3.4.4</div><div class="line"></div><div class="line">## 退出到系统环境</div><div class="line">root@pts/6 $ pyenv deactivate</div><div class="line">Dev-mysql-mem [~] 2016-06-07 12:14:46</div><div class="line">root@pts/6 $</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="卸载虚拟环境"><a href="#卸载虚拟环境" class="headerlink" title="卸载虚拟环境"></a>卸载虚拟环境</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">## 方式一：暴力删除</div><div class="line">rm -rf ~/.pyenv/versions/py3.4.4</div><div class="line"></div><div class="line">## 方式二：温柔卸载</div><div class="line">pyenv uninstall py3.4.4</div></pre></td></tr></table></figure>
+<h2 id="Refer-to"><a href="#Refer-to" class="headerlink" title="Refer to"></a>Refer to</h2><blockquote>
+<p><a href="https://github.com/yyuu/pyenv-virtualenv" target="_blank" rel="external">pyenv插件virtualenv</a></p>
+</blockquote>
+<hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/10/16/2015-10-16-一款图形化memcache监控工具/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Colin.Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/colinws.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="全栈运维">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2015/10/16/2015-10-16-一款图形化memcache监控工具/" itemprop="url">一款图形化memcache监控工具</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-10-16T11:19:11+08:00">
+                2015-10-16
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-06-13T22:29:00+08:00">
+                2017-06-13
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Memcache/" itemprop="url" rel="index">
+                    <span itemprop="name">Memcache</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>对于memcache监控，一般可以利用memcache自带的<code>STAT</code>命令来查看，但是其输出的结果对于开发而言不是很明了，监控的目的是让开发通过监控的结果去调优程序。这里介绍一款形化memcache监控工具<code>memcachephp</code>,<br>memcachephp是一款memcache图形界面的监控工具，可以通过这个工具查看到局域网内所有部署memcache机器或者端口的memcache的运行情况，对我们监控memcache的缓存命中率、cache利用率、点击率等信息有很好的帮助作用</p>
+</blockquote>
+<hr>
+<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><pre><code>可一个通过下面的地址下载对应的版本，最新版是3.0.8，但是这里建议选择`稳定版2.7.7`
+http://pecl.php.net/package/memcache
+</code></pre><p><img src="/images/memcache/memcache-php.png" alt="memcache-php.png"></p>
+<p><strong>实际的下载地址 </strong></p>
+<p><a href="http://pecl.php.net/get/memcache-2.2.7.tgz" target="_blank" rel="external">http://pecl.php.net/get/memcache-2.2.7.tgz</a></p>
+<h2 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h2><pre><code>下载解压之后，修改 `memcache.php` 文件，这里需要修改如图A/B两处
+</code></pre><p><img src="/images/memcache/memcache-php-config.png" alt="memcache-php-config.php"></p>
+<pre><code>**A处修改：**
+    这里其实也可以采用默认的账号密码，但是建议修改为自己的账号密码
+
+**B处修改：**
+    这里是添加你需要的memcache主机，通过 $MEMCACHE_SERVERS[]可以配置多个memcache实例去监控
+</code></pre><h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><pre><code>把修改好的`memcache.php` 复制到网站对应的位置，
+然后通过 `http://real-ip/memcache.php` 去访问，
+访问的时候需要账号密码，如果修改了就是自己修改的账号密码
+</code></pre><h2 id="实际效过展示"><a href="#实际效过展示" class="headerlink" title="实际效过展示"></a>实际效过展示</h2><p><strong>全局效果展示</strong></p>
+<p><img src="/images/memcache/memcache-php-show.png" alt="memcache-php-show.png"></p>
+<p><strong>具体memcache实例效果展示</strong></p>
+<p><img src="/images/memcache/memcache-php-show-host.png" alt="memcache-php-show-host.png"></p>
+<hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/10/10/2016-10-12-Centos-install-MongoDB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Colin.Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/colinws.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="全栈运维">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2015/10/10/2016-10-12-Centos-install-MongoDB/" itemprop="url">Centos下安装MongoDB</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-10-10T14:38:45+08:00">
+                2015-10-10
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-06-13T22:29:00+08:00">
+                2017-06-13
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MongoDB/" itemprop="url" rel="index">
+                    <span itemprop="name">MongoDB</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="导语"><a href="#导语" class="headerlink" title="导语"></a>导语</h2><blockquote>
+<p>MongoDB 是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。是一个基于分布式文件存储的开源数据库系统。<br>在高负载的情况下，添加更多的节点，可以保证服务器性能。<br>MongoDB 是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。<br>MongoDB 将数据存储为一个文档，数据结构由键值(key=&gt;value)对组成。MongoDB 文档类似于 JSON 对象。字段值可以包含其他文档，数组及文档数组。</p>
+</blockquote>
+<hr>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>Centos下安装MongoDB有多种方式，这里介绍yum安装和tar包安装两种方式</p>
+<h3 id="YUM-安装"><a href="#YUM-安装" class="headerlink" title="YUM 安装"></a>YUM 安装</h3><p>在 /etc/yum.repos.d/下面新增文件 mongodb.repo</p>
+<pre><code>root@pts/2 $ cat mongodb.repo 
+[mongodb]
+name=MongoDB repo
+baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/
+gpgcheck=0
+enabled=1
+</code></pre><p>yum安装</p>
+<pre><code>yum install mongodb-org mongodb-org-server
+</code></pre><h3 id="Tar-安装"><a href="#Tar-安装" class="headerlink" title="Tar 安装"></a>Tar 安装</h3><pre><code># download page
+http://www.mongodb.org/downloads
+
+# use `wget` or `curl` to get file
+wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-3.0.6.tgz 
+curl -O https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-3.0.6.tgz 
+
+# untar 
+tar -zxvf mongodb-linux-x86_64-3.0.6.tgz   
+
+# move to appropriate path
+mv mongodb-linux-x86_64-3.0.6 /usr/local/mongodb
+</code></pre><h3 id="Configure"><a href="#Configure" class="headerlink" title="Configure"></a>Configure</h3><pre><code>## add mongodba user
+useradd mongodba
+
+## create configuration and data folder, then set privilege
+mkdir -p /usr/local/mongodb/{conf,data}
+chown -R mongodba:mongodba /usr/local/mongodb/
+
+## add below command into /etc/profile
+MONGO_HOME=/usr/local/mongodb
+PATH=$PATH:$JAVA_HOME/bin:${MONGO_HOME}/bin
+</code></pre><hr>
+<h2 id="Verify"><a href="#Verify" class="headerlink" title="Verify"></a>Verify</h2><p>无论哪种安装方式最终都采用如下方式验证是否安装成功</p>
+<pre><code>root@pts/2 $ mongod --version
+db version v3.0.6
+git version: 1ef45a23a4c5e3480ac919b28afcba3c615488f2
+</code></pre><h2 id="附加"><a href="#附加" class="headerlink" title="附加"></a>附加</h2><pre><code>## start mongo
+mongod --dbpath /usr/local/mongodb/data/ --logpath /var/log/mongod.log --logappend &amp;
+
+## mongo shell
+## you can use mongo or /usr/local/mongodb/bin/mongo
+root@pts/2 $ mongo
+MongoDB shell version: 3.0.6
+connecting to: test
+</code></pre><hr>
+<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/08/16/2015-08-16-memcache监控小工具stats命令/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1656,529 +2195,11 @@ put this file to mediawiki/LocalSettings.php
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/04/28/2015-04-28-centos6下Memcache安装/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Colin.Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/colinws.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="全栈运维">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2015/04/28/2015-04-28-centos6下Memcache安装/" itemprop="url">centos6下Memcache安装</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-04-28T17:09:32+08:00">
-                2015-04-28
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2017-06-13T22:29:00+08:00">
-                2017-06-13
-              </time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Memcache/" itemprop="url" rel="index">
-                    <span itemprop="name">Memcache</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Requirement"><a href="#Requirement" class="headerlink" title="Requirement"></a>Requirement</h1><pre><code>yum install -y libevent libevent-devel
-</code></pre><h1 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h1><h2 id="get-source-code"><a href="#get-source-code" class="headerlink" title="get source code"></a>get source code</h2><pre><code>wget http://memcached.org/files/memcached-1.4.24.tar.gz
-</code></pre><h2 id="Installation-1"><a href="#Installation-1" class="headerlink" title="Installation"></a>Installation</h2><pre><code>tar -zxvf memcached-1.4.24.tar.gz 
-cd memcached-1.4.24  
-./configure
-make
-make install 
-</code></pre><h2 id="verify"><a href="#verify" class="headerlink" title="verify"></a>verify</h2><pre><code>[root@e167418cd3b2 /]# ls -lart /usr/local/bin/memcached 
--rwxr-xr-x 1 root root 431374 Apr 27 10:41 /usr/local/bin/memcached
-[root@e167418cd3b2 /]# memcached -h
-memcached 1.4.24
--p &lt;num&gt;      TCP port number to listen on (default: 11211)
--U &lt;num&gt;      UDP port number to listen on (default: 11211, 0 is off)
--s &lt;file&gt;     UNIX socket path to listen on (disables network support)
--A            enable ascii &quot;shutdown&quot; command
--a &lt;mask&gt;     access mask for UNIX socket, in octal (default: 0700)
--l &lt;addr&gt;     interface to listen on (default: INADDR_ANY, all addresses)
-
-
-yum install -y wget tar make gcc libevent libevent-devel
-wget http://memcached.org/files/memcached-1.4.24.tar.gz &amp;&amp; tar -zxvf memcached-1.4.24.tar.gz &amp;&amp; cd memcached-1.4.24 &amp;&amp; ./configure &amp;&amp; make &amp;&amp; make install 
-cd / &amp;&amp; rm -rf memcached-1.4.24* &amp;&amp; yum clean all 
-</code></pre><h2 id="start"><a href="#start" class="headerlink" title="start"></a>start</h2><pre><code>/usr/local/bin/memcached -u root -m 128 -p 22422 -c 512 -P /memcached_22422.pid
-</code></pre><hr>
-<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/04/28/2015-04-28-centos7下docker升级到1-6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Colin.Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/colinws.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="全栈运维">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2015/04/28/2015-04-28-centos7下docker升级到1-6/" itemprop="url">centos7下docker升级到1.6</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-04-28T16:47:59+08:00">
-                2015-04-28
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2017-06-13T22:29:00+08:00">
-                2017-06-13
-              </time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Docker/" itemprop="url" rel="index">
-                    <span itemprop="name">Docker</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="get-latest-docker"><a href="#get-latest-docker" class="headerlink" title="get latest docker"></a>get latest docker</h2><pre><code>wget https://get.docker.io/builds/Linux/x86_64/docker-latest 
-</code></pre><h2 id="stop-serivce-and-backup-old"><a href="#stop-serivce-and-backup-old" class="headerlink" title="stop serivce and backup old"></a>stop serivce and backup old</h2><pre><code>service docker stop 
-
-mv /usr/bin/docker /usr/bin/docker.20150428
-</code></pre><h2 id="set-new-version"><a href="#set-new-version" class="headerlink" title="set new version"></a>set new version</h2><pre><code>cp docker-latest /usr/bin/docker 
-chmod a+x /usr/bin/docker
-</code></pre><h2 id="start-new"><a href="#start-new" class="headerlink" title="start new"></a>start new</h2><pre><code>service docker start 
-
-root@pts/0 # docker version 
-Client version: 1.6.0
-Client API version: 1.18
-Go version (client): go1.4.2
-Git commit (client): 4749651
-OS/Arch (client): linux/amd64
-Server version: 1.6.0
-Server API version: 1.18
-Go version (server): go1.4.2
-Git commit (server): 4749651
-OS/Arch (server): linux/amd64
-</code></pre><hr>
-<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/04/22/2015-04-22-centos7下-Jenkins-安装/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Colin.Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/colinws.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="全栈运维">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2015/04/22/2015-04-22-centos7下-Jenkins-安装/" itemprop="url">centos7下 Jenkins 安装</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-04-22T13:02:23+08:00">
-                2015-04-22
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2017-06-13T22:29:00+08:00">
-                2017-06-13
-              </time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Jenkins/" itemprop="url" rel="index">
-                    <span itemprop="name">Jenkins</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Requirement"><a href="#Requirement" class="headerlink" title="Requirement"></a>Requirement</h1><h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><pre><code>root@pts/0 # java -version 
-java version &quot;1.7.0_40&quot;
-Java(TM) SE Runtime Environment (build 1.7.0_40-b43)
-Java HotSpot(TM) 64-Bit Server VM (build 24.0-b56, mixed mode)
-</code></pre><h2 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h2><pre><code># get repo
-rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
-wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
-yum install jenkins -y
-</code></pre><h2 id="Configuration-and-start"><a href="#Configuration-and-start" class="headerlink" title="Configuration and start"></a>Configuration and start</h2><pre><code># auto-start after reboot
-chkconfig jenkins on
-
-# start
-service jenkins start[stop/restart/status]
-
-# modify jenkins user and login port
-sed -i &apos;s@JENKINS_PORT=&quot;8080&quot;@JENKINS_PORT=&quot;8008&quot;@&apos; /etc/sysconfig/jenkins
-sed -i &apos;s@JENKINS_USER=&quot;jenkins&quot;@JENKINS_USER=&quot;root&quot;@&apos; /etc/sysconfig/jenkins
-# change to root for ssh remote execution
-
-## log path
-/var/log/jenkins
-# install path /var/lib/jenkins
-# /var/lib/jenkins/jobs
-# /var/lib/jenkins/workspace
-</code></pre><h2 id="Test-installation"><a href="#Test-installation" class="headerlink" title="Test installation"></a>Test installation</h2><pre><code>netstat -tnlp | grep 8080
-http://localhost:8080
-http://jenkins-server-ip:8080
-</code></pre><h2 id="Simple-Usage"><a href="#Simple-Usage" class="headerlink" title="Simple Usage"></a>Simple Usage</h2><h2 id="Error"><a href="#Error" class="headerlink" title="Error"></a>Error</h2><pre><code># error
-Starting jenkins (via systemctl):  Job for jenkins.service failed. See &apos;systemctl status jenkins.service&apos; and &apos;journalctl -xn&apos; for details. [FAILED]
-# fixed
-install java
-
-# error ,forgot to add &apos;admin&apos; to Matrix based security authentication
-admin没有Overall/Read权限
-# fixed
-sed -i &apos;s/youyuan/admin/g&apos; /var/lib/jenkins/config.xml
-# reason after signup admin user but forgot to add privileges for it
-# &apos;Jenkins&apos; -&gt; &apos;system management&apos; -&gt; &apos;Configure Global Security&apos; -&gt; &apos;Authorization&apos; -&gt; &apos;matrix-based security&apos;
-</code></pre><hr>
-<div align="center"><br>公众号:  DailyJobOps<br><img src="/images/qrcode_for_gh_da4929fed8ed_430.jpg" width="200" height="200" alt="DailyJobOps"><br></div>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2223,7 +2244,7 @@ sed -i &apos;s/youyuan/admin/g&apos; /var/lib/jenkins/config.xml
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">41</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2245,7 +2266,7 @@ sed -i &apos;s/youyuan/admin/g&apos; /var/lib/jenkins/config.xml
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-count">51</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
